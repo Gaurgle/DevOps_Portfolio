@@ -50,3 +50,7 @@ out/
 ### OS ###
 .DS_Store
 Thumbs.db
+
+# Ignore local frontend project
+portfolio/
+portfolio_FE/
