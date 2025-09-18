@@ -1,11 +1,19 @@
-HELP.md
-.gradle
+### Build & IDE ###
+.gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+bin/
+out/
 
-### STS ###
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### STS / Eclipse ###
 .apt_generated
 .classpath
 .factorypath
@@ -13,18 +21,6 @@ build/
 .settings
 .springBeans
 .sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -37,12 +33,20 @@ out/
 .vscode/
 
 ### Kotlin ###
-.kotlin
+.kotlin/
 
-### Spring boot ###
-application-local.properties
-application-*.properties
-application-*.yaml
+### Spring Boot backend ###
+portfolio_BE/src/main/resources/application-local.properties
+portfolio_BE/src/main/resources/application-*.properties
+portfolio_BE/src/main/resources/application-*.yaml
+portfolio_BE/.env
+
+### Node / Astro frontend ###
+portfolio_FE/node_modules/
+portfolio_FE/.astro/
+portfolio_FE/dist/
+portfolio_FE/.vercel/
+portfolio_FE/.env
 
 ### Logs ###
 *.log
@@ -50,5 +54,3 @@ application-*.yaml
 ### OS ###
 .DS_Store
 Thumbs.db
-
-# Ignore local frontend project
