@@ -39,4 +39,14 @@ out/
 ### Kotlin ###
 .kotlin
 
+### Spring boot ###
 .application-local.properties
+.application-*.properties
+.application-*.yaml
+
+### Logs ###
+*.log
+
+### OS ###
+.DS_Store
+Thumbs.db
