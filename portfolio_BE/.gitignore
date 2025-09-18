@@ -54,3 +54,9 @@ portfolio_FE/.env
 ### OS ###
 .DS_Store
 Thumbs.db
+
+# Ignore Spring profile files anywhere in the repo
+**/application-local.properties
+**/application-*.properties
+**/application-*.yml
+**/application-*.yaml
