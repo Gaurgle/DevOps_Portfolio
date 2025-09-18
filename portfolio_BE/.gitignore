@@ -52,4 +52,3 @@ application-*.yaml
 Thumbs.db
 
 # Ignore local frontend project
-portfolio/
