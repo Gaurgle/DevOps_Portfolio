@@ -52,5 +52,4 @@ out/
 Thumbs.db
 
 # Ignore local frontend project
-portfolio/
 portfolio_FE/
