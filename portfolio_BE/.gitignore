@@ -40,9 +40,9 @@ out/
 .kotlin
 
 ### Spring boot ###
-.application-local.properties
-.application-*.properties
-.application-*.yaml
+application-local.properties
+application-*.properties
+application-*.yaml
 
 ### Logs ###
 *.log
