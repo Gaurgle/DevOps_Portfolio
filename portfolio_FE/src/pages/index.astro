@@ -1,37 +1,36 @@
 ---
-const title = "My Portfolio";
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
+<BaseLayout title="Hej! Jag är [Ditt Namn]" subtitle="Kotlin • Spring Boot • Postgres • Astro" current="/">
+	<section class="grid gap-6">
+		<div class="card">
+			<h2 class="text-2xl font-semibold">About me</h2>
+			<p class="mt-2 text-gray-600">
+				I’m a developer building a modern portfolio: Kotlin + Spring Boot backend,
+				Postgres on Render, Astro + Tailwind frontend.
+			</p>
+			<div class="mt-4 flex gap-3">
+				<a class="btn" href="/projects">See projects</a>
+				<a class="btn" href="/contact">Contact me</a>
+			</div>
+		</div>
 
-<html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<title>{title}</title>
-</head>
-<body class="bg-gray-100 text-gray-900">
-<!-- Banner -->
-<header class="bg-blue-600 text-white p-6 text-center">
-	<h1 class="text-3xl font-bold">{title}</h1>
-	<p class="text-lg">Welcome to my portfolio 🚀</p>
-</header>
-
-<!-- Frame / Main content -->
-<main class="flex">
-	<!-- Side panel -->
-	<aside class="w-64 bg-gray-200 p-4">
-		<nav>
-			<ul class="space-y-2">
-				<li><a href="/" class="block hover:text-blue-600">Home</a></li>
-				<li><a href="/projects" class="block hover:text-blue-600">Projects</a></li>
-				<li><a href="/contact" class="block hover:text-blue-600">Contact</a></li>
-			</ul>
-		</nav>
-	</aside>
-
-	<!-- Main content area -->
-	<section class="flex-1 p-6">
-		<h2 class="text-2xl font-semibold mb-4">About Me</h2>
-		<p>Hello! I’m building this portfolio with Astro + Tailwind.</p>
+		<div class="grid sm:grid-cols-2 gap-6">
+			<div class="card">
+				<h3 class="font-semibold text-lg">What I work with:</h3>
+				<ul class="mt-2 list-disc list-inside text-gray-700">
+					<li>Kotlin + Spring Boot</li>
+					<li>PostgreSQL & Flyway</li>
+					<li>Astro + TypeScript + Tailwind</li>
+					<li>CI/CD with GitHub Actions</li>
+				</ul>
+			</div>
+			<div class="card">
+				<h3 class="font-semibold text-lg">Rubrik</h3>
+				<p class="mt-2 text-gray-700">
+					blablabla
+				</p>
+			</div>
+		</div>
 	</section>
-</main>
-</body>
-</html>
+</BaseLayout>

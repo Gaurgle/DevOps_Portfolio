@@ -1,0 +1,25 @@
+---
+import "../styles/global.css";
+import Banner from "../components/Banner.astro";
+import Sidebar from "./Sidebar.astro";
+
+const { title = "Portfolio", subtitle, current = "/" } = Astro.props;
+---
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+</head>
+<body class="min-h-dvh bg-gray-50 text-gray-900">
+<Banner title={title} subtitle={subtitle} />
+<div class="container py-8">
+    <div class="flex gap-6">
+        <Sidebar current={current} />
+        <main class="flex-1">
+            <slot />
+        </main>
+    </div>
+</div>
+</body>
+</html>
