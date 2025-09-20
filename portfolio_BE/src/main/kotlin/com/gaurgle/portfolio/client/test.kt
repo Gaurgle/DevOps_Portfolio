@@ -1,4 +1,7 @@
 package com.gaurgle.portfolio.client
 
-class test {
+class Test {
+    fun test() {
+        println("test")
+    }
 }
