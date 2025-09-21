@@ -1,24 +1,17 @@
 ---
-const nav = [
-    { href: "/", label: "Home" },
-    { href: "/projects", label: "Projects" },
-    { href: "/contact", label: "Contact" },
-];
-const { current = "/" } = Astro.props;
+import BorderBeam from "./HibubbaIO/BorderBeam";
+
+const {current = "/"} = Astro.props;
 ---
-<aside class="hidden md:block w-64 shrink-0">
-    <nav class="card sticky top-6">
-        <ul class="space-y-1">
-            {nav.map((n) => (
-                    <li>
-                        <a href={n.href}
-                           class={`block rounded-lg px-3 py-2 hover:bg-gray-100 ${
-                               current === n.href ? "bg-gray-100 font-semibold" : ""
-                           }`}>
-                            {n.label}
-                        </a>
-                    </li>
-            ))}
-        </ul>
+<div class="sidebar bg-gray-950">
+    <BorderBeam>
+    <nav class="relative space-y-2 bg-gray-950 rounded-lg p-4 h-screen">
+
+        <a class="text-whonanimationiteration-600 hover:underline" href="/">Home</a><br>
+        <a class="text-whonanimationiteration-600 hover:underline" href="/projects">Projects</a><br>
+        <a class="text-whonanimationiteration-600 hover:underline" href="/contact">About</a><br>
+        <a class="text-whonanimationiteration-600 hover:underline" href="/contact">Contact</a><br>
+
     </nav>
-</aside>
+    </BorderBeam>
+</div>

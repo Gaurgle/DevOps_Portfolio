@@ -5,10 +5,26 @@
 /* src/styles/global.css */
 body {
     font-family: system-ui, sans-serif;
+   @apply bg-gray-950 text-white min-h-screen
+   border-gray-950;
+}
+
+.particle-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+}
+
+@layer utilities {
+    .bg-behind {
+        @apply fixed inset-0 -z-0 pointer-events-none;
+    }
 }
 
 .banner {
-    background: linear-gradient(90deg, #131313, #152d34);
+    @apply bg-gray-950;
+    /*background: linear-gradient(90deg, #131313, #2a2a2a);*/
     color: white;
     padding: 2rem;
     border-radius: 1rem;
@@ -26,4 +42,11 @@ body {
 }
 .link {
     @apply text-blue-600 hover:underline;
+}
+
+.Sidebar {
+    background: linear-gradient(90deg, #131313, #2a2a2a);
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
 }

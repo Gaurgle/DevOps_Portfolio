@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
+import ParticleBg from "../components/HibubbaIO/ParticleBg";
 interface Props {
     title: string;
     subtitle?: string;
@@ -16,56 +17,40 @@ const {title, subtitle, current = "/"} = Astro.props;
 <head>
     <meta charset="UTF-8"></meta>
 </head>
-<Banner />
-<Sidebar current={current} />
-<style>
-</style>
+<Banner visable={false}/>
+
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>{title}</title>
 <meta name="description" content={subtitle}/>
 
-<body class="bg-gray-100 text-white min-h-screen">
-<div class="max-w-4xl mx-auto px-4 py-8">
-    <header class="mb-8">
-        <h1 class="text-4xl font-bold">{title}</h1>
-        {subtitle && <p class="text-gray-400 mt-2">{subtitle}</p>}
-    </header>
 
-    <section class="hero mb-8 bg-indigo-600 text-white py-8 rounded-md shadow-lg">
-        <div class="text-center">
-            <h2 class="text-2xl font-semibold">Welcome to {title}!</h2>
-            <p class="text-indigo-200 mt-2">{subtitle || "Hero section"}</p>
-        </div>
-    </section>
+<ParticleBg client:load className="bg-behind" />
 
-    <div class="flex">
+<div class="bg-gray-950 flex flex-col h-screen">
+
+    <!-- Content Section: Sidebar, Main Content -->
+    <div class="bg-950 flex flex-1">
         <!-- Sidebar -->
-        <aside class="w-1/4 bg-gray-800 text-gray-200 p-4 rounded-md shadow-lg">
-            <nav>
-                <ul class="space-y-2">
-                    <div class="text-xl font-bold">Sidebar --></div>
-                    <li><a href="/" class="block px-2 py-1 hover:bg-gray-700 rounded">Home</a></li>
-                    <li><a href="/about" class="block px-2 py-1 hover:bg-gray-700 rounded">About</a></li>
-                    <li><a href="/contact" class="block px-2 py-1 hover:bg-gray-700 rounded">Contact</a></li>
-                </ul>
-            </nav>
-        </aside>
+        <Sidebar class="w-64 bg-gray-950 text-white"/>
 
-        <!-- Main Content -->
-        <div class="w-3/4 p-4">
-            <h2 class="text-2xl font-bold align-text-bottom">Main Content</h2>
-            <slot/>
-        </div>
+        <!-- Main Section -->
+        <main class="flex-1 bg-gray-950 p-6">
+            <div class="hero mb-4">
+                <!-- Hero Section -->
+                <slot name="hero"/>
+            </div>
+
+            <div class="content">
+                <!-- Main Content -->
+                <h1 class="text-3xl font-bold mb-4">
+                    Hello on the main side!
+                </h1>
+                <slot/>
+            </div>
+        </main>
     </div>
-
-    <!-- Footer -->
-    <footer class="mt-8 bg-gray-800 text-gray-400 py-4 text-center rounded-md shadow-lg">
-        <p>&copy; {new Date().getFullYear()} Your Website. All rights reserved.</p>
-    </footer>
-    <main>
-        <slot/>
-    </main>
 </div>
-</body>
+
+
 </html>
