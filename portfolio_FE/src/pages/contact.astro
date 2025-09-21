@@ -1,37 +1,6 @@
 ---
-const title = "Contact";
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>{title}</title>
-</head>
-<body class="bg-gray-100 text-gray-900">
-<!-- Banner -->
-<header class="bg-blue-600 text-white p-6 text-center">
-    <h1 class="text-3xl font-bold">{title}</h1>
-    <p class="text-lg">Contact</p>
-</header>
-
-<!-- Frame / Main content -->
-<main class="flex">
-    <!-- Side panel -->
-    <aside class="w-64 bg-gray-200 p-4">
-        <nav>
-            <ul class="space-y-2">
-                <li><a href="/" class="block hover:text-blue-600">Home</a></li>
-                <li><a href="/projects" class="block hover:text-blue-600">Projects</a></li>
-                <li><a href="/contact" class="block hover:text-blue-600">Contact</a></li>
-            </ul>
-        </nav>
-    </aside>
-
-    <!-- Main content area -->
-    <section class="flex-1 p-6">
-        <h2 class="text-2xl font-semibold mb-4">Contact</h2>
-        <p>Here's how you can contact me.</p>
-    </section>
-</main>
-</body>
-</html>
+<BaseLayout>
+</BaseLayout>
+<p>contact</p>
