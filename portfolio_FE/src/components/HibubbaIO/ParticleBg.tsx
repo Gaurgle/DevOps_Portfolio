@@ -24,10 +24,10 @@ type Circle = {
 
 const ParticleBg: React.FC<Props> = ({
                                        quantity = 200,
-                                       size = 1,
+                                       size = 0.2,
                                        color = "#000000",
                                        darkModeColor = "#ffffff",
-                                       speed = 0.1,
+                                       speed = 0.15,
                                        className,
                                        children,
                                      }) => {
