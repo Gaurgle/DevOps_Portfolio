@@ -10,7 +10,7 @@ const BorderBeam: React.FC<Props> = ({ children }) => {
             <div
                 className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500  to-red-500
         rounded-lg blur-md"
-                style={{ zIndex: 0 }}
+                style={{ zIndex: 1 }}
             ></div>
 
             {/* Child content container */}
