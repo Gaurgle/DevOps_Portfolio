@@ -1,5 +1,7 @@
 ---
+import "../styles/global.css";
 import Banner from "../components/Banner.astro";
+import Sidebar from "../components/Sidebar.astro";
 interface Props {
     title: string;
     subtitle?: string;
@@ -12,8 +14,10 @@ const {title, subtitle, current = "/"} = Astro.props;
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+    <meta charset="UTF-8"></meta>
 </head>
 <Banner />
+<Sidebar current={current} />
 <style>
 </style>
 <meta charset="UTF-8"/>
@@ -50,6 +54,7 @@ const {title, subtitle, current = "/"} = Astro.props;
 
         <!-- Main Content -->
         <div class="w-3/4 p-4">
+            <h2 class="text-2xl font-bold align-text-bottom">Main Content</h2>
             <slot/>
         </div>
     </div>
