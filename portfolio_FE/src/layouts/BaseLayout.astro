@@ -1,16 +1,67 @@
 ---
-import "../styles/global.css";
-const { title = "Portfolio" } = Astro.props;
+import banner from "../components/Banner.astro";
+
+interface Props {
+    title: string;
+    subtitle?: string;
+    current?: string;
+}
+
+const {title, subtitle, current = "/"} = Astro.props;
 ---
-<html lang="en">
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen">
-<main class="max-w-4xl mx-auto p-6">
-    <slot />
-</main>
+<banner>
+<body>
+</body>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>{title}</title>
+<meta name="description" content={subtitle}/>
+</banner>
+
+<body class="bg-gray-900 text-white min-h-screen">
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <header class="mb-8">
+        <h1 class="text-4xl font-bold">{title}</h1>
+        {subtitle && <p class="text-gray-400 mt-2">{subtitle}</p>}
+    </header>
+
+    <section class="hero mb-8 bg-indigo-600 text-white py-8 rounded-md shadow-lg">
+        <div class="text-center">
+            <h2 class="text-2xl font-semibold">Welcome to {title}!</h2>
+            <p class="text-indigo-200 mt-2">{subtitle || "Explore the content below"}</p>
+        </div>
+    </section>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-1/4 bg-gray-800 text-gray-200 p-4 rounded-md shadow-lg">
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="/" class="block px-2 py-1 hover:bg-gray-700 rounded">Home</a></li>
+                    <li><a href="/about" class="block px-2 py-1 hover:bg-gray-700 rounded">About</a></li>
+                    <li><a href="/contact" class="block px-2 py-1 hover:bg-gray-700 rounded">Contact</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="w-3/4 p-4">
+            <slot/>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 bg-gray-800 text-gray-400 py-4 text-center rounded-md shadow-lg">
+        <p>&copy; {new Date().getFullYear()} Your Website. All rights reserved.</p>
+    </footer>
+    <main>
+        <slot/>
+    </main>
+</div>
 </body>
 </html>

@@ -1,9 +1,16 @@
+// src/components/Banner.astro
 ---
-const { title = "My Portfolio", subtitle = "Astro • TypeScript • Tailwind" } = Astro.props;
+// Add any props or imports needed
 ---
-<header class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-    <div class="container py-8">
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">{title}</h1>
-        <p class="mt-2 text-white/90">{subtitle}</p>
-    </div>
-</header>
+<div class="banner">
+    <nav class="flex justify-center gap-4">
+        <a class="text-blue-600 hover:underline" href="/">Home</a>
+        <a class="text-blue-600 hover:underline" href="/projects">Projects</a>
+        <a class="text-blue-600 hover:underline" href="/contact">Contact</a>
+    </nav>
+</div>
+<style>
+    .banner {
+        @apply bg-gray-100 py-4 shadow-md;
+    }
+</style>
