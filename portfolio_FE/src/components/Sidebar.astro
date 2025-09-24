@@ -1,17 +1,24 @@
 ---
 import BorderBeam from "./HibubbaIO/BorderBeam";
+import BlobLink from "./BlobLink.astro";
 
 const {current = "/"} = Astro.props;
 ---
-<div class="sidebar bg-gray-950">
-    <BorderBeam>
-    <nav class="relative space-y-2 bg-gray-950 rounded-lg p-4 h-screen">
+<div class="flex h-screen">
+    <aside class="w-40 bg-black text-white h-full">
+    <!--<BorderBeam>-->
+    <nav class="sticky left-0 space-y-1 bg-black rounded-lg p-10 h-full">
+
 
         <a class="text-whonanimationiteration-600 hover:underline" href="/">Home</a><br>
         <a class="text-whonanimationiteration-600 hover:underline" href="/projects">Projects</a><br>
         <a class="text-whonanimationiteration-600 hover:underline" href="/contact">About</a><br>
         <a class="text-whonanimationiteration-600 hover:underline" href="/contact">Contact</a><br>
+        <div class="flex justify-center">
+        <div class="h-px w-[80px] bg-white mt-5"></div>
+    </div>
 
     </nav>
-    </BorderBeam>
+    <!--</BorderBeam>-->
+    </aside>
 </div>

@@ -1,18 +1,14 @@
 ---
 import BorderBeam from "./HibubbaIO/BorderBeam";
+import BlobLink from "./BlobLink.astro";
 ---
-<BorderBeam>
-    <div class="banner border-b-1">
-        <nav class="flex justify-center gap-10">
+<div class="sticky top-0 z-50 banner border-b-1">
+    <nav class="flex justify-center gap-1">
 
-            <a class="text-whonanimationiteration-600 hover:underline" href="/">Home</a>
-            <a class="text-whonanimationiteration-600 hover:underline" href="/projects">Projects</a>
-            <a class="text-whonanimationiteration-600 hover:underline" href="/contact">About</a>
-            <a class="text-whonanimationiteration-600 hover:underline" href="/contact">Contact</a>
-            <a class="text-whonanimationiteration-600 hover:underline" href="/contact">fake</a>
+        <BlobLink href="/projects">Projects</BlobLink>
+        <BlobLink href="/about">About</BlobLink>
+        <BlobLink href="/contact">Contact</BlobLink>
 
+    </nav>
+</div>
 
-        </nav>
-    </div>
-
-</BorderBeam>
