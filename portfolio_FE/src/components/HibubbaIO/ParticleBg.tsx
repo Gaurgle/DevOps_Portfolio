@@ -24,7 +24,7 @@ type Circle = {
 
 const ParticleBg: React.FC<Props> = ({
                                        quantity = 200,
-                                       size = 0.2,
+                                       size = 0.1,
                                        color = "#000000",
                                        darkModeColor = "#ffffff",
                                        speed = 0.15,
