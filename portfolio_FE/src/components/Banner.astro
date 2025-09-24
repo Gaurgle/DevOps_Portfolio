@@ -1,14 +1,11 @@
 ---
-import BorderBeam from "./HibubbaIO/BorderBeam";
-import BlobLink from "./BlobLink.astro";
+// Banner.astro
+import HoverBlobs from "./HibubbaIO/HoverBlobs.tsx";
 ---
-<div class="sticky top-0 z-50 banner border-b-1">
-    <nav class="flex justify-center gap-1">
-
-        <BlobLink href="/projects">Projects</BlobLink>
-        <BlobLink href="/about">About</BlobLink>
-        <BlobLink href="/contact">Contact</BlobLink>
-
+<div class="sticky top-0 z-50 banner">
+    <nav class="flex justify-center gap-4 overflow-visible">
+        <HoverBlobs client:idle href="/projects">Projects</HoverBlobs>
+        <HoverBlobs client:idle href="/about">About</HoverBlobs>
+        <HoverBlobs client:idle href="/contact">Contact</HoverBlobs>
     </nav>
 </div>
-
