@@ -3,54 +3,41 @@ import "../styles/global.css";
 import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
 import ParticleBg from "../components/HibubbaIO/ParticleBg";
-interface Props {
-    title: string;
-    subtitle?: string;
-    current?: string;
-}
-
-const {title, subtitle, current = "/"} = Astro.props;
+const { title, subtitle, current = "/" } = Astro.props;
 ---
-
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8"></meta>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{title}</title>
+    <meta name="description" content={subtitle}/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<Banner visable={false}/>
 
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>{title}</title>
-<meta name="description" content={subtitle}/>
-
-
+<body class="font-sans">
 <ParticleBg client:load className="bg-behind" />
 
-<div class="bg-gray-950 flex flex-col h-screen">
-
-    <!-- Content Section: Sidebar, Main Content -->
-    <div class="bg-950 flex flex-1">
-        <!-- Sidebar -->
-        <Sidebar class="w-64 bg-gray-950 text-white"/>
-
-        <!-- Main Section -->
-        <main class="flex-1 bg-gray-950 p-6">
-            <div class="hero mb-4">
-                <!-- Hero Section -->
-                <slot name="hero"/>
-            </div>
-
+<div class="bg-black flex flex-col h-full">
+<Banner />
+    <div class="flex flex-1 overflow-hidden">
+        <Sidebar />
+        <main class="flex-1 bg-black p-6 overflow-auto">
+            <div class="hero mb-4"><slot name="hero" /></div>
+            <p style="font-family: Roboto, sans-serif">This should be Roboto</p>
             <div class="content">
-                <!-- Main Content -->
-                <h1 class="text-3xl font-bold mb-4">
-                    Hello on the main side!
-                </h1>
-                <slot/>
+                <h1 class="text-3xl font-bold mb-4">Hello on the main side!</h1>
+                <slot />
             </div>
         </main>
     </div>
 </div>
-
-
+</body>
 </html>

@@ -1,18 +1,11 @@
 ---
-import BorderBeam from "./HibubbaIO/BorderBeam";
+// Banner.astro
+import HoverBlobs from "./HibubbaIO/HoverBlobs.tsx";
 ---
-<BorderBeam>
-    <div class="banner border-b-1">
-        <nav class="flex justify-center gap-10">
-
-            <a class="text-whonanimationiteration-600 hover:underline" href="/">Home</a>
-            <a class="text-whonanimationiteration-600 hover:underline" href="/projects">Projects</a>
-            <a class="text-whonanimationiteration-600 hover:underline" href="/contact">About</a>
-            <a class="text-whonanimationiteration-600 hover:underline" href="/contact">Contact</a>
-            <a class="text-whonanimationiteration-600 hover:underline" href="/contact">fake</a>
-
-
-        </nav>
-    </div>
-
-</BorderBeam>
+<div class="sticky top-0 z-50 banner">
+    <nav class="flex justify-center gap-4 overflow-visible">
+        <HoverBlobs client:idle href="/projects">Projects</HoverBlobs>
+        <HoverBlobs client:idle href="/about">About</HoverBlobs>
+        <HoverBlobs client:idle href="/contact">Contact</HoverBlobs>
+    </nav>
+</div>
