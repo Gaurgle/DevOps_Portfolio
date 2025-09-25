@@ -12,8 +12,6 @@
 @tailwind utilities;
 
 body {
-    /*fonts-family: "Roboto", "Inter", "Poppins", "Manrope", sans-serif;*/
-
     @apply bg-black text-white min-h-screen border-gray-950;
 }
 
@@ -36,7 +34,7 @@ body {
     color: white;
     padding: 1rem;
     border-radius: 4px;
-    margin-bottom: 0rem;
+    margin-bottom: 1rem;
     font-size: 1.0rem;
     font-weight: 100;
 
