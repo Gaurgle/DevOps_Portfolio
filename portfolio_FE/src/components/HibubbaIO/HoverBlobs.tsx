@@ -1,50 +1,65 @@
+// src/components/HibubbaIO/HoverBlobs.tsx
 "use client";
 import React from "react";
 
-type Props = {
-    href?: string;
-    className?: string;       // extra classes from the caller
-    insetClass?: string;      // size of blob area (default 'inset-[2px]')
-    blurClass?: string;       // blur strength (default 'blur')
-    duration?: string;        // hover transition duration (default 'duration-200')
-    colors?: string[];        // e.g., ['bg-purple-600/25','bg-yellow-500/20','bg-pink-600/20']
+type HoverBlobsProps = {
     children: React.ReactNode;
-};
+    href?: string;
+    className?: string;      // outer wrapper classes
+    insetClass?: string;     // blob area size
+    blurClass?: string;      // blur strength
+    colors?: string[];       // 3 tailwind bg-* utilities
+    alwaysOn?: boolean;      // show blobs when not hovered
+    contentClass?: string;   // inner content classes
+    target?: React.HTMLAttributeAnchorTarget;
+    rel?: string;
+} & Omit<React.HTMLAttributes<HTMLSpanElement>, "className" | "children">;
 
 export default function HoverBlobs({
+                                       children,
                                        href,
                                        className = "",
-                                       insetClass = "inset-[1px]",
-                                       blurClass = "blur",
-                                       duration = "duration-1000",
-                                       colors = ["bg-gray-800", "bg-yellow-500/20", "bg-pink-600/20"],
-                                       children,
-                                   }: Props) {
-    const Tag: any = href ? "a" : "span";
+                                       insetClass = "inset-0",
+                                       blurClass = "blur-md",
+                                       colors = ["bg-purple-600/25", "bg-blue-500/20", "bg-pink-600/20"],
+                                       alwaysOn = false,
+                                       contentClass = "",
+                                       target,
+                                       rel,
+                                       ...rest
+                                   }: HoverBlobsProps) {
+    const Wrapper: any = href ? "a" : "span";
+
+    const linkProps =
+        href
+            ? {
+                href,
+                target,
+                rel: target === "_blank" ? (rel ?? "noopener noreferrer") : rel,
+            }
+            : {};
+
     return (
-        <Tag
-            href={href}
-            className={`relative inline-block group px-1 py-2 rounded-sm ${className}`}
+        <Wrapper
+            {...linkProps}
+            className={`relative inline-block group ${className}`}
+            {...rest}
         >
-            {/* blob layer */}
+            {/* Blobs */}
             <span
-                className={`pointer-events-none absolute inset-0 z-0 opacity-0 scale-95 transition ${duration} ease-out group-hover:opacity-100 group-hover:scale-100`}
+                className={`pointer-events-none absolute ${insetClass} z-0 transition duration-300 ease-out ${
+                    alwaysOn
+                        ? "opacity-100 scale-100"
+                        : "opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100"
+                }`}
             >
-        <span
-            className={`absolute ${insetClass} rounded-[40%] ${blurClass} ${colors[0]} mix-blend-multiply dark:mix-blend-screen animate-blob`}
-        />
-        <span
-            className={`absolute ${insetClass} rounded-lg ${blurClass} ${colors[1]} mix-blend-multiply dark:mix-blend-screen animate-blob`}
-            style={{animationDelay: "1.6s"}}
-        />
-        <span
-            className={`absolute ${insetClass} rounded-[30%] ${blurClass} ${colors[2]} mix-blend-multiply dark:mix-blend-screen animate-blob`}
-            style={{animationDelay: "0.9s"}}
-        />
+        <span className={`absolute inset-0 rounded-lg ${blurClass} ${colors[0]} mix-blend-multiply dark:mix-blend-screen animate-blob`} />
+        <span className={`absolute inset-0 rounded-lg ${blurClass} ${colors[1]} mix-blend-multiply dark:mix-blend-screen animate-blob`} style={{ animationDelay: "1.6s" }} />
+        <span className={`absolute inset-0 rounded-lg ${blurClass} ${colors[2]} mix-blend-multiply dark:mix-blend-screen animate-blob`} style={{ animationDelay: "0.9s" }} />
       </span>
 
-            {/* text */}
-            <span className="relative z-10">{children}</span>
-        </Tag>
+            {/* Content */}
+            <span className={`relative z-10 ${contentClass}`}>{children}</span>
+        </Wrapper>
     );
 }

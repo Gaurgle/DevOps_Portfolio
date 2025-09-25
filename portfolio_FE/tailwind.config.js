@@ -8,6 +8,10 @@ export default {
     theme: {
         fontFamily: {
             sans: ["Roboto", '"Press Start 2P"', "Poppins", "Inter", "Manrope", "sans-serif"],
+            serif: ["Roboto", "Manrope", "sans-serif"],
+            mono: ["Inter", "Roboto Mono", "sans-serif"],
+            weird: ['"Press Start 2P"', "sans-serif"],
+            ramose: ["Ramose", "cursive"],
         },
         extend: {
             keyframes: {

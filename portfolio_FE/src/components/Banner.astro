@@ -1,11 +1,53 @@
 ---
 // Banner.astro
 import HoverBlobs from "./HibubbaIO/HoverBlobs.tsx";
+import StaticBlobs from "./HibubbaIO/StaticBlobs";
 ---
-<div class="sticky top-0 z-50 banner">
-    <nav class="flex justify-center gap-4 overflow-visible">
-        <HoverBlobs client:idle href="/projects">Projects</HoverBlobs>
-        <HoverBlobs client:idle href="/about">About</HoverBlobs>
-        <HoverBlobs client:idle href="/contact">Contact</HoverBlobs>
+<div class="sticky top-9 bottom-2 z-50 banner py-8 overflow-visible">
+    <nav class="flex items-center justify-end overflow-visible gap-6">
+
+        <div class="absolute left-1/2 gap-2 transform -translate-x-1/2">
+            <StaticBlobs
+                    client:idle
+                    href="/"
+                    className="font-ramose text-7xl font-thin"
+                    contentClass="px-6 py-2 rounded-2xl"
+                    insetClass="inset-[-2px]"
+                    blurClass="blur-md"
+                    colors={["bg-yellow-600/20", "bg-pink-500/15", "bg-green-600/20"]}>
+                Andreas Roos
+            </StaticBlobs>
+        </div>
+
+
+        <div class="flex gap-2">
+            <HoverBlobs client:idle href="/projects">Projects</HoverBlobs>
+            <HoverBlobs client:idle href="/about">About</HoverBlobs>
+            <HoverBlobs client:idle href="/contact">Contact</HoverBlobs>
+        </div>
+
+        <div class="flex gap-2 items-center">
+            <div class="h-7 w-px bg-gray-700 mx-4"></div>
+
+            <HoverBlobs client:idle
+                        href="https://github.com/gaurgle/"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        className="w-10 h-10 rounded-full flex items-center justify-center overflow-visable">
+                <img src="https://cdn.simpleicons.org/github/ffffff"
+                     alt="GitHub" width="24" height="24"/>
+            </HoverBlobs>
+
+            <HoverBlobs client:idle
+                        href="https://www.linkedin.com/in/andreasrooos/"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        className="w-10 h-10 rounded-full flex items-center justify-center overflow-visable">
+                <img src="https://img.icons8.com/?size=100&id=8808&format=png&color=ffffff"
+                     alt="LinkedIn" width="50" height="24"/>
+            </HoverBlobs>
+
+
+        </div>
     </nav>
 </div>

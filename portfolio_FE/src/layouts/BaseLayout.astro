@@ -19,17 +19,26 @@ const { title, subtitle, current = "/" } = Astro.props;
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="font-sans">
 <ParticleBg client:load className="bg-behind" />
-
 <div class="bg-black flex flex-col h-full">
 <Banner />
     <div class="flex flex-1 overflow-hidden">
         <Sidebar />
         <main class="flex-1 bg-black p-6 overflow-auto">
+
+            <!-- <br>'s -->
+            {Array.from({length: 50}).map((_item, index) => (
+                    <br/>
+            ))}
+
             <div class="hero mb-4"><slot name="hero" /></div>
             <p style="font-family: Roboto, sans-serif">This should be Roboto</p>
             <div class="content">
