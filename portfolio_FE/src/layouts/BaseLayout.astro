@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
 import ParticleBg from "../components/HibubbaIO/ParticleBg";
+import CardProjects from "../components/CardProjects.tsx";
 const { title, subtitle, current = "/" } = Astro.props;
 
 ---
@@ -50,12 +51,12 @@ const { title, subtitle, current = "/" } = Astro.props;
         <Sidebar />
     </aside>
 
+
     <!-- MAIN (scrolls; important: min-h-0) -->
     <main class="col-[2] row-[2] min-h-0 overflow-y-auto p-6">
         <!-- CONTENT -->
-        {Array.from({ length: 50 }).map(() => <br />)}
+
         <div class="hero mb-4"><slot name="hero" /></div>
-        <h1 class="text-3xl font-bold mb-4">Hello on the main side!</h1>
         <slot />
     </main>
 </div>

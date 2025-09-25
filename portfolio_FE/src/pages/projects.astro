@@ -1,6 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import CardProjects from "../components/CardProjects.tsx";
 ---
 <BaseLayout>
+    <div>
+        <CardProjects client:load />
+
+    </div>
 </BaseLayout>
 <p>projects</p>
