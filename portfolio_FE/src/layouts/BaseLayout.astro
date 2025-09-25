@@ -4,6 +4,7 @@ import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
 import ParticleBg from "../components/HibubbaIO/ParticleBg";
 const { title, subtitle, current = "/" } = Astro.props;
+
 ---
 <!DOCTYPE html>
 <html lang="en" class="dark">
@@ -36,10 +37,13 @@ const { title, subtitle, current = "/" } = Astro.props;
              grid-cols-[16rem,1fr]  /* <- sidebar width + main */
              "
 >
-    <!-- HEADER -->
+    <!-- BANNER -->
     <header class="col-[1/-1] row-[1]">
         <!-- 'sticky' not needed anymore; header doesn't scroll -->
+        <div class="sticky top-1 z-50  overflow-visible">
         <Banner />
+
+        </div>
     </header>
 
     <!-- SIDEBAR -->

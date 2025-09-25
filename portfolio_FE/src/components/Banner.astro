@@ -3,11 +3,13 @@
 import HoverBlobs from "./HibubbaIO/HoverBlobs.tsx";
 import StaticBlobs from "./HibubbaIO/StaticBlobs";
 ---
-<div class="sticky top-9 bottom-2 z-50 banner py-8 overflow-visible">
-    <nav class="flex items-center justify-end overflow-visible gap-6">
+<div class="sticky top-9 z-50 banner py-6 overflow-visible">
+    <nav class="grid grid-cols-[1fr_auto_1fr] items-end gap-4 overflow-visible">
 
+
+        <div></div>
         <!-- Logo -->
-        <div class="absolute left-1/2 gap-2 transform -translate-x-1/2">
+        <div class="justify-self-center min-w-0">
             <StaticBlobs
                     client:idle
                     href="/"
@@ -20,36 +22,38 @@ import StaticBlobs from "./HibubbaIO/StaticBlobs";
             </StaticBlobs>
         </div>
 
-
+        <!-- links and socials -->
+        <div class="flex items-center gap-4 justify-self-end">
         <!-- Links -->
-        <div class="flex gap-2">
-            <HoverBlobs client:idle href="/projects">Projects</HoverBlobs>
-            <HoverBlobs client:idle href="/about">About</HoverBlobs>
-            <HoverBlobs client:idle href="/contact">Contact</HoverBlobs>
-        </div>
+            <div class="flex gap-3">
+                <HoverBlobs client:idle href="/projects">Projects</HoverBlobs>
+                <HoverBlobs client:idle href="/about">About</HoverBlobs>
+                <HoverBlobs client:idle href="/contact">Contact</HoverBlobs>
+            </div>
 
-        <!-- Social -->
-        <div class="flex gap-2 items-center">
+            <!-- Divider -->
             <div class="h-7 w-px bg-gray-700 mx-4"></div>
 
-            <HoverBlobs client:idle
-                        href="https://github.com/gaurgle/"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                        className="w-10 h-10 rounded-full flex items-center justify-center overflow-visable">
-                <img src="https://cdn.simpleicons.org/github/ffffff"
-                     alt="GitHub" width="24" height="24"/>
-            </HoverBlobs>
+            <!-- Social -->
+            <div class="flex gap-2">
+                <HoverBlobs client:idle
+                            href="https://github.com/gaurgle/"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            className="w-10 h-10 rounded-full flex items-center justify-center overflow-visable">
+                    <img src="https://cdn.simpleicons.org/github/ffffff"
+                         alt="GitHub" width="24" height="24"/>
+                </HoverBlobs>
 
-            <HoverBlobs client:idle
-                        href="https://www.linkedin.com/in/andreasrooos/"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                        className="w-10 h-10 rounded-full flex items-center justify-center overflow-visable">
-                <img src="https://img.icons8.com/?size=100&id=8808&format=png&color=ffffff"
-                     alt="LinkedIn" width="50" height="24"/>
-            </HoverBlobs>
-
+                <HoverBlobs client:idle
+                            href="https://www.linkedin.com/in/andreasrooos/"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            className="w-10 h-10 rounded-full flex items-center justify-center overflow-visable">
+                    <img src="https://img.icons8.com/?size=100&id=8808&format=png&color=ffffff"
+                         alt="LinkedIn" width="50" height="24"/>
+                </HoverBlobs>
+            </div>
         </div>
     </nav>
 </div>
