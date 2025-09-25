@@ -1,20 +1,18 @@
 package com.gaurgle.portfolio.entities
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Column
+import jakarta.persistence.*
 
 @Entity
-class PortfolioProject {
+@Table(name = "portfolio_projects")
+data class PortfolioProject (
     
     @Id
-    var id: Long? = null
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
 
     @Column(nullable = false)
-    var projectName: String = ""
+    var projectName: String = "",
 
     @Column(nullable = false)
     var gitHubURL: String = ""
-
-
-}
+)

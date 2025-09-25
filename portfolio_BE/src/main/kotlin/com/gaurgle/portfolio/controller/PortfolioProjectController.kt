@@ -1,9 +1,32 @@
-package com.gaurgle.portfolio.repository
+package com.gaurgle.portfolio.controller
 
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
 import com.gaurgle.portfolio.entities.PortfolioProject
+import com.gaurgle.portfolio.service.PortfolioProjectService
+import org.springframework.web.bind.annotation.*
 
-@Repository
-interface PortfolioProjectController : JpaRepository<PortfolioProject, Long>
 
+@RestController
+@RequestMapping("/api/projects")
+class PortfolioProjectController(
+    private val portfolioProjectService: PortfolioProjectService
+) {
+    @GetMapping
+    fun getAllProjects(): List<PortfolioProject> =
+        portfolioProjectService.getAllProjects()
+
+    @GetMapping("/{id}")
+    fun getProjectById(@PathVariable id: Long): PortfolioProject? =
+        portfolioProjectService.getProjectById(id)
+
+    @PostMapping
+    fun createProject(@RequestBody project: PortfolioProject): PortfolioProject =
+        portfolioProjectService.createProject(project)
+
+    @PutMapping("/{id}")
+    fun updateProject(@PathVariable id: Long, @RequestBody project: PortfolioProject): PortfolioProject =
+        portfolioProjectService.updateProject(id, project)
+
+    @DeleteMapping("/{id}")
+    fun deleteProject(@PathVariable id: Long) =
+        portfolioProjectService.deleteProject(id)
+}

@@ -1,13 +1,13 @@
 package com.gaurgle.portfolio.service
 
 import com.gaurgle.portfolio.entities.PortfolioProject
-import com.gaurgle.portfolio.repository.PortfolioProjectController
+import com.gaurgle.portfolio.repository.PortfolioProjectRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PortfolioProjectService(
-    private val portfolioProjectRepository: PortfolioProjectController
+    private val portfolioProjectRepository: PortfolioProjectRepository
 ) {
 
     fun getAllProjects(): List<PortfolioProject> {
@@ -24,7 +24,8 @@ class PortfolioProjectService(
     }
 
     @Transactional
-    fun updateProject(project: PortfolioProject): PortfolioProject {
+    fun updateProject(id: Long, project: PortfolioProject): PortfolioProject {
+        val updated = project.copy(id = id)
         return portfolioProjectRepository.save(project)
     }
 
