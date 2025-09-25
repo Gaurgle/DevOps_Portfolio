@@ -6,27 +6,29 @@ const projects = [
     {
         title: "Project one",
         description: "info about this project",
-        image: "/images/project1.png",
+        image: "https://picsum.photos/200",
         link: "#",
     },
     {
         title: "Project two",
         description: "info about this project",
-        image: "/images/project2.png",
+        image: "https://picsum.photos/200" +"1",
         link: "#",
     },
     {
         title: "Project three",
         description: "info about this project",
-        image: "/images/project3.png",
+        image: "https://picsum.photos/200" +"2",
         link: "#",
     },
     {
         title: "Project four",
         description: "info about this project",
-        image: "/images/project4.png",
+        image: "https://picsum.photos/200" +"3",
         link: "#",
     },
+    
+    
 ];
 
 export default function ProjectCards() {
@@ -37,7 +39,7 @@ export default function ProjectCards() {
                     {/* card content */}
                     <div className="flex h-64 bg-white dark:bg-black rounded-2xl shadow-lg overflow-visible border-2 border-gray-950 dark:border-b-gray-950">
                         {/* Left: Image */}
-                        <div className="w-[240px] min-w-[120px]">
+                        <div className="w-[240px] min-w-[120px] rounded-2xl overflow-hidden">
                             <img
                                 src={project.image}
                                 alt={project.title}
@@ -46,7 +48,9 @@ export default function ProjectCards() {
                         </div>
 
                         {/* Divider */}
-                        <div className="h-[180px] w-px bg-gray-700 mx-4 self-center"></div>
+                        <div className="h-[200px] w-px bg-gray-800 ml-1.5 self-center"></div>
+                        <div className="h-[180px] w-px bg-gray-800 opacity-100 ml-1 self-center"></div>
+                        <div className="h-[160px] w-px bg-gray-900 mx-1 self-center"></div>
 
                         {/* Right: Text */}
                         <div className="flex flex-col justify-center p-4 w-2/3">
