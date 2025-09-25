@@ -28,12 +28,17 @@ const { title, subtitle, current = "/" } = Astro.props;
 
 <body class="font-sans">
 <ParticleBg client:load className="bg-behind" />
-
 <div class="bg-black flex flex-col h-full">
 <Banner />
     <div class="flex flex-1 overflow-hidden">
         <Sidebar />
         <main class="flex-1 bg-black p-6 overflow-auto">
+
+            <!-- <br>'s -->
+            {Array.from({length: 50}).map((_item, index) => (
+                    <br/>
+            ))}
+
             <div class="hero mb-4"><slot name="hero" /></div>
             <p style="font-family: Roboto, sans-serif">This should be Roboto</p>
             <div class="content">
