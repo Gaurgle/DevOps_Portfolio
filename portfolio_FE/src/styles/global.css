@@ -17,6 +17,11 @@ body {
     @apply bg-black text-white min-h-screen border-gray-950;
 }
 
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(1.02); }
+}
+
 .particle-bg {
     position: fixed;
     inset: 0;
