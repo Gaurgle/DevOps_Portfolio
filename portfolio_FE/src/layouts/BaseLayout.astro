@@ -26,27 +26,35 @@ const { title, subtitle, current = "/" } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="font-sans">
+<body class="font-sans bg-black text-white">
 <ParticleBg client:load className="bg-behind" />
-<div class="bg-black flex flex-col h-full">
-<Banner />
-    <div class="flex flex-1 overflow-hidden">
+
+<!-- GRID CONTAINER -->
+<div
+        class="grid h-dvh overflow-hidden
+             grid-rows-[auto,1fr]
+             grid-cols-[16rem,1fr]  /* <- sidebar width + main */
+             "
+>
+    <!-- HEADER -->
+    <header class="col-[1/-1] row-[1]">
+        <!-- 'sticky' not needed anymore; header doesn't scroll -->
+        <Banner />
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="col-[1] row-[2] min-h-0">
         <Sidebar />
-        <main class="flex-1 bg-black p-6 overflow-auto">
+    </aside>
 
-            <!-- <br>'s -->
-            {Array.from({length: 50}).map((_item, index) => (
-                    <br/>
-            ))}
-
-            <div class="hero mb-4"><slot name="hero" /></div>
-            <p style="font-family: Roboto, sans-serif">This should be Roboto</p>
-            <div class="content">
-                <h1 class="text-3xl font-bold mb-4">Hello on the main side!</h1>
-                <slot />
-            </div>
-        </main>
-    </div>
+    <!-- MAIN (scrolls; important: min-h-0) -->
+    <main class="col-[2] row-[2] min-h-0 overflow-y-auto p-6">
+        <!-- CONTENT -->
+        {Array.from({ length: 50 }).map(() => <br />)}
+        <div class="hero mb-4"><slot name="hero" /></div>
+        <h1 class="text-3xl font-bold mb-4">Hello on the main side!</h1>
+        <slot />
+    </main>
 </div>
 </body>
 </html>

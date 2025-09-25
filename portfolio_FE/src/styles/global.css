@@ -12,6 +12,8 @@
 @tailwind utilities;
 
 body {
+    height: 100%;
+    overflow: hidden;
     @apply bg-black text-white min-h-screen border-gray-950;
 }
 
