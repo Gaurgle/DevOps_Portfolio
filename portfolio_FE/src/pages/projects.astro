@@ -2,10 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CardProjects from "../components/CardProjects.tsx";
 ---
-<BaseLayout>
-    <div>
+<BaseLayout title="Projects" subtitles="Some of my projects" current="/projects">
+    <div transition:name="projects-grid">
         <CardProjects client:load />
-
     </div>
 </BaseLayout>
 <p>projects</p>
