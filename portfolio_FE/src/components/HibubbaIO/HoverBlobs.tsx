@@ -21,7 +21,7 @@ export default function HoverBlobs({
                                        className = "",
                                        insetClass = "inset-0",
                                        blurClass = "blur-md",
-                                       colors = ["bg-purple-600/25", "bg-blue-500/20", "bg-pink-600/20"],
+                                       colors = ["bg-purple-600/25", "bg-blue-500/50", "bg-pink-600/50"],
                                        alwaysOn = false,
                                        contentClass = "",
                                        target,
@@ -47,10 +47,11 @@ export default function HoverBlobs({
         >
             {/* Blobs */}
             <span
-                className={`pointer-events-none absolute ${insetClass} z-0 transition duration-300 ease-out ${
-                    alwaysOn
-                        ? "opacity-100 scale-100"
-                        : "opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100"
+                className={`pointer-events-none absolute ${insetClass} z-0
+              transition-all duration-1000 ease-in-out
+              ${alwaysOn
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100"
                 }`}
             >
         <span className={`absolute inset-0 rounded-lg ${blurClass} ${colors[0]} mix-blend-multiply dark:mix-blend-screen animate-blob`} />
