@@ -14,9 +14,9 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
                                                    className,
                                                    length = 200,
                                                    duration = 10,
-                                                   colorFrom = "#0080ff",
-                                                   colorVia = "#8803f4",
-                                                   colorTo = "#ff0062",
+                                                   colorFrom = "#ffdd00",
+                                                   colorVia = "#dc03f4",
+                                                   colorTo = "#1aff00",
                                                }) => {
     const fadeLength = Math.round(length * 0.85);
     const blurAmount = Math.round(length * 0.25);

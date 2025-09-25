@@ -48,9 +48,9 @@ export default function ProjectCards() {
                         </div>
 
                         {/* Divider */}
-                        <div className="h-[200px] w-px bg-gray-800 ml-1.5 self-center"></div>
-                        <div className="h-[180px] w-px bg-gray-800 opacity-100 ml-1 self-center"></div>
-                        <div className="h-[160px] w-px bg-gray-900 mx-1 self-center"></div>
+                        {/*<div className="h-[200px] w-px bg-gray-800 ml-1.5 self-center"></div>*/}
+                        <div className="h-[180px] w-px bg-gray-800 opacity-100 ml-2 self-center"></div>
+                        {/*<div className="h-[160px] w-px bg-gray-900 mx-1 self-center"></div>*/}
 
                         {/* Right: Text */}
                         <div className="flex flex-col justify-center p-4 w-2/3">
