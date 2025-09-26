@@ -53,6 +53,11 @@ jobs:
       - name: Configure Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Install psql client
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y postgresql-client
+
       - name: Wait for Postgres
         run: |
           for i in {1..30}; do
@@ -62,6 +67,11 @@ jobs:
 
       - name: Build & test (uses Postgres)
         env:
+          # Spring-native vars (Spring Boot auto-binds these)
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/portfolio
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: password
+          # Your fallback vars (used in application.properties defaults)
           DB_URL: jdbc:postgresql://localhost:5432/portfolio
           DB_USER: postgres
           DB_PASSWORD: password
