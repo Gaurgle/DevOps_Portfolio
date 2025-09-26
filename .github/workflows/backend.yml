@@ -20,6 +20,21 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: portfolio
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d portfolio"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=20
+
     defaults:
       run:
         working-directory: portfolio_BE
@@ -35,11 +50,21 @@ jobs:
           java-version: '21'
           cache: gradle
 
-      # Gradle
       - name: Configure Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build & test
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            pg_isready -h 127.0.0.1 -p 5432 -U postgres -d portfolio && break
+            echo "Postgres not ready yet... ($i)"; sleep 2
+          done
+
+      - name: Build & test (uses Postgres)
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/portfolio
+          DB_USER: postgres
+          DB_PASSWORD: password
         run: ./gradlew --no-daemon clean build
 
       - name: Upload test report (always)
