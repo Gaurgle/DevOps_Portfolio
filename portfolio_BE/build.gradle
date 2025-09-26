@@ -30,6 +30,7 @@ dependencies {
 
     // DB & migrations
     implementation 'org.flywaydb:flyway-core:11.10.0'
+    implementation 'org.flywaydb:flyway-database-postgresql'
     runtimeOnly 'org.postgresql:postgresql'
     implementation("org.postgresql:postgresql:42.7.4")
 
