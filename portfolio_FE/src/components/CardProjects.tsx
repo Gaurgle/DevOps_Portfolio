@@ -43,13 +43,13 @@ export default function ProjectCards() {
                             <img
                                 src={project.image}
                                 alt={project.title}
-                                className="object-cover h-full w-full"
+                                className="object-cover h-full w-full transition duration-300 ease-in-out filter group-hover:filter-none blur-sm sm:group-hover:blur-0 grayscale group-hover:grayscale-0"
                             />
                         </div>
 
                         {/* Divider */}
                         {/*<div className="h-[200px] w-px bg-gray-800 ml-1.5 self-center"></div>*/}
-                        <div className="h-[180px] w-px bg-gray-800 opacity-100 ml-2 self-center"></div>
+                        <div className="h-[180px] w-px bg-gray-700 opacity-100 ml-2 self-center"></div>
                         {/*<div className="h-[160px] w-px bg-gray-900 mx-1 self-center"></div>*/}
 
                         {/* Right: Text */}
