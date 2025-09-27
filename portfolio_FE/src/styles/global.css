@@ -41,9 +41,9 @@ body {
     color: white;
     padding: 1rem;
     border-radius: 4px;
-    margin-bottom: 1rem;
-    font-size: 1.0rem;
-    font-weight: 100;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 60;
 
 }.sidebar {
     @apply bg-black border-solid ;

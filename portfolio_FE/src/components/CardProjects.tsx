@@ -37,13 +37,15 @@ export default function ProjectCards() {
             {projects.map((project, idx) => (
                 <div key={idx} className="relative group rounded-2xl">
                     {/* card content */}
-                    <div className="flex h-64 bg-white dark:bg-black rounded-2xl shadow-lg overflow-visible border-2 border-gray-950 dark:border-b-gray-950">
+                    <div className="flex h-[200px] w-[300px] bg-black dark:bg-black rounded-2xl shadow-lg overflow-visible border-2 border-gray-950 dark:border-b-gray-950">
                         {/* Left: Image */}
-                        <div className="w-[240px] min-w-[120px] rounded-2xl overflow-hidden">
+                        <div className="w-[180px] h-[180px] min-w-[180px] rounded-2xl overflow-hidden">
                             <img
                                 src={project.image}
                                 alt={project.title}
-                                className="object-cover h-full w-full transition duration-300 ease-in-out filter group-hover:filter-none blur-sm sm:group-hover:blur-0 grayscale group-hover:grayscale-0"
+                                className="object-cover h-full w-full transition duration-300
+                                ease-in-out filter group-hover:filter-none blur-sm
+                                sm:group-hover:blur-0 grayscale group-hover:grayscale-0"
                             />
                         </div>
 
