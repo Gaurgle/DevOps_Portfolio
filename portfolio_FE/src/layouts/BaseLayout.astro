@@ -14,17 +14,11 @@ const {title, description, current = "/"} = Astro.props;
     <title>Portfolio</title>
 </head>
 
-<script is:inline>
-    {
-        sidebarToggle
-    }
-</script>
-
 <body class="font-sans bg-black text-white">
 <ParticleBg client:load className="bg-behind"/>
 <ViewTransitions/>
 
-
+<!-- Sidebar -->
 <Sidebar/>
 
 <!-- GRID CONTAINER -->
@@ -42,10 +36,10 @@ const {title, description, current = "/"} = Astro.props;
         </div>
         <slot/>
     </main>
-
-    <script type="module">
-        import "/src/scripts/sidebar-toggle.ts";
-    </script>
 </div>
+
+<script type="module">
+    import "/src/scripts/sidebar-toggle.ts";
+</script>
 </body>
 </html>

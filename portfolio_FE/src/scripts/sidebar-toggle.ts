@@ -1,8 +1,6 @@
-// src/scripts/sidebar-toggle.ts
-document.addEventListener("DOMContentLoaded", () => {
+function init() {
     const sidebar = document.getElementById("sidebar");
     const toggleButton = document.getElementById("sidebar-toggle");
-
     if (!sidebar || !toggleButton) return;
 
     const setState = (open: boolean) => {
@@ -15,14 +13,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Initial: closed on mobile, open on desktop
+    // Closed on mobile, open on desktop
     const mq = window.matchMedia("(min-width: 768px)");
     setState(mq.matches);
-
     mq.addEventListener("change", (e) => setState(e.matches));
 
     toggleButton.addEventListener("click", () => {
         const isHidden = sidebar.getAttribute("aria-hidden") === "true";
         setState(isHidden);
     });
-});
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+} else {
+    init();
+}
