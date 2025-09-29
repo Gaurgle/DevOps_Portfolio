@@ -1,40 +1,47 @@
-// src/scripts/SidebarToggle.ts
-function initSidebarToggle() {
-    const sidebar = document.getElementById('sidebar');
-    const toggleButton = document.getElementById('sidebarToggle') as HTMLButtonElement | null;
+export function initSidebarToggle() {
+    const sidebar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("sidebarToggle"); // <-- id must match
 
-    if (!sidebar || !toggleButton) {
-        console.warn('[SidebarToggle] sidebar or button not found');
-        return;
+    if (!sidebar || !toggleButton) return;
+
+    const iconHamburger = `
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>`;
+    const iconClose = `
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"/>
+    </svg>`;
+
+    function setState(open: boolean) {
+        if (open) {
+            sidebar.classList.remove("-translate-x-full");
+            sidebar.setAttribute("aria-hidden", "false");
+            toggleButton.innerHTML = iconClose;
+        } else {
+            sidebar.classList.add("-translate-x-full");
+            sidebar.setAttribute("aria-hidden", "true");
+            toggleButton.innerHTML = iconHamburger;
+        }
     }
 
-    const setState = (open: boolean) => {
-        if (open) {
-            sidebar.classList.remove('-translate-x-full');
-            sidebar.setAttribute('aria-hidden', 'false');
-            toggleButton.textContent = 'Close Menu';
-        } else {
-            sidebar.classList.add('-translate-x-full');
-            sidebar.setAttribute('aria-hidden', 'true');
-            toggleButton.textContent = 'Open Menu';
-        }
-    };
+    // Initial: closed on mobile, open on desktop
+    const mq = window.matchMedia("(min-width: 768px)");
+    setState(mq.matches); // true on desktop, false on mobile
 
-    // Open on ≥ md (768px), closed on mobile
-    const mq = window.matchMedia('(min-width: 768px)');
-    setState(mq.matches);
-    mq.addEventListener('change', (e) => setState(e.matches));
+    // Keep state in sync across breakpoint
+    mq.addEventListener("change", (e) => setState(e.matches));
 
-    toggleButton.addEventListener('click', () => {
-        const isHidden = sidebar.getAttribute('aria-hidden') === 'true';
+    // Toggle on click
+    toggleButton.addEventListener("click", () => {
+        const isHidden = sidebar.getAttribute("aria-hidden") === "true";
         setState(isHidden);
     });
 }
 
-// Run after DOM is ready (safe even with script at end of <body>)
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSidebarToggle);
-} else {
-    initSidebarToggle();
-}
-console.log('[SidebarToggle] script loaded');
+// Optional: auto-init if you import as a module file
+initSidebarToggle();
