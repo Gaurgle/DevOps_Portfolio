@@ -15,7 +15,9 @@ const {title, description, current = "/"} = Astro.props;
 </head>
 
 <script is:inline>
-    {sidebarToggle}
+    {
+        sidebarToggle
+    }
 </script>
 
 <body class="font-sans bg-black text-white">
@@ -40,8 +42,10 @@ const {title, description, current = "/"} = Astro.props;
         </div>
         <slot/>
     </main>
+
+    <script type="module">
+        import "/src/scripts/sidebar-toggle.ts";
+    </script>
 </div>
 </body>
 </html>
-
-<script type="module" src={Astro.resolve("../scripts/sidebar-toggle.ts")}></script>
