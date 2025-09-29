@@ -14,8 +14,8 @@ const {title, description, current = "/"} = Astro.props;
     <title>Portfolio</title>
 </head>
 
-<body class="font-sans bg-black text-white">
-<ParticleBg client:load className="bg-behind"/>
+<body class="font-sans bg-black text-white relative">
+´
 <ViewTransitions/>
 
 <!-- Sidebar -->
@@ -25,7 +25,7 @@ const {title, description, current = "/"} = Astro.props;
 <div class="min-h-screen md:ml-64">
 
     <!-- BANNER -->
-    <header class="fixed inset-x-0 top-0 z-50 md:ml-64">
+    <header class="fixed inset-x-0 top-0 z-50 md:ml-64 pointer-events-auto">
         <Banner/>
     </header>
 
