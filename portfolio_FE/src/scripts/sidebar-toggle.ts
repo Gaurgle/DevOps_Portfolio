@@ -1,7 +1,7 @@
 // src/scripts/sidebar-toggle.ts
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
-    const toggleButton = document.getElementById("sidebarToggle");
+    const toggleButton = document.getElementById("sidebar-toggle");
 
     if (!sidebar || !toggleButton) return;
 
