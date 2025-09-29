@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/projects")
 class PortfolioProjectController(
     private val portfolioProjectService: PortfolioProjectService
-) {
+) {it pull
     @GetMapping
     fun getAllProjects(): List<PortfolioProject> =
         portfolioProjectService.getAllProjects()
