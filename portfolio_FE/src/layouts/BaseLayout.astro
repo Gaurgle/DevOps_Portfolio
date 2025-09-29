@@ -15,14 +15,14 @@ const {title, description, current = "/"} = Astro.props;
 </head>
 
 <body class="font-sans bg-black text-white relative">
-´
+<ParticleBg client:load className="bg-behind pointer-events-none" />
 <ViewTransitions/>
 
 <!-- Sidebar -->
 <Sidebar/>
 
 <!-- GRID CONTAINER -->
-<div class="min-h-screen md:ml-64">
+<div class="relative z-10 min-h-screen md:ml-64">
 
     <!-- BANNER -->
     <header class="fixed inset-x-0 top-0 z-50 md:ml-64 pointer-events-auto">
@@ -30,7 +30,7 @@ const {title, description, current = "/"} = Astro.props;
     </header>
 
     <!-- MAIN (scrolls; important: min-h-0) -->
-    <main class="min-h-0 overflow-y-auto p-4 md:p-6">
+    <main class="relative z-10 min-h-0 overflow-y-auto p-4 md:p-6 pt-[80px] md:pt-[120px]">
         <div class="hero mb-4">
             <slot name="hero"/>
         </div>
