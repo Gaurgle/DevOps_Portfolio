@@ -5,6 +5,7 @@ import "../styles/global.css";
 import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
 import ParticleBg from "../components/HibubbaIO/ParticleBg";
+import sidebarToggle from "../scripts/sidebar-toggle.ts?raw";
 const {title, description, current = "/"} = Astro.props;
 ---
 <!DOCTYPE html>
@@ -13,6 +14,10 @@ const {title, description, current = "/"} = Astro.props;
     <CommonHead {title}/>
     <title>Portfolio</title>
 </head>
+
+<script is:inline>
+    {sidebarToggle}
+</script>
 
 <body class="font-sans bg-black text-white">
 <ParticleBg client:load className="bg-behind"/>
