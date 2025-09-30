@@ -37,7 +37,7 @@ export default function ProjectCards() {
             {projects.map((project, idx) => (
                 <div key={idx} className="relative group rounded-2xl">
                     {/* card content */}
-                    <div className="flex h-[200px] w-[300px] bg-black dark:bg-black rounded-2xl shadow-lg overflow-visible border-2 border-gray-950 dark:border-b-gray-950">
+                    <div className="flex h-[200px] w-[300px] bg-black dark:bg-black rounded-2xl shadow-lg overflow-hidden border-2 border-gray-950 dark:border-b-gray-950">
                         {/* Left: Image */}
                         <div className="w-[180px] h-[180px] min-w-[180px] rounded-2xl overflow-hidden">
                             <img
