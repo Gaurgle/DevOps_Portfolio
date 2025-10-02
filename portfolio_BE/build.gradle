@@ -42,7 +42,6 @@ dependencies {
     // Email (Brevo)
     implementation("com.sendinblue:sib-api-v3-sdk:7.0.0")
 
-
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -50,6 +49,15 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.19.7")
     testImplementation("org.testcontainers:postgresql:1.19.7")
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Logging (fr lektion)
+    implementation("management.endpoints.web.exposure:include=*")
+    implementation("management.endpoints.health:show-details=always")
+        //SLF4J:
+    implementation 'org.slf4j:slf4j-api:2.0.12'
+    implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
 
 }
 
