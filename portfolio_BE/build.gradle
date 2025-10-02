@@ -22,44 +22,34 @@ repositories {
 
 dependencies {
     // Spring
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    // DB & migrations
-    implementation 'org.flywaydb:flyway-core:11.10.0'
-    implementation 'org.flywaydb:flyway-database-postgresql'
-    runtimeOnly 'org.postgresql:postgresql'
-    implementation("org.postgresql:postgresql:42.7.4")
-
-    // Kotlin/Jackson
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
-
-
-    // Email (Brevo)
-    implementation("com.sendinblue:sib-api-v3-sdk:7.0.0")
-
-    // Test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation("org.testcontainers:junit-jupiter:1.19.7")
-    testImplementation("org.testcontainers:postgresql:1.19.7")
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-
-    // Logging (fr lektion)
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Metrics (Prometheus -> Grafana)
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
-    //SLF4J:
-    implementation 'org.slf4j:slf4j-api:2.0.12'
-    implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
-    implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
-    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
+    // DB & migrations
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+    runtimeOnly    'org.postgresql:postgresql'   // keep only ONE postgres dep
+
+    // Kotlin/Jackson
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+
+    // Email (Brevo)
+    implementation 'com.sendinblue:sib-api-v3-sdk:7.0.0'
+
+    // Tests
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'io.mockk:mockk:1.13.11'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
+    testImplementation 'org.testcontainers:postgresql:1.19.7'
+    testRuntimeOnly  'org.junit.platform:junit-platform-launcher'
 
 }
 
