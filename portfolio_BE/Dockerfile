@@ -2,19 +2,18 @@
 FROM eclipse-temurin:21-jdk AS builder
 WORKDIR /app
 
-# Copy wrapper + build files first
+# Copy wrapper + Gradle build files first (cache-friendly).
+# Wildcards handle Groovy/Kotlin DSL (build.gradle / build.gradle.kts)
 COPY gradlew gradlew
 COPY gradle gradle
-COPY build.gradle build.gradle
-COPY build.gradle.kts build.gradle.kts
-COPY settings.gradle settings.gradle
-COPY settings.gradle.kts settings.gradle.kts
+COPY build.gradle* ./
+COPY settings.gradle* ./
 
-# Make wrapper executable & prime Gradle
+# Make wrapper executable & warm Gradle cache
 RUN chmod +x ./gradlew
 RUN ./gradlew --no-daemon help || true
 
-# Copy the rest of the project
+# Copy the rest and build
 COPY . .
 RUN ./gradlew --no-daemon clean bootJar
 
