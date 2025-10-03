@@ -1,9 +1,16 @@
+# Help docs
 HELP.md
+
+# Gradle
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+# Spring Boot configs
+application-local.properties
+applicatio-local.yml
 
 ### STS ###
 .apt_generated
@@ -39,12 +46,7 @@ out/
 ### Kotlin ###
 .kotlin
 
-### Spring boot ###
-application-local.properties
-application-*.properties
-application-*.yaml
-
-### Logs ###
+# Logs
 *.log
 
 ### OS ###
