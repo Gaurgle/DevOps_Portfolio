@@ -2,8 +2,8 @@
 FROM eclipse-temurin:21-jdk AS builder
 WORKDIR /app
 
-# Copy wrapper + build files first (cache-friendly).
-# Wildcards handle either Groovy or Kotlin DSL (build.gradle / build.gradle.kts)
+# Copy wrapper + Gradle build files first (cache-friendly).
+# Wildcards handle Groovy/Kotlin DSL (build.gradle / build.gradle.kts)
 COPY gradlew gradlew
 COPY gradle gradle
 COPY build.gradle* ./
