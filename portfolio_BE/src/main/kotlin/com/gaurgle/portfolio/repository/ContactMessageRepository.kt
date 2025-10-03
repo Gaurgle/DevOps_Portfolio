@@ -1,4 +1,6 @@
 package com.gaurgle.portfolio.repository
 
-interface ContactMessageRepository {
-}
+import com.gaurgle.portfolio.entities.ContactMessage
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface ContactMessageRepository : JpaRepository<ContactMessage, Long>
