@@ -1,4 +1,4 @@
-CREATE TABLE contact_messages (
+CREATE TABLE IF NOT EXISTS contact_messages (
   id            BIGSERIAL PRIMARY KEY,
   name          TEXT NOT NULL,
   email         TEXT NOT NULL,
