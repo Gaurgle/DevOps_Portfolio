@@ -15,10 +15,10 @@ class SecurityConfig {
         http
             .authorizeHttpRequests { auth ->
                 auth
-                    // allow actuator health/metrics/prometheus without auth
                     .requestMatchers(
-                        EndpointRequest.to("health", "metrics", "prometheus")
-                    ).permitAll()
+                        EndpointRequest.to("health", "metrics", "prometheus")).permitAll()
+
+                    .requestMatchers("/api/**").permitAll()
                     .anyRequest().authenticated()
             }
             .httpBasic(Customizer.withDefaults())

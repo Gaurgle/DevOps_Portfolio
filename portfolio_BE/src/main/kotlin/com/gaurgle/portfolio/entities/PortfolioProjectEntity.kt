@@ -7,7 +7,7 @@ import java.time.Instant
 
 @Entity
 @Table(name = "portfolio_projects")
-data class PortfolioProject (
+data class PortfolioProjectEntity (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,11 +16,14 @@ data class PortfolioProject (
     @Column(name = "project_name", nullable = false)
     val projectName: String,
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description")
     val description: String? = null,
 
-    val thumbnail: String,
-    val screenshot: String,
+    @Column(name = "thumbnail")
+    val thumbnail: String? = null,
+
+    @Column(name = "screenshot")
+    val screenshot: String? = null,
 
     @Column(name = "repo_url")
     val repoUrl: String? = null,

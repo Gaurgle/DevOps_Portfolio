@@ -22,7 +22,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:16-alpine   # was 17-alpine earlier
         env:
           POSTGRES_DB: portfolio
           POSTGRES_USER: postgres
@@ -74,6 +74,7 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/portfolio
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: password
+          SPRING_PROFILES_ACTIVE: test # <-- remember
 
           DB_URL: jdbc:postgresql://localhost:5432/portfolio
           DB_USER: postgres

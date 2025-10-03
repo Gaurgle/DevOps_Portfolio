@@ -1,36 +1,30 @@
 package com.gaurgle.portfolio.service
 
-import com.gaurgle.portfolio.entities.PortfolioProject
+import com.gaurgle.portfolio.entities.PortfolioProjectEntity
 import com.gaurgle.portfolio.repository.PortfolioProjectRepository
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class PortfolioProjectService(
     private val portfolioProjectRepository: PortfolioProjectRepository
 ) {
 
-    fun getAllProjects(): List<PortfolioProject> {
+    fun getAllProjects(): List<PortfolioProjectEntity> {
         return portfolioProjectRepository.findAll()
     }
 
-    fun getProjectById(id: Long): PortfolioProject? {
-        return portfolioProjectRepository.findById(id).orElse(null)
-    }
+    fun getProjectById(id: Long): PortfolioProjectEntity =
+        portfolioProjectRepository.findByIdOrNull(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "project $id not found")
 
-    @Transactional
-    fun createProject(project: PortfolioProject): PortfolioProject {
-        return portfolioProjectRepository.save(project)
-    }
-
-    @Transactional
-    fun updateProject(id: Long, project: PortfolioProject): PortfolioProject {
-        val updated = project.copy(id = id)
-        return portfolioProjectRepository.save(project)
-    }
 
     @Transactional
     fun deleteProject(id: Long) {
+        getProjectById((id))
         portfolioProjectRepository.deleteById(id)
     }
 }

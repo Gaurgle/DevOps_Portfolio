@@ -1,12 +1,27 @@
-# Bygg med Gradle i en första stage
-FROM gradle:8.10-jdk17 AS builder
-WORKDIR /home/gradle/project
-COPY . .
-RUN gradle bootJar --no-daemon
-
-# Kör appen i en minimal JDK-bild
-FROM openjdk:17-jdk-slim
+# ---------- Build stage ----------
+FROM eclipse-temurin:21-jdk AS builder
 WORKDIR /app
-COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
+
+# Copy wrapper + build files first
+COPY gradlew gradlew
+COPY gradle gradle
+COPY build.gradle build.gradle
+COPY build.gradle.kts build.gradle.kts
+COPY settings.gradle settings.gradle
+COPY settings.gradle.kts settings.gradle.kts
+
+# Make wrapper executable & prime Gradle
+RUN chmod +x ./gradlew
+RUN ./gradlew --no-daemon help || true
+
+# Copy the rest of the project
+COPY . .
+RUN ./gradlew --no-daemon clean bootJar
+
+# ---------- Runtime stage ----------
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=builder /app/build/libs/*.jar app.jar
+ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxRAMPercentage=75"
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh","-c","java $JAVA_OPTS -jar app.jar"]
