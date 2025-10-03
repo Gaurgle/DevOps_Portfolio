@@ -1,0 +1,30 @@
+# Ignore build artifacts
+build/
+out/
+bin/
+.gradle/
+
+# Ignore Git
+.git/
+.gitignore
+
+# Ignore IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Frontend project (if in same repo)
+portfolio_FE/
+
+# Docker itself
+Dockerfile
+.dockerignore
