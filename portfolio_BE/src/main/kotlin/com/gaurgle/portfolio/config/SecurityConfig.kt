@@ -18,7 +18,7 @@ class SecurityConfig {
                     .requestMatchers(
                         EndpointRequest.to("health", "metrics", "prometheus")).permitAll()
 
-                    .requestMatchers("/api/**").permitAll()
+                    .requestMatchers("/actuator/health","/api/**").permitAll()
                     .anyRequest().authenticated()
             }
             .httpBasic(Customizer.withDefaults())
