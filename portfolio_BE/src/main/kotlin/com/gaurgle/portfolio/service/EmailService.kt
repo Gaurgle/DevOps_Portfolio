@@ -2,32 +2,52 @@ package com.gaurgle.portfolio.service
 
 import com.gaurgle.portfolio.config.EmailSettings
 import org.springframework.stereotype.Service
+import sendinblue.ApiClient
+import sendinblue.Configuration
+import sendinblue.auth.ApiKeyAuth
+import sibApi.TransactionalEmailsApi
+import sibModel.SendSmtpEmail
+import sibModel.SendSmtpEmailSender
+import sibModel.SendSmtpEmailTo
 
 interface EmailService {
-    fun sendContactEmail(name: String, email: String, message: String) {
-    }
+    fun sendContactEmail(
+        name: String,
+        email: String,
+        message: String
+    )
+}
 
-    @Service
-    class EmailServiceImp(
-        private val settings: EmailSettings
-    ) : EmailService
+@Service
+class EmailServiceImpl(
+    private val settings: EmailSettings
+) : EmailService {
 
-    override fun sendCotactEmail(name: String, email: String, message: String) {
+    override fun sendContactEmail(
+        name: String,
+        email: String,
+        message: String
+    ) {
         if (!settings.enabled) {
-            println("[EmailService] Disabled. Wpuld send to ${settings.to} Subject:New contact from $name")
+            println("[EmailService] Disabled. Would send to ${settings.to} | Subject:New contact from $name")
             return
         }
         require(settings.apiKey.isNotBlank()) { "BREVO_API_KEY is missing" }
         require(settings.to.isNotBlank()) { "app.email.to is missing" }
         require(settings.from.isNotBlank()) { "app.email.fromAddress is missing" }
 
-        val client = sibApi.ApiClient().apply() {
-            setApiKey("api-key", settings.apiKey)
-        }
-        val api = sibApi.TransactionalEmailsApi(client)
+        val client: ApiClient = Configuration.getDefaultApiClient()
+        val apiKeyAuth = client.getAuthentication("api-key") as ApiKeyAuth
+        apiKeyAuth.apiKey = settings.apiKey
 
-        val from = sibModel.SendSmtpEmailSender().email(settings.from).name(settings.fromName)
-        val to = listOf(sibModel.SendSmptEmailTo().email.(settings.to))
+        val api = TransactionalEmailsApi(client)
+
+        val from = SendSmtpEmailSender()
+            .email(settings.from)
+            .name(settings.fromName)
+
+        val to = listOf(SendSmtpEmailTo().email(settings.to))
+
         val subject = "New contact message from $name"
         val html = """
             <h2>New contact</h2>
@@ -36,19 +56,16 @@ interface EmailService {
             <pre style="white-space:pre-wrap">${'$'}{escape(message)}</pre>
         """.trimIndent()
 
-        val mail = sibModel.SendSmtpEmail().sender(from).to(to).subject(subject).htmlContent(html)
+        val mail = SendSmtpEmail()
+            .sender(from)
+            .to(to)
+            .subject(subject)
+            .htmlContent(html)
             .replyTo(sibModel.SendSmtpEmailReplyTo().email(email).name(name))
 
         api.sendTransacEmail(mail)
     }
 
-    privater
-    fun escape(s: String) =
-        s.replace("&", "&a,p;").replace("<", "&lt;").replace(">", "&gt;")
-}
-
-
-
-
-    }
+    private fun escape(s: String) =
+        s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 }
