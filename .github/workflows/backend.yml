@@ -22,18 +22,18 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16-alpine   # was 17-alpine earlier
+        image: postgres:16
         env:
           POSTGRES_DB: portfolio
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_USER: portfolio
+          POSTGRES_PASSWORD: portfolio
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U postgres -d portfolio"
+          --health-cmd="pg_isready -U portfolio -d portfolio"
           --health-interval=5s
           --health-timeout=3s
-          --health-retries=20
+          --health-retries=30
 
     defaults:
       run:
@@ -50,35 +50,25 @@ jobs:
           java-version: '21'
           cache: gradle
 
-      - name: Configure Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
-      - name: Install psql client
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y postgresql-client
 
       - name: Wait for Postgres
         run: |
-          for i in {1..30}; do
-            pg_isready -h 127.0.0.1 -p 5432 -U postgres -d portfolio && break
-            echo "Postgres not ready yet... ($i)"; sleep 2
+          for i in {1..60}; do
+            pg_isready -h 127.0.0.1 -p 5432 -U portfolio -d portfolio && break
+            echo "Postgres not ready yet ($i)"; sleep 2
           done
 
-      - name: Build
+      - name: Build (assemble JAR)
         run: ./gradlew --no-daemon clean assemble
 
-      - name: Run tests (uses Postgres)
+      - name: Test (uses CI datasource)
         env:
-
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/portfolio
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: password
-          SPRING_PROFILES_ACTIVE: test # <-- remember
-
-          DB_URL: jdbc:postgresql://localhost:5432/portfolio
-          DB_USER: postgres
-          DB_PASSWORD: password
+          SPRING_DATASOURCE_USERNAME: portfolio
+          SPRING_DATASOURCE_PASSWORD: portfolio
+          SPRING_PROFILES_ACTIVE: ci
         run: ./gradlew --no-daemon test
 
       - name: Upload test report (always)
