@@ -9,7 +9,9 @@ build/
 !**/src/test/**/build/
 
 # Spring Boot configs
-application-local.properties
+## DON'T .gitignore application-local.properties
+## when using .enc.local.properties
+### -> application-local.properties
 applicatio-local.yml
 
 ### STS ###
@@ -58,3 +60,4 @@ portfolio_FE/
 
 # Env
 .env
+.env.local.properties
