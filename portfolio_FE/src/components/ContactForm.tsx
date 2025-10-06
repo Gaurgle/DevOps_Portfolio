@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+console.log("API_BASE =", API_BASE);
 
 export default function ContactForm() {
     const [form, setForm] = useState({
