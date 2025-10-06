@@ -53,13 +53,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Wait for Postgres
-        run: |
-          for i in {1..60}; do
-            pg_isready -h 127.0.0.1 -p 5432 -U portfolio -d portfolio && break
-            echo "Postgres not ready yet ($i)"; sleep 2
-          done
-
       - name: Build (assemble JAR)
         run: ./gradlew --no-daemon clean assemble
 
