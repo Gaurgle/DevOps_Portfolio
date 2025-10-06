@@ -31,11 +31,16 @@ class SecurityConfig {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val cfg = CorsConfiguration().apply {
-            // use allowedOriginPatterns to avoid exact-origin issues
-            allowedOriginPatterns = listOf("http://localhost:5173", "https://*.vercel.app")
+            // Allow your local FE and your deployed FE
+            allowedOriginPatterns = listOf(
+                "http://localhost:4321",  // Astro dev default
+                "http://localhost:5173",  // Vite
+                "https://andreasroos.vercel.app"    // deployed FE
+            )
             allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
             allowedHeaders = listOf("*")
             allowCredentials = true
+            maxAge = 3600
         }
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", cfg)

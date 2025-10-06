@@ -1,6 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.tsx";
 ---
-<BaseLayout title="Contact" subtitles="Contact me" current="/contact">
+
+<BaseLayout title="Contact" description="Contact me" current="/contact">
+    <h1 slot="hero">Contact me</h1>
+
+    <ContactForm client:load />
 </BaseLayout>
-<p>contact</p>
