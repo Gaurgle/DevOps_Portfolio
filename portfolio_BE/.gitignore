@@ -55,3 +55,6 @@ Thumbs.db
 
 # Ignore local frontend project
 portfolio_FE/
+
+# Env
+.env
