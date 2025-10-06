@@ -4,11 +4,16 @@ import com.gaurgle.portfolio.entities.ContactMessage
 import com.gaurgle.portfolio.repository.ContactMessageRepository
 import com.gaurgle.portfolio.service.EmailService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-data class ContactRequest(val name: String,
-                          val email: String,
-                          val message: String)
+data class ContactRequest(
+    val name: String,
+    val email: String,
+    val message: String
+)
 
 @RestController
 @RequestMapping("/api")
@@ -18,11 +23,18 @@ class ContactMessageController(
 ) {
     @PostMapping("/contact")
     fun create(@RequestBody body: ContactRequest): ResponseEntity<Map<String, Any>> {
-        val saved = repo.save(ContactMessage(
-            name = body.name,
-            email = body.email,
-            message = body.message
-        ))
+        val saved = repo.save(
+            ContactMessage(
+                name = body.name,
+                email = body.email,
+                message = body.message
+            )
+        )
+
+        runCatching {
+            emailService.sendContactEmail(body.name, body.email, body.message)
+        }.onFailure { e -> println("[EmailService] send failed: ${e.message}") }
+
         return ResponseEntity.status(201).body(mapOf("id" to saved.id, "status" to "ok"))
     }
 }
