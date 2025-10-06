@@ -26,5 +26,3 @@ Thumbs.db
 portfolio_FE/
 
 # Docker itself
-Dockerfile
-.dockerignore
