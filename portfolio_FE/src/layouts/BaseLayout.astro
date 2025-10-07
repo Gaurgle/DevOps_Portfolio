@@ -18,16 +18,16 @@ const {title, description, current = "/"} = Astro.props;
 <ParticleBg client:load className="bg-behind pointer-events-none" />
 <ViewTransitions/>
 
-<!-- Sidebar -->
+<!-- BANNER -->
+<header class="fixed inset-x-0 top-0 z-50 pointer-events-auto">
+    <Banner/>
+</header>
+
+<!-- SIDEBAR -->
 <Sidebar/>
 
 <!-- GRID CONTAINER -->
-<div class="relative z-10 min-h-screen md:ml-64">
-
-    <!-- BANNER -->
-    <header class="fixed inset-x-0 top-0 z-50 md:ml-64 pointer-events-auto">
-        <Banner/>
-    </header>
+<div class="relative z-20 min-h-screen md:ml-64">
 
     <!-- MAIN (scrolls; important: min-h-0) -->
     <main class="relative z-10 min-h-screen p-4 md:p-6 pt-[80px] md:pt-[120px] pb-60">

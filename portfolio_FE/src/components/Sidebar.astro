@@ -8,9 +8,9 @@ const {current = "/"} = Astro.props;
 <aside
         id="sidebar"
         aria-hidden="true"
-        class="fixed left-0 top-0 z-40 h-screen w-64 bg-gray-900
-            transform transition-transform duration-300
-            -translate-x-full md:translate-x-0">
+        class="fixed left-0 top-[80px] z-40 h-[calc(100vh-80px)] w-54 bg-gray-900
+         transform transition-transform duration-300
+         -translate-x-full md:translate-x-0">
 
 
     <nav class=" relative h-full space-y-1 bg-black p-10 rounded-lg px-10 pt-20 md:pt-10">
@@ -28,7 +28,7 @@ const {current = "/"} = Astro.props;
 
         <!-- Divider -->
         <div class="flex justify-center items-center space-y-2 overflow-visible w-[100px]">
-            <div class="h-px w-[700px] bg-gray-800 mt-[2px]"></div>
+            <div class="h-px w-[700px] bg-gray-600 mt-[3px]"></div>
         </div>
 
         <!-- Social -->

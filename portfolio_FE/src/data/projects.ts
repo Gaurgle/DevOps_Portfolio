@@ -4,7 +4,7 @@ export const projects = [
     "tagline": "JS, CSS, HTML, Java, MySQL",
     "description": "webshop sdescription.",
     "image": "https://picsum.photos/200?random=1",
-    "link": "https://github.com/gaurgle/DevOps_Portfolio/tree/main/portfolio_FE",
+    "link": "https://github.com/gaurgle/DevOps_Portfolio/",
     // "demoUrl": "https://andreasroos.vercel.app",
     // "order": 1
   },
