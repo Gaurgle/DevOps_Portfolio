@@ -1,35 +1,7 @@
 // src/components/Portfolio/ProjectCards.tsx
 import React from "react";
 import BorderBeam from "./HibubbaIO/BorderBeam.tsx";
-
-const projects = [
-    {
-        title: "Project one",
-        description: "info about this project",
-        image: "https://picsum.photos/200",
-        link: "#",
-    },
-    {
-        title: "Project two",
-        description: "info about this project",
-        image: "https://picsum.photos/200" +"1",
-        link: "#",
-    },
-    {
-        title: "Project three",
-        description: "info about this project",
-        image: "https://picsum.photos/200" +"2",
-        link: "#",
-    },
-    {
-        title: "Project four",
-        description: "info about this project",
-        image: "https://picsum.photos/200" +"3",
-        link: "#",
-    },
-    
-    
-];
+import { projects } from "/Users/at-a/Documents/GitHub/JAVA24/DevOps_Portfolio/portfolio_FE/src/data/projects.ts";
 
 export default function ProjectCards() {
     return (
@@ -62,6 +34,8 @@ export default function ProjectCards() {
                             </p>
                             <a
                                 href={project.link}
+                                target={"_blank"}
+                                rel="noopener noreferrer"
                                 className="text-sm font-medium text-white hover:underline"
                             >
                                 View Project →
