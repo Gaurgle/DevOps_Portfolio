@@ -1,6 +1,6 @@
 export const projects = [
   {
-    "title": "Webshop",
+    "projectTitle": "Webshop",
     "tagline": "JS, CSS, HTML, Java, MySQL",
     "description": "webshop sdescription.",
     "image": "https://picsum.photos/200?random=1",
@@ -9,7 +9,7 @@ export const projects = [
     // "order": 1
   },
   {
-    "title": "15 Game",
+    "projectTitle": "15 Game",
     "description": "Puzzle game written in Java with Swing. Utilizing a built in audio converter for playing in game audio music and effects",
     "image": "https://picsum.photos/200?random=2",
     "link": "https://github.com/Gaurgle/15-game/",
@@ -17,7 +17,7 @@ export const projects = [
     // "order": 2
   },
   {
-    "title": "Quiz game",
+    "projectTitle": "Quiz game",
     "description": "Quiz game, practicing serialization, local database and serverSocket for multiplayer",
     "image": "https://picsum.photos/200?random=3",
     "link": "https://github.com/cfrank3N/quiz-game",
@@ -25,7 +25,7 @@ export const projects = [
     // "order": 3
   },
   {
-    "title": "portfolio_BE",
+    "projectTitle": "portfolio_BE",
     "description": ".",
     "image": "https://picsum.photos/200?random=4",
     "link": "https://github.com/gaurgle/DevOps_Portfolio/",
