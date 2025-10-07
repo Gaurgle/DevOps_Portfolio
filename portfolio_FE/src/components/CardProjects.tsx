@@ -1,46 +1,44 @@
-// src/components/Portfolio/ProjectCards.tsx
 import React from "react";
 import BorderBeam from "./HibubbaIO/BorderBeam.tsx";
 import { projects } from "/Users/at-a/Documents/GitHub/JAVA24/DevOps_Portfolio/portfolio_FE/src/data/projects.ts";
 
 export default function ProjectCards() {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, idx) => (
-                <div key={idx} className="relative group rounded-2xl">
-                    {/* card content */}
-                    <div className="flex h-[200px] w-[300px] bg-black dark:bg-black rounded-2xl shadow-lg overflow-hidden border-2 border-gray-950 dark:border-b-gray-950">
-                        {/* Left: Image */}
-                        <div className="w-[180px] h-[180px] min-w-[180px] rounded-2xl overflow-hidden">
-                            <img
-                                src={project.image}
-                                alt={project.title}
-                                className="object-cover h-full w-full transition duration-300
-                                ease-in-out filter group-hover:filter-none blur-sm
-                                sm:group-hover:blur-0 grayscale group-hover:grayscale-0"
-                            />
-                        </div>
+                <div
+                    key={idx}
+                    className="relative group bg-black dark:bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden hover:border-yellow-500/50 transition-all"
+                >
+                    {/* Image */}
+                    <div className="h-48 w-full overflow-hidden">
+                        <img
+                            src={project.image}
+                            alt={project.title}
+                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105 group-hover:blur-0 blur-[1px] grayscale group-hover:grayscale-0"
+                        />
+                    </div>
 
-                        {/* Divider */}
-                        {/*<div className="h-[200px] w-px bg-gray-800 ml-1.5 self-center"></div>*/}
-                        <div className="h-[180px] w-px bg-gray-700 opacity-100 ml-2 self-center"></div>
-                        {/*<div className="h-[160px] w-px bg-gray-900 mx-1 self-center"></div>*/}
-
-                        {/* Right: Text */}
-                        <div className="flex flex-col justify-center p-4 w-2/3">
-                            <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    {/* Content */}
+                    <div className="p-5 flex flex-col justify-between h-[220px]">
+                        <div>
+                            <h3 className="text-lg font-semibold mb-2 text-white">
+                                {project.title}
+                            </h3>
+                            <p className="text-sm text-gray-400 mb-4 line-clamp-3">
                                 {project.description}
                             </p>
-                            <a
-                                href={project.link}
-                                target={"_blank"}
-                                rel="noopener noreferrer"
-                                className="text-sm font-medium text-white hover:underline"
-                            >
-                                View Project →
-                            </a>
                         </div>
+
+                        {/* Link */}
+                        <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-medium text-yellow-400 hover:underline self-start"
+                        >
+                            View Project →
+                        </a>
                     </div>
 
                     <BorderBeam className="rounded-2xl z-10" />
