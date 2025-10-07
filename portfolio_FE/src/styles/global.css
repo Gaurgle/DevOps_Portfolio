@@ -11,9 +11,10 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    height: 100%;
-    overflow: hidden;
+html, body {
+    min-height: 100%;
+    height: auto;
+    overflow-y: auto;
     @apply bg-black text-white min-h-screen border-gray-950;
 }
 

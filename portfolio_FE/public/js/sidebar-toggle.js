@@ -1,9 +1,10 @@
+// public/js/sidebar-toggle.js
 function init() {
     const sidebar = document.getElementById("sidebar");
     const toggleButton = document.getElementById("sidebar-toggle");
     if (!sidebar || !toggleButton) return;
 
-    const setState = (open: boolean) => {
+    const setState = (open) => {
         if (open) {
             sidebar.classList.remove("-translate-x-full");
             sidebar.setAttribute("aria-hidden", "false");
@@ -13,7 +14,6 @@ function init() {
         }
     };
 
-    // Closed on mobile, open on desktop
     const mq = window.matchMedia("(min-width: 768px)");
     setState(mq.matches);
     mq.addEventListener("change", (e) => setState(e.matches));

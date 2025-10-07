@@ -3,12 +3,12 @@
 import HoverBlobs from "./HibubbaIO/HoverBlobs.tsx";
 import StaticBlobs from "./HibubbaIO/StaticBlobs";
 ---
-<div class="py-6 relative z-40 bg-black" style="box-shadow: 1px 5px 10px rgba(255, 255, 255, 0.2);">
+<div class="py-6 relative z-40 bg-black">
     <nav class="flex items-center justify-between gap-4 px-4">
         <button
                 id="sidebar-toggle"
-                class="md:hidden fixed top-4 left-4 z-[60] p-2 rounded-lg bg-gray-800/80 backdrop-blur
-         border border-gray-700 hover:bg-gray-700 focus:outline-none"
+                class="md:hidden fixed top-5 left-4 z-[60] p-2 rounded-lg bg-gray-950 backdrop-blur transition-all duration-150
+         border border-black hover:bg-gray-800 focus:outline-none"
                 aria-label="Open menu"
         >
             <!-- hamburger icon -->
@@ -22,7 +22,6 @@ import StaticBlobs from "./HibubbaIO/StaticBlobs";
         <!-- Spacer -->
         <div class="hidden md:block flex-1"></div>
 
-        <!-- Desktop logo -->
         <div class="flex-1 md:flex-none text-right md:text-center">
             <!-- Mobile logo -->
             <StaticBlobs
