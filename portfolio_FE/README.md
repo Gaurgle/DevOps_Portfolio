@@ -1,8 +1,8 @@
-# Overview
+# 🤔 **Overview**
 This project is a frontend implemented using **Astro** and **React**. It employs modern web development practices to deliver a visually engaging and interactive user experience. Key components include reusable UI elements built with **React** and styled using **TailwindCSS** for utility-first styling.
 The main goal of the application is to provide a responsive and interactive interface that dynamically renders content based on configuration and user interaction, ensuring accessibility across devices and platforms.
 
-### Table of contents:
+### 🏓 **Table of contents:**
 - [Overview](#Overview)
 - [Features](#Features)
 - [Tech stack](#Tech)
@@ -12,25 +12,25 @@ The main goal of the application is to provide a responsive and interactive inte
 - [License](#Licsnse)
 
 
-### Features
+### 🐣 **Features**
 ##### Modern UI Design:
 - Utilizes React components like `HoverBlob` and `StaticBlobs` to add interactivity and animations for hoover effects and transitions.
 - Responsive layout implemented using [TailwindCSS](https://tailwindcss.com/) to maintain useability on all screen sizes.
 
-##### Nav bar:
+##### 🧑‍✈️ **Nav bar**
 - A sticky navigation bar built using Astro, React and Tailwind. It dynamically renders:
 	- Links to `Projects`, `About` and `Contact`
 	- Sociial media thumbnails for GitHub and LinkedIn.
 - Hover effects and animations for links and social icons are handled through the `HoverBlobs` component.
 
-### Tech
+### ⚙️ **Tech**
 - Astro: Static site generator that inegrates seamlessly with React components.
 - React: for building reusable and dynamic UI components.
 - TailwindCSS: Utility-first CSS framework for consistent, responsive styling.
 - PostCSS & Autoprefixer: To ensure CSS compatebility across browsers.
 - Vite: For fast development server for optimal performance.
 
-### Folder layout:
+### 📂 **Folder layout**
 ```text
 /src/
   ├── components/
@@ -65,16 +65,16 @@ The main goal of the application is to provide a responsive and interactive inte
 ```
 
 
-### Develompent notes:
+### **Develompent notes**
 - Astro enables server-side rendering (SSR) and integrates seamlessly with React.
 - TailwindCSS configuration is defined in `tailwind.config.cjs`
 
-### BubbaUI
+### 🌈 **BubbaUI**
 - Imported React and TS/JS components from Bubba UI like `Animated Blobs` and `Particle Background` from [Bubba UI](https://bubba-ui-one.vercel.app/) for 
 
 
 
-### Astro:
+# **Astro:**
 
 ## Astro Starter Kit: Minimal
 
@@ -83,7 +83,7 @@ npm create astro@latest -- --template minimal
 ```
 
 
-## 🚀 Project Structure
+## 🚀 **Project Structure**
 
 Inside of your Astro project, you'll see the following folders and files:
 
