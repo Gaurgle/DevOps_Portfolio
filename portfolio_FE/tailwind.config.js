@@ -16,21 +16,23 @@ export default {
         extend: {
             keyframes: {
                 blob: {
-                    "0%": {transform: "translate(0px, 0px) scale(1) rotate(0deg)"},
-                    "33%": {transform: "translate(30px, -50px) scale(1.1) rotate(10deg)"},
-                    "66%": {transform: "translate(-20px, 20px) scale(0.9) rotate(-5deg)"},
-                    "100%": {transform: "translate(0px, 0px) scale(1) rotate(0deg)"},
+                    "0%": { transform: "translate(0px, 0px) scale(1) rotate(0deg)" },
+                    "33%": { transform: "translate(30px, -50px) scale(1.1) rotate(10deg)" },
+                    "66%": { transform: "translate(-20px, 20px) scale(0.9) rotate(-5deg)" },
+                    "100%": { transform: "translate(0px, 0px) scale(1) rotate(0deg)" },
                 },
                 "border-beam": {
-                    "100%": {
-                        "offset-distance": "100%",
-                    },
+                    "100%": { "offset-distance": "100%" },
                 },
-
+                "gradient-text": {
+                    "0%": { backgroundPosition: "0% 50%" },
+                    "100%": { backgroundPosition: "100% 50%" },
+                },
             },
             animation: {
-                "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
                 blob: "blob 7s infinite ease-in-out",
+                "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
+                "gradient-text": "gradient-text 6s linear infinite",
             },
         },
     },

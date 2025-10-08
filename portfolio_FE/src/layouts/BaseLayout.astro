@@ -8,6 +8,7 @@ import ParticleBg from "../../public/js/ParticleBg"; // Corrected import path
 import SidebarToggle from "../components/SidebarToggle"; // Corrected import path
 
 const {title, description, current = "/"} = Astro.props;
+const isHome = Astro.url.pathname === "/";
 
 ---
 <!DOCTYPE html>
@@ -23,7 +24,7 @@ const {title, description, current = "/"} = Astro.props;
 
 <!-- BANNER -->
 <header class="fixed inset-x-0 top-0 z-50 pointer-events-auto">
-    <Banner/>
+    <Banner isHome={isHome} />
 </header>
 
 <!-- SIDEBAR TOGGLE -->

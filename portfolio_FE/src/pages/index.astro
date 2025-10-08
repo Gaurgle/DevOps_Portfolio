@@ -1,6 +1,18 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="Home" subtitles="" current="/Home">
+<BaseLayout title="About" subtitles="About me" current="/About">
+    <div class="about-section my-8 px-6 max-w-4xl mx-auto space-y-8 text-center" style="transform: translateX(-10%);">
+        <h2 class="text-7xl font-bold text-gray-800 dark:text-gray-200">Hello, I'm </h2>
+
+        <h2 class="text-8xl md:text-8xl font-extrabold bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-500 bg-clip-text text-transparent staticblobs">
+            Andreas Roos
+        </h2>
+
+        <p class="text-lg accent-gray-400 dark:accent-gray-400">
+            Welcome to my portfolio! I'm excited to share my coding
+            journey and creations with you here.<br/>
+            I will be updating this website regularly with new projects and content. <br/>
+        </p>
+    </div>
 </BaseLayout>
-<p>Index</p>

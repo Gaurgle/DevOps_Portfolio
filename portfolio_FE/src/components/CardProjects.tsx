@@ -25,7 +25,7 @@ export default function ProjectCards() {
                             <h3 className="text-lg font-semibold mb-2 text-white">
                                 {project.projectTitle}
                             </h3>
-                            <p className="text-sm text-gray-400 mb-4 line-clamp-3">
+                            <p className="text-sm text-gray-400 mb-4 h-20 overflow-y-auto">
                                 {project.description}
                             </p>
                         </div>

@@ -1,5 +1,40 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="About" subtitles="About me" current="/About">
+
+<BaseLayout>
+    <div class="about-section my-8 px-6 max-w-4xl mx-auto space-y-8 text-center" style="transform: translateX(-10%);">
+
+        <div class="container mx-auto px-6 lg:px-16">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-5xl font-extrabold tracking-tight mb-6">About Me</h1>
+                <p class="text-lg text-gray-400 leading-relaxed mb-12">
+                    In my career in music, I've had the pleasure to work as a drummer, producer,<br>
+                    mixing engineer and live technitian all around the world. <br>
+                    It has been a great experience to learn and grow in this field. <br>
+                    But time has come to try new things in life.
+                    I'm currently studying coding and system development at Nackademin in Stockholm, and will be doing <br>
+                    an internship at WSI Sigma in Stockholm through out the year.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Placeholder for personal details section -->
+                <div class="flex flex-col items-start p-8 bg-gray-900 rounded-lg shadow-lg">
+                    <h2 class="text-3xl font-semibold mb-4">Who I Am</h2>
+                    <p class="text-gray-400 leading-relaxed">
+                        I'm a [Your Profession/Passion], driven by creativity and fuelled by ambition. This is where you
+                        can add more about your story.
+                    </p>
+                </div>
+                <!-- Placeholder for professional skills section -->
+                <div class="flex flex-col items-start p-8 bg-gray-900 rounded-lg shadow-lg">
+                    <h2 class="text-3xl font-semibold mb-4">My Work</h2>
+                    <p class="text-gray-400 leading-relaxed">
+                        My journey involves [Your Skillset/Profession]. Add more about your career, projects, or
+                        achievements here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </BaseLayout>

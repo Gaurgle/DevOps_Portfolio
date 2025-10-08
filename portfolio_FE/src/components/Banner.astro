@@ -2,6 +2,8 @@
 // Banner.astro
 import HoverBlobs from "./HibubbaIO/HoverBlobs.tsx";
 import StaticBlobs from "./HibubbaIO/StaticBlobs";
+
+const { isHome = false } = Astro.props;
 ---
 <div class="py-6 relative z-40 bg-black">
     <nav class="flex items-center justify-between gap-4 px-4">
@@ -9,31 +11,33 @@ import StaticBlobs from "./HibubbaIO/StaticBlobs";
         <!-- Spacer -->
         <div class="hidden md:block flex-1"></div>
 
-        <div class="flex-1 md:flex-none text-right md:text-center">
-            <!-- Mobile logo -->
-            <StaticBlobs
-                    client:idle
-                    href="/"
-                    className="font-ramose text-3xl font-thin block md:hidden ml-auto"
-                    contentClass="px-3 py-1 rounded-lg"
-                    insetClass="inset-[-1px]"
-                    blurClass="blur-sm"
-                    colors={["bg-yellow-600/20", "bg-pink-500/15", "bg-green-600/20"]}>
-                Roos
-            </StaticBlobs>
+        { !isHome && (
+                <div class="flex-1 md:flex-none text-right md:text-center">
+                    <!-- Mobile logo -->
+                    <StaticBlobs
+                            client:idle
+                            href="/"
+                            className="font-ramose text-3xl font-thin block md:hidden ml-auto"
+                            contentClass="px-3 py-1 rounded-lg"
+                            insetClass="inset-[-1px]"
+                            blurClass="blur-sm"
+                            colors={["bg-yellow-600/20", "bg-pink-500/15", "bg-green-600/20"]}>
+                        Roos
+                    </StaticBlobs>
 
-            <!-- Desktop logo -->
-            <StaticBlobs
-                    client:idle
-                    href="/"
-                    className="font-ramose text-3xl font-thin hidden md:block"
-                    contentClass="px-6 py-2 rounded-2xl"
-                    insetClass="inset-[-2px]"
-                    blurClass="blur-md"
-                    colors={["bg-yellow-600/20", "bg-pink-500/15", "bg-green-600/20"]}>
-                Andreas Roos
-            </StaticBlobs>
-        </div>
+                    <!-- Desktop logo -->
+                    <StaticBlobs
+                            client:idle
+                            href="/"
+                            className="font-ramose text-3xl font-thin hidden md:block"
+                            contentClass="px-6 py-2 rounded-2xl"
+                            insetClass="inset-[-2px]"
+                            blurClass="blur-md"
+                            colors={["bg-yellow-600/20", "bg-pink-500/15", "bg-green-600/20"]}>
+                        Andreas Roos
+                    </StaticBlobs>
+                </div>
+        )}
 
         <div class="md:block h-7 w-px bg-gray-700 mx-4"></div>
 
