@@ -1,9 +1,10 @@
 ---
 import HoverBlobs from "./HibubbaIO/HoverBlobs";
+import MusicPlayer from "./MusicPlayer"; // Import the MusicPlayer component
+import { tracks } from "../data/Tracks.ts"; // Import the tracks array
 
-const {current = "/"} = Astro.props;
+const { current = "/" } = Astro.props;
 ---
-
 
 <aside
         id="sidebar"
@@ -30,6 +31,12 @@ const {current = "/"} = Astro.props;
         <div class="flex justify-center items-center space-y-2 overflow-visible w-[100px]">
             <div class="h-px w-[700px] bg-gray-600 mt-[3px]"></div>
         </div>
+
+        <!-- MusicPlayer Component -->
+        <!--<div class="mt-4">-->
+        <!--    <MusicPlayer tracks={tracks} autoPlay={false} />-->
+        <!--</div>-->
+
 
         <!-- Social -->
         <div class="flex flex-col space-y-2 gap-2">

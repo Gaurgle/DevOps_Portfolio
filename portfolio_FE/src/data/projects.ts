@@ -1,7 +1,7 @@
 export const projects = [
     {
     "projectTitle": "Portfolio",
-    "description": "This site. A fullstack portfolio site, built Spring Boot (kotlin), Astro, TS, React and TailwindCSS. \n" +
+    "description": "This site. A fullstack portfolio site, built with Spring Boot (kotlin), Astro, TS, React and TailwindCSS. \n" +
       "+PostgreSQL database hosted on Render",
     "image": "/pictures/Portfolio.png",
     "link": "https://github.com/gaurgle/DevOps_Portfolio/",
