@@ -31,7 +31,7 @@ class SecurityConfig {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val cfg = CorsConfiguration().apply {
-            // Allow your local FE and your deployed FE
+
             allowedOriginPatterns = listOf(
                 "http://localhost:4321",  // Astro dev default
                 "http://localhost:5173",  // Vite
