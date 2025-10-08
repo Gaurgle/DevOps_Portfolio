@@ -4,24 +4,30 @@ import CommonHead from "../components/CommonHead.astro";
 import "../styles/global.css";
 import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
-import ParticleBg from "../../public/js/ParticleBg";
+import ParticleBg from "../../public/js/ParticleBg"; // Corrected import path
+import SidebarToggle from "../components/SidebarToggle"; // Corrected import path
+
 const {title, description, current = "/"} = Astro.props;
+
 ---
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <CommonHead {title}/>
     <title>Portfolio</title>
+    <ViewTransitions/>
 </head>
 
 <body class="font-sans bg-black text-white relative">
 <ParticleBg client:load className="bg-behind pointer-events-none" />
-<ViewTransitions/>
 
 <!-- BANNER -->
 <header class="fixed inset-x-0 top-0 z-50 pointer-events-auto">
     <Banner/>
 </header>
+
+<!-- SIDEBAR TOGGLE -->
+<SidebarToggle client:load />
 
 <!-- SIDEBAR -->
 <Sidebar/>
@@ -39,5 +45,4 @@ const {title, description, current = "/"} = Astro.props;
 </div>
 
 </body>
-<script src="/js/sidebar-toggle.js" defer></script>
 </html>
