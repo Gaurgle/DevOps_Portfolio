@@ -3,7 +3,7 @@ export const projects = [
     "projectTitle": "Portfolio",
     "description": "This site. A fullstack portfolio site, built Spring Boot (kotlin), Astro, TS, React and TailwindCSS. \n" +
       "+PostgreSQL database hosted on Render",
-    "image": "https://picsum.photos/200?random=4",
+    "image": "public/pictures/Portfolio.png",
     "link": "https://github.com/gaurgle/DevOps_Portfolio/",
     "demoUrl": "https://andreasroos.vercel.app",
     // "order": 4
@@ -24,7 +24,7 @@ export const projects = [
     "description":
         "This project was developed as a backend and frontend assignment using Spring Boot, Javascript, and integration with the Fake Store API.\n" +
         "The purpose was to build a simple web shop application with product management, authentication, and error handling.",
-    "image": "https://picsum.photos/200?random=1",
+    "image": "public/pictures/webshop.png",
     "link": "https://github.com/Gaurgle/web-shop-aaa",
 
     // "order": 1
@@ -33,7 +33,7 @@ export const projects = [
     "projectTitle": "15 Game",
     "description": "Puzzle game written in Java with Swing. \n" +
         "Utilizing a built in audio converter and player for in game audio music and effects!",
-    "image": "https://picsum.photos/200?random=2",
+    "image": "public/pictures/15game.png",
     "link": "https://github.com/Gaurgle/15-game/",
     // "demoUrl": null,
     // "order": 2
@@ -42,16 +42,16 @@ export const projects = [
     "projectTitle": "Quiz game",
     "description": "Quiz game, practicing serialization, local database and serverSocket for multiplayer concurrency. +\n" +
     "Comes with it's own cute soundtrack.",
-    "image": "https://picsum.photos/200?random=3",
+    "image": "public/pictures/QuizGame1.png",
     "link": "https://github.com/cfrank3N/quiz-game",
     // "demoUrl": null,
     // "order": 3
   },
   {
     "projectTitle": "Yacht Strike",
-    "description": "Battleship in the command line. Muliplayer. +\n" +
+    "description": "Battleship in the command line. Multiplayer. +\n" +
         "Has the best soundtrack.",
-    "image": "https://picsum.photos/200?random=6",
+    "image": "public/pictures/Yachstrike.png",
     "link": "https://github.com/Gaurgle/YachtStrikeVGAndreasRoos",
     // "demoUrl": null,
     // "order": 3
