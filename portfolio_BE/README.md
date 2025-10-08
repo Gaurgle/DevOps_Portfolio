@@ -1,7 +1,7 @@
 # Portfolio Backend project.
 A Spring Boot backend application for a portfolio website that manages portfolio projects and contact messages.
 
-### Table of contents:
+### **Table of contents:**
 - [Overview](#Overview)
 - [Tech](#tech)
 - [Features](#features)
@@ -17,11 +17,11 @@ A Spring Boot backend application for a portfolio website that manages portfolio
 
 ---
 
-# Overview
+# 🤔 **Overview**
 The backend provides RESTful API services for a portfolio website, enabling portfolio project and contact message handling.
 The application is built with Kotlin and Spring Boot, trying to follow best practices for security, performance and maintainablity.
 
-### Tech
+### ⚙️ **Tech**
 Using:
 - Kotlin (1.9.25)
 - Spring Boot (2.5.6)
@@ -33,7 +33,7 @@ Using:
 - Monitoring with Spring Actuator, Prometheus
 - Deployment: Docker.
 
-### Features:
+### 🐣 **Features**
 - CRUD
 - Contact form message handling.
 - Authentication and authorization.
@@ -42,7 +42,7 @@ Using:
 - Metrics and monitoring
 - Docker containerization.
 
-### Project structure:
+### 📂 **Project structure**
 ```text
 src
 ├── main
@@ -62,7 +62,7 @@ src
 ```
 
 
-### API endpoints:
+### ↔ **API endpoints**
 - ##### Portfolio projects:
 - `GET /api/projects` 			- Get all portfolio projects
 - `GET /api/projects/{id}` 		- Get project by ID
@@ -70,26 +70,26 @@ src
 - `PUT /api/projects/{id}` 		- Update project
 - `DELETE /api/projects/{id}` 	- Delete project
 
-- ##### Contact Messages
+- ##### ✉️ **Contact Messages**
 - `GET /api/contact` - Get all contact messages (admin only)
 - `POST /api/contact` - Submit a contact message
 - `PUT /api/contact/{id}/handle` - Mark a contact message as handled
 - `DELETE /api/contact/{id}` - Delete a contact message
 
-### Database:
+### 📊 **Database**
 The application uses PostgreSQL for data persistance. The schema is managed by Flyway migration.
 
-### Entity model:
+### Entity models:
 ##### PotfolioProject:
 - Represents a portfolio project with details like title, description, links etc.
 
 ##### ContactMessages.
 - Stores contact form submissions with name, emailaddress, message and status.
 
-### Email integration:
+### 📬 **Email integration**
 The application uses [Brevo](https://www.brevo.com/?r=t) [SendInBlue](https://www.brevo.com/landing/product-sib/?utm_source=adwords_brand&utm_medium=lastclick&utm_content=SendinBlue&utm_extension=&utm_term=send%20in%20blue&utm_matchtype=e&utm_campaign=20011980164&utm_network=g&km_adid=753112475464&km_adposition=&km_device=c&utm_adgroupid=151171467351&gad_source=1&gad_campaignid=20011980164&gbraid=0AAAAADjx0RaPNr2BsKt8UP_33gW9bxOmI) for sending email notifications when new messages are recieved. 
 
-### Testing:
+### ⚠️ **Testing**
 The project includes an expanding set of tests with:
 - Unit tests for services and controllers.
 - Integration tests with TestContainers for database operations.
