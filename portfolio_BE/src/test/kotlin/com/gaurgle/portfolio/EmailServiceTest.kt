@@ -47,7 +47,7 @@ class EmailServiceTest {
 
     @Test
     fun `should not send email when service is disabled`() {
-        // Arrange
+
         every { settings.enabled } returns false
         every { settings.to } returns "admin@example.com"
 
@@ -60,7 +60,7 @@ class EmailServiceTest {
 
     @Test
     fun `should throw exception when required settings are missing`() {
-        // Arrange
+
         every { settings.enabled } returns true
         every { settings.apiKey } returns ""
         every { settings.to } returns "admin@example.com"
@@ -74,7 +74,7 @@ class EmailServiceTest {
 
     @Test
     fun `should send email with correct content when enabled`() {
-        // Arrange
+
         every { settings.enabled } returns true
         every { settings.apiKey } returns "test-api-key"
         every { settings.to } returns "admin@example.com"
