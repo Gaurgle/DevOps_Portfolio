@@ -30,15 +30,28 @@ export default function ProjectCards() {
                             </p>
                         </div>
 
-                        {/* Link */}
-                        <a
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-yellow-400 hover:underline self-start"
-                        >
-                            View Project →
-                        </a>
+                        {/* Links */}
+                        <div className="absolute bottom-5 left-5 right-5 flex flex-col gap-2">
+                            {project.demoUrl && (
+                                <a
+                                    href={project.demoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm font-medium text-white hover:underline self-start"
+                                >
+                                    See project live →
+                                </a>
+                            )}
+
+                            <a
+                                href={project.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm font-medium text-white hover:underline self-start"
+                            >
+                                View on GitHub→
+                            </a>
+                        </div>
                     </div>
 
                     <BorderBeam className="rounded-2xl z-10" />

@@ -5,7 +5,17 @@ export const projects = [
     "description": "webshop sdescription.",
     "image": "https://picsum.photos/200?random=1",
     "link": "https://github.com/gaurgle/DevOps_Portfolio/",
-    // "demoUrl": "https://andreasroos.vercel.app",
+    "demoUrl": "https://andreasroos.vercel.app",
+    // "order": 1
+  },
+  {
+    "projectTitle": "Booking program",
+    "tagline": "JS, CSS, HTML, Java, MySQL",
+    "description": "This project was developed as a group assignment for the Backend 1 course at Nackademin.\n" +
+        "The task was to build a booking system for a small guesthouse, using Java Spring Boot, Hibernate, and a Thymeleaf web interface.",
+    "image": "https://picsum.photos/200?random=5",
+    "link": "https://github.com/cfrank3N/booking-program",
+    "demoUrl": "  https://booking-program-production.up.railway.app/home",
     // "order": 1
   },
   {
