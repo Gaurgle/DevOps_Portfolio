@@ -8,12 +8,6 @@ export type Track = {
 
 export const tracks: Track[] = [
     {
-        id: "15GameSong",
-        title: "Game15 8-bit old school",
-        artist: "Andreas Roos",
-        src: "/audio/Game15_1.0.wav",
-    },
-    {
         id: "QuizGameSong",
         title: "Quiz Game Theme Song",
         artist: "Andreas Roos",
@@ -24,5 +18,11 @@ export const tracks: Track[] = [
         title: "Yacht Strike Theme Song",
         artist: "Andreas Roos",
         src: "/audio/wavYachtTheme.wav",
+    },
+    {
+        id: "15GameSong",
+        title: "Game15 8-bit old school",
+        artist: "Andreas Roos",
+        src: "/audio/Game15_1.0.wav",
     },
 ];

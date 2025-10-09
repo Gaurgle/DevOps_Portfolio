@@ -6,6 +6,7 @@ import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
 import ParticleBg from "../../public/js/ParticleBg"; // Corrected import path
 import SidebarToggle from "../components/SidebarToggle"; // Corrected import path
+import MusicPlayerWrapper from "../components/MusicPlayerWrapper";
 
 const {title, description, current = "/"} = Astro.props;
 const isHome = Astro.url.pathname === "/";
@@ -44,6 +45,8 @@ const isHome = Astro.url.pathname === "/";
         <slot/>
     </main>
 </div>
+<!-- Persistent Music Player -->
+<MusicPlayerWrapper client:load />
 
 </body>
 </html>
