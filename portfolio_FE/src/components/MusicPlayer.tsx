@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import type { Track } from "../data/Tracks.ts";
+import React, {useEffect, useMemo, useRef, useState} from "react";
+import type {Track} from "../data/Tracks.ts";
 
 type LoopMode = "off" | "one" | "all";
 
@@ -8,7 +8,7 @@ interface Props {
     autoPlay?: boolean;
 }
 
-export default function MusicPlayer({ tracks, autoPlay = false }: Props) {
+export default function MusicPlayer({tracks, autoPlay = false}: Props) {
     const [index, setIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [loopMode, setLoopMode] = useState<LoopMode>("off");
@@ -22,13 +22,20 @@ export default function MusicPlayer({ tracks, autoPlay = false }: Props) {
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
+
+        // Ensure audio loads the new track
         audio.load();
-        if (autoPlay) {
-            audio.play().catch(() => setIsPlaying(false));
-        } else {
-            setIsPlaying(false);
-        }
-    }, [index, autoPlay]);
+
+        // Auto-play the audio when the index changes
+        audio
+            .play()
+            .then(() => setIsPlaying(true))
+            .catch((err) => {
+                console.error("Error playing track:", err);
+                setIsPlaying(false);
+            });
+    }, [index]);
+
 
     // Loop handling on end
     const handleEnded = () => {
@@ -45,6 +52,8 @@ export default function MusicPlayer({ tracks, autoPlay = false }: Props) {
     };
 
     const playPause = () => {
+        console.log("Play/Pause clicked");
+
         const audio = audioRef.current;
         if (!audio) return;
         if (isPlaying) {
@@ -115,124 +124,154 @@ export default function MusicPlayer({ tracks, autoPlay = false }: Props) {
     }, [isPlaying]);
 
     return (
-        <div className="w-full max-w-3xl mx-auto grid gap-6 md:grid-cols-[1fr_minmax(220px,280px)]">
-            {/* Player card */}
-            <div className="p-5 rounded-2xl bg-black/40 border border-gray-800">
-                <div className="flex items-center gap-5">
-                    {current.cover ? (
-                        <img
-                            src={current.cover}
-                            alt={current.title}
-                            className="w-24 h-24 rounded-xl object-cover"
-                            loading="lazy"
-                        />
-                    ) : (
-                        <div className="w-24 h-24 rounded-xl bg-gray-800 grid place-items-center text-gray-400">
-                            ♪
-                        </div>
-                    )}
+        <div className="w-full max-w-2xl mx-auto relative">
+            {/* Floating Button to Show Player */}
+            <button
+                className="fixed bottom-5 right-5 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700"
+                onClick={() => {
+                    const player = document.getElementById("music-player");
+                    if (player) {
+                        player.classList.toggle("hidden");
+                    }
+                }}
+            >
+                Open Player
+            </button>
 
-                    <div className="min-w-0">
-                        <h3 className="font-semibold truncate">{current.title}</h3>
-                        {current.artist && (
-                            <p className="text-sm text-gray-400 truncate">{current.artist}</p>
+            {/* Floating Music Player */}
+            <div
+                id="music-player"
+                className="hidden fixed bottom-14 right-5 bg-black/40 border border-gray-800 rounded-xl shadow-lg p-6 z-50 max-w-2xl"
+            >
+                {/* Player card */}
+                <div className="p-5 rounded-1xl bg-black/40 border border-gray-800">
+                    <div className="flex items-center gap-5">
+                        {current.cover ? (
+                            <img
+                                src={current.cover}
+                                alt={current.title}
+                                className="w-24 h-24 rounded-xl object-cover"
+                                loading="lazy"
+                            />
+                        ) : (
+                            <div className="w-24 h-24 rounded-xl bg-gray-800 grid place-items-center text-gray-400">
+                                ♪
+                            </div>
                         )}
-                        <p className="text-xs text-gray-500 truncate">{current.src}</p>
+
+                        <div className="min-w-0">
+                            <h3 className="font-semibold truncate">{current.title}</h3>
+                            {current.artist && (
+                                <p className="text-sm text-gray-400 truncate">{current.artist}</p>
+                            )}
+                            <p className="text-xs text-gray-500 truncate">{current.src}</p>
+                        </div>
+                        <button onClick={playPause} className="mt-4">
+                            {isPlaying ? "Pause" : "Play"}
+                        </button>
+                    </div>
+
+                    {/* Audio Element */}
+                    <audio
+                        ref={audioRef}
+                        onTimeUpdate={onTimeUpdate}
+                        onEnded={handleEnded}
+                    >
+                        <source src={current.src} type={`audio/${current.src.split('.').pop()}`}/>
+                    </audio>
+
+                    {/* Controls */}
+                    <div className="mt-4 flex items-center gap-3">
+                        <button
+                            onClick={prev}
+                            className="px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
+                            aria-label="Previous"
+                        >
+                            ◀
+                        </button>
+                        <button
+                            onClick={playPause}
+                            className="px-4 py-2 rounded-lg bg-gray-100 text-black hover:bg-white"
+                            aria-label="Play/Pause"
+                        >
+                            {isPlaying ? "Pause" : "Play"}
+                        </button>
+                        <button
+                            onClick={next}
+                            className="px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
+                            aria-label="Next"
+                        >
+                            ▶
+                        </button>
+
+                        <button
+                            onClick={toggleLoop}
+                            className="ml-auto px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm"
+                            title="Loop: off → one → all"
+                            aria-label="Loop mode"
+                        >
+                            Loop: {loopMode}
+                        </button>
+                    </div>
+
+                    {/* Seek */}
+                    <div className="mt-4">
+                        <input
+                            type="range"
+                            min={0}
+                            max={Math.floor(duration || 0)}
+                            step={1}
+                            value={Math.floor(progress || 0)}
+                            onChange={onSeek}
+                            className="w-full"
+                        />
+                        <div className="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>{format(progress)}</span>
+                            <span>{format(duration)}</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* Controls */}
-                <div className="mt-4 flex items-center gap-3">
-                    <button
-                        onClick={prev}
-                        className="px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
-                        aria-label="Previous"
-                    >
-                        ◀
-                    </button>
-                    <button
-                        onClick={playPause}
-                        className="px-4 py-2 rounded-lg bg-gray-100 text-black hover:bg-white"
-                        aria-label="Play/Pause"
-                    >
-                        {isPlaying ? "Pause" : "Play"}
-                    </button>
-                    <button
-                        onClick={next}
-                        className="px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
-                        aria-label="Next"
-                    >
-                        ▶
-                    </button>
-
-                    <button
-                        onClick={toggleLoop}
-                        className="ml-auto px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm"
-                        title="Loop: off → one → all"
-                        aria-label="Loop mode"
-                    >
-                        Loop: {loopMode}
-                    </button>
+                {/* Playlist */}
+                <div className="p-5 rounded-2xl bg-black/40 border border-gray-800 max-h-[360px] overflow-auto">
+                    <h4 className="text-sm text-gray-400 mb-3">Playlist</h4>
+                    <ul className="grid gap-2">
+                        {tracks.map((t, i) => {
+                            const active = i === index;
+                            return (
+                                <li key={t.id ?? `${t.title}-${i}`}>
+                                    <button
+                                        onClick={() => {
+                                            setIndex(i);
+                                            const audio = audioRef.current;
+                                            if (audio) {
+                                                audio.pause();
+                                                audio.load();
+                                                audio.play()
+                                                    .then(() => setIsPlaying(true)
+                                                    )
+                                                    .catch((err) => console.error("Playback error:", err));
+                                            }
+                                        }
+                                        }
+                                        className={`w-full text-left p-3 rounded-lg transition ${
+                                            active
+                                                ? "bg-gray-200 text-black"
+                                                : "bg-gray-900 hover:bg-gray-800 text-gray-200"
+                                        }`}
+                                    >
+                                        <div className="font-medium truncate">{t.title}</div>
+                                        {t.artist && (
+                                            <div className="text-xs text-gray-500 truncate">
+                                                {t.artist}
+                                            </div>
+                                        )}
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
                 </div>
-
-                {/* Seek */}
-                <div className="mt-4">
-                    <input
-                        type="range"
-                        min={0}
-                        max={Math.floor(duration || 0)}
-                        step={1}
-                        value={Math.floor(progress || 0)}
-                        onChange={onSeek}
-                        className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1">
-                        <span>{format(progress)}</span>
-                        <span>{format(duration)}</span>
-                    </div>
-                </div>
-
-                <audio
-                    ref={audioRef}
-                    src={current.src}
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    onEnded={handleEnded}
-                    onTimeUpdate={onTimeUpdate}
-                    onLoadedMetadata={onTimeUpdate}
-                    // native loop only for single-track looping
-                    loop={loopMode === "one"}
-                    preload="metadata"
-                />
-            </div>
-
-            {/* Playlist */}
-            <div className="p-5 rounded-2xl bg-black/40 border border-gray-800 max-h-[360px] overflow-auto">
-                <h4 className="text-sm text-gray-400 mb-3">Playlist</h4>
-                <ul className="grid gap-2">
-                    {tracks.map((t, i) => {
-                        const active = i === index;
-                        return (
-                            <li key={t.id ?? `${t.title}-${i}`}>
-                                <button
-                                    onClick={() => setIndex(i)}
-                                    className={`w-full text-left p-3 rounded-lg transition ${
-                                        active
-                                            ? "bg-gray-200 text-black"
-                                            : "bg-gray-900 hover:bg-gray-800 text-gray-200"
-                                    }`}
-                                >
-                                    <div className="font-medium truncate">{t.title}</div>
-                                    {t.artist && (
-                                        <div className="text-xs text-gray-500 truncate">
-                                            {t.artist}
-                                        </div>
-                                    )}
-                                </button>
-                            </li>
-                        );
-                    })}
-                </ul>
             </div>
         </div>
     );
