@@ -158,7 +158,7 @@ export default function MusicPlayer({tracks, autoPlay = false}: Props) {
                     <button
                         onClick={playPause}
                         aria-label="Play/Pause"
-                        className="w-10 h-7 rounded bg-gray-200 text-black text-xs grid place-items-center hover:bg-white"
+                        className="w-10 h-7 rounded bg-yellow-400 text-black text-xs grid place-items-center hover:bg-white"
                     >
                         {isPlaying ? "II" : "▶"}
                     </button>
