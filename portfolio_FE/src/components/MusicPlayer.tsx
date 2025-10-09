@@ -124,154 +124,82 @@ export default function MusicPlayer({tracks, autoPlay = false}: Props) {
     }, [isPlaying]);
 
     return (
-        <div className="w-full max-w-2xl mx-auto relative">
-            {/* Floating Button to Show Player */}
-            <button
-                className="fixed bottom-5 right-5 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700"
-                onClick={() => {
-                    const player = document.getElementById("music-player");
-                    if (player) {
-                        player.classList.toggle("hidden");
-                    }
-                }}
-            >
-                Open Player
-            </button>
+        <div id="music-player" className="w-full max-w-[200px] px-0 select-none">
+            {/* Card */}
+            <div className="rounded-md bg-black/30 p-2 border border-black/50">
+                {/* Header: title only (no image) */}
+                <div className="min-w-0">
+                    <h3 className="font-medium text-[12px] leading-tight truncate">{current.title}</h3>
+                    {current.artist && (
+                        <p className="text-[11px] text-gray-400 truncate">{current.artist}</p>
+                    )}
+                </div>
 
-            {/* Floating Music Player */}
-            <div
-                id="music-player"
-                className="hidden fixed bottom-14 right-5 bg-black/40 border border-gray-800 rounded-xl shadow-lg p-6 z-50 max-w-2xl"
-            >
-                {/* Player card */}
-                <div className="p-5 rounded-1xl bg-black/40 border border-gray-800">
-                    <div className="flex items-center gap-5">
-                        {current.cover ? (
-                            <img
-                                src={current.cover}
-                                alt={current.title}
-                                className="w-24 h-24 rounded-xl object-cover"
-                                loading="lazy"
-                            />
-                        ) : (
-                            <div className="w-24 h-24 rounded-xl bg-gray-800 grid place-items-center text-gray-400">
-                                ♪
-                            </div>
-                        )}
+                {/* Single audio element */}
+                <audio
+                    ref={audioRef}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    onEnded={handleEnded}
+                    preload="metadata"
+                >
+                    <source src={current.src} type={`audio/${current.src.split(".").pop()}`} />
+                </audio>
 
-                        <div className="min-w-0">
-                            <h3 className="font-semibold truncate">{current.title}</h3>
-                            {current.artist && (
-                                <p className="text-sm text-gray-400 truncate">{current.artist}</p>
-                            )}
-                            <p className="text-xs text-gray-500 truncate">{current.src}</p>
-                        </div>
-                        <button onClick={playPause} className="mt-4">
-                            {isPlaying ? "Pause" : "Play"}
-                        </button>
-                    </div>
-
-                    {/* Audio Element */}
-                    <audio
-                        ref={audioRef}
-                        onTimeUpdate={onTimeUpdate}
-                        onEnded={handleEnded}
+                {/* Controls (fixed sizes, no text resizing) */}
+                <div className="mt-2 flex items-center gap-1">
+                    <button
+                        onClick={prev}
+                        aria-label="Previous"
+                        className="w-8 h-7 rounded bg-black text-gray-200 text-xs grid place-items-center hover:bg-black/80"
                     >
-                        <source src={current.src} type={`audio/${current.src.split('.').pop()}`}/>
-                    </audio>
-
-                    {/* Controls */}
-                    <div className="mt-4 flex items-center gap-3">
-                        <button
-                            onClick={prev}
-                            className="px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
-                            aria-label="Previous"
-                        >
-                            ◀
-                        </button>
-                        <button
-                            onClick={playPause}
-                            className="px-4 py-2 rounded-lg bg-gray-100 text-black hover:bg-white"
-                            aria-label="Play/Pause"
-                        >
-                            {isPlaying ? "Pause" : "Play"}
-                        </button>
-                        <button
-                            onClick={next}
-                            className="px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
-                            aria-label="Next"
-                        >
-                            ▶
-                        </button>
-
-                        <button
-                            onClick={toggleLoop}
-                            className="ml-auto px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm"
-                            title="Loop: off → one → all"
-                            aria-label="Loop mode"
-                        >
-                            Loop: {loopMode}
-                        </button>
-                    </div>
-
-                    {/* Seek */}
-                    <div className="mt-4">
-                        <input
-                            type="range"
-                            min={0}
-                            max={Math.floor(duration || 0)}
-                            step={1}
-                            value={Math.floor(progress || 0)}
-                            onChange={onSeek}
-                            className="w-full"
-                        />
-                        <div className="flex justify-between text-xs text-gray-400 mt-1">
-                            <span>{format(progress)}</span>
-                            <span>{format(duration)}</span>
-                        </div>
-                    </div>
+                        ◀
+                    </button>
+                    <button
+                        onClick={playPause}
+                        aria-label="Play/Pause"
+                        className="w-10 h-7 rounded bg-gray-200 text-black text-xs grid place-items-center hover:bg-white"
+                    >
+                        {isPlaying ? "II" : "▶"}
+                    </button>
+                    <button
+                        onClick={next}
+                        aria-label="Next"
+                        className="w-8 h-7 rounded bg-black text-gray-200 text-xs grid place-items-center hover:bg黑/80 hover:bg-black/80"
+                    >
+                        ▶
+                    </button>
                 </div>
+            </div>
 
-                {/* Playlist */}
-                <div className="p-5 rounded-2xl bg-black/40 border border-gray-800 max-h-[360px] overflow-auto">
-                    <h4 className="text-sm text-gray-400 mb-3">Playlist</h4>
-                    <ul className="grid gap-2">
-                        {tracks.map((t, i) => {
-                            const active = i === index;
-                            return (
-                                <li key={t.id ?? `${t.title}-${i}`}>
-                                    <button
-                                        onClick={() => {
-                                            setIndex(i);
-                                            const audio = audioRef.current;
-                                            if (audio) {
-                                                audio.pause();
-                                                audio.load();
-                                                audio.play()
-                                                    .then(() => setIsPlaying(true)
-                                                    )
-                                                    .catch((err) => console.error("Playback error:", err));
-                                            }
+            {/* Ultra-compact playlist */}
+            <div className="mt-2 rounded-md bg-black/30 p-2 border border-black/50 max-h-[140px] overflow-auto">
+                <h4 className="text-[11px] text-gray-400 mb-1">Playlist</h4>
+                <ul className="space-y-[1px]">
+                    {tracks.map((t, i) => {
+                        const active = i === index;
+                        return (
+                            <li key={t.id ?? `${t.title}-${i}`}>
+                                <button
+                                    onClick={() => {
+                                        setIndex(i);
+                                        const a = audioRef.current;
+                                        if (a) {
+                                            a.pause();
+                                            a.load();
+                                            a.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
                                         }
-                                        }
-                                        className={`w-full text-left p-3 rounded-lg transition ${
-                                            active
-                                                ? "bg-gray-200 text-black"
-                                                : "bg-gray-900 hover:bg-gray-800 text-gray-200"
-                                        }`}
-                                    >
-                                        <div className="font-medium truncate">{t.title}</div>
-                                        {t.artist && (
-                                            <div className="text-xs text-gray-500 truncate">
-                                                {t.artist}
-                                            </div>
-                                        )}
-                                    </button>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
+                                    }}
+                                    className={`w-full text-left px-0 py-[4px] rounded text-[11px] leading-none truncate transition
+                ${active ? "bg-gray-300 text-black" : "bg-black/70 text-gray-200 hover:bg-black"}`}
+                                    title={t.title}
+                                >
+                                    {t.title}
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
         </div>
     );
