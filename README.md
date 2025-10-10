@@ -12,7 +12,7 @@ A full-stack developer portfolio built with **Astro (frontend)** and **Spring Bo
 
 ## 🌍 Live Demo
 - **Frontend (Portfolio site)** → [https://andreasroos.vercel.app](https://andreasroos.vercel.app)
-- **Backend (API)** → [https://devopsportfolio-production.up.railway.app/actuator/health](https://your-railway-app.up.railway.app/actuator/health)
+- **Backend (API)** → [https://devopsportfolio-production.up.railway.app/actuator/health](https://devopsportfolio-production.up.railway.app/actuator/health)
 
 ---
 
