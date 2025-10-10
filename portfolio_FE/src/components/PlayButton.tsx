@@ -57,7 +57,7 @@ export default function PlayButton({ src, title = "Play preview" }: Props) {
                   hover:bg-black/80 transition`}
             title={title}
         >
-            {isPlaying ? "II" : "▶"}
+            {isPlaying ? "II" : "\u25B6"}
         </button>
     );
 }

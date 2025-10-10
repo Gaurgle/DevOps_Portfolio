@@ -61,7 +61,7 @@ function PlayButton({ src, title }: { src: string; title: string }) {
             title={`Play ${title}`}
             className="w-8 h-8 grid place-items-center rounded bg-black/80 text-gray-100 text-xs hover:bg-black transition"
         >
-            {isPlaying ? "II" : "▶"}
+            {isPlaying ? "II" : "\u25B6"}
         </button>
     );
 }
