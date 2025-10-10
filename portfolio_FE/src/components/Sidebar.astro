@@ -65,16 +65,5 @@ const { current = "/" } = Astro.props;
         <br>
         <!--MusicPlayer Component-->
 
-        <div class="absolute bottom-4 left-0 w-full px-4">
-            <div class="flex justify-center items-center space-y-2 overflow-visible w-[140px]">
-                <div class="h-px w-[700px] bg-gray-600 mt-[3px]"></div>
-            </div>
-
-            <MusicPlayer client:load tracks={tracks} autoPlay={false} />
-
-            <div class="flex justify-center items-center space-y-2 overflow-visible w-[140px]">
-                <div class="h-px w-[700px] bg-gray-600 mt-[3px]"></div>
-            </div>
-        </div>
     </nav>
 </aside>
