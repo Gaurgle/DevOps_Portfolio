@@ -5,8 +5,8 @@ import StaticBlobs from "./HibubbaIO/StaticBlobs";
 
 const { isHome = false } = Astro.props;
 ---
-<div class="py-6 relative z-40 bg-black">
-    <nav class="flex items-center justify-between gap-4 px-4">
+<div class="relative z-40 bg-black">
+    <nav class="flex items-center justify-between gap-4 px-4 h-16 md:h-20">
 
         <!-- Spacer -->
         <div class="hidden md:block flex-1"></div>
@@ -37,12 +37,12 @@ const { isHome = false } = Astro.props;
                         Andreas Roos
                     </StaticBlobs>
                 </div>
-        )}
         <div class="md:block h-7 w-px bg-gray-700 mx-4"></div>
-
+        )}
 
         <!-- links and socials -->
-        <div class="flex items-center gap-4 justify-self-end">
+        <!--<div class="flex items-center gap-4 justify-self-end">-->
+        <div class="flex items-center gap-4 justify-self-end ml-auto md:ml-0">
             <!-- Links -->
             <div class="hidden md:flex gap-3">
                 <HoverBlobs client:idle href="/projects">Projects</HoverBlobs>
