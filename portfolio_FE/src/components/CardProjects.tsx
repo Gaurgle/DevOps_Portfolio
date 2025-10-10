@@ -72,14 +72,14 @@ export default function ProjectCards() {
             {projects.map((project, idx) => (
                 <div
                     key={idx}
-                    className="relative group bg-black dark:bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden hover:border-yellow-500/50 transition-all"
+                    className="relative group bg-black dark:bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden hover:border-yellow-500/20 transition-all"
                 >
                     {/* Image */}
                     <div className="h-48 w-full overflow-hidden">
                         <img
                             src={project.image}
                             alt={project.projectTitle}
-                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105 group-hover:blur-0 blur-[1px] grayscale group-hover:grayscale-0"
+                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105 group-hover:blur-0 blur-[2px] grayscale group-hover:grayscale-0"
                         />
                     </div>
 

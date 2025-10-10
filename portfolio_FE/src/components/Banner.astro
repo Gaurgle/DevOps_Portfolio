@@ -2,22 +2,33 @@
 // Banner.astro
 import HoverBlobs from "./HibubbaIO/HoverBlobs.tsx";
 import StaticBlobs from "./HibubbaIO/StaticBlobs";
+import SidebarToggle from "../components/SidebarToggle"; // Corrected import path
 
-const { isHome = false } = Astro.props;
+const {isHome = false} = Astro.props;
 ---
-<div class="relative z-40 bg-black">
-    <nav class="flex items-center justify-between gap-4 px-4 h-16 md:h-20">
+<header
+        id="site-header"
+        class="sticky top-0 z-50
+         bg-black/70 backdrop-blur supports-[backdrop-filter]:bg-black/80
+         border-b border-white/0
+         transition-shadow
+         [&[data-scrolled]]:shadow-lg">
 
-        <!-- Spacer -->
-        <div class="hidden md:block flex-1"></div>
+    <!-- 3-col grid: left / center / right -->
+    <nav class="grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 h-16 md:h-20">
 
-        { !isHome && (
-                <div class="flex-1 md:flex-none text-right md:text-center">
+        <!-- SIDEBAR TOGGLE -->
+        <div class="h-20 w-10 grid place-items-center">
+            <SidebarToggle client:load/>
+        </div>
+        <!-- CENTER: logo (placeholder when on home) -->
+        {!isHome ? (
+                <div class="justify-self-center">
                     <!-- Mobile logo -->
                     <StaticBlobs
                             client:idle
                             href="/"
-                            className="font-ramose text-3xl font-thin block md:hidden ml-auto"
+                            className="font-ramose text-3xl font-thin block md:hidden leading-none"
                             contentClass="px-3 py-1 rounded-lg"
                             insetClass="inset-[-1px]"
                             blurClass="blur-sm"
@@ -29,7 +40,7 @@ const { isHome = false } = Astro.props;
                     <StaticBlobs
                             client:idle
                             href="/"
-                            className="font-ramose text-3xl font-thin hidden md:block"
+                            className="font-ramose text-3xl font-thin hidden md:block leading-none"
                             contentClass="px-6 py-2 rounded-2xl"
                             insetClass="inset-[-2px]"
                             blurClass="blur-md"
@@ -37,43 +48,51 @@ const { isHome = false } = Astro.props;
                         Andreas Roos
                     </StaticBlobs>
                 </div>
-        <div class="md:block h-7 w-px bg-gray-700 mx-4"></div>
+        ) : (
+            /* Placeholder keeps column 2 occupied so layout never shifts */
+                <div aria-hidden="true" class="justify-self-center"></div>
         )}
 
-        <!-- links and socials -->
-        <!--<div class="flex items-center gap-4 justify-self-end">-->
-        <div class="flex items-center gap-4 justify-self-end ml-auto md:ml-0">
-            <!-- Links -->
+        <!-- RIGHT (always column 3): links + socials -->
+        <div class="col-start-3 justify-self-end flex items-center gap-4">
+            <!-- Links (desktop only) -->
             <div class="hidden md:flex gap-3">
                 <HoverBlobs client:idle href="/projects">Projects</HoverBlobs>
                 <HoverBlobs client:idle href="/about">About</HoverBlobs>
                 <HoverBlobs client:idle href="/contact">Contact</HoverBlobs>
             </div>
 
-            <!-- Divider -->
+            <!-- Divider (desktop only) -->
             <div class="hidden md:block h-7 w-px bg-gray-700 mx-4"></div>
 
-            <!-- Socials thumbnails -->
+            <!-- Socials -->
             <div class="flex gap-2">
-                <HoverBlobs client:idle
-                            href="https://github.com/gaurgle/"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                            className="w-7 h-7 rounded-full flex items-center justify-center overflow-visable">
-                    <img src="https://cdn.simpleicons.org/github/ffffff"
-                         alt="GitHub" width="25" height="20"/>
+                <HoverBlobs
+                        client:idle
+                        href="https://github.com/gaurgle/"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        className="w-7 h-7 rounded-full flex items-center justify-center overflow-visible">
+                    <img src="https://cdn.simpleicons.org/github/ffffff" alt="GitHub" width="25" height="20"/>
                 </HoverBlobs>
 
-                <HoverBlobs client:idle
-                            href="https://www.linkedin.com/in/andreasrooos/"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                            className="w-7 h-7 rounded-full flex items-center justify-center overflow-visable">
+                <HoverBlobs
+                        client:idle
+                        href="https://www.linkedin.com/in/andreasrooos/"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        className="w-7 h-7 rounded-full flex items-center justify-center overflow-visible">
                     <img src="https://img.icons8.com/?size=100&id=8808&format=png&color=ffffff"
                          alt="LinkedIn" width="25" height="20"/>
                 </HoverBlobs>
-
             </div>
         </div>
     </nav>
-</div>
+</header>
+
+<script is:raw>
+    const header = document.getElementById('site-header');
+    const onScroll = () => header.toggleAttribute('data-scrolled', window.scrollY > 2);
+    onScroll();
+    addEventListener('scroll', onScroll, {passive: true});
+</script>

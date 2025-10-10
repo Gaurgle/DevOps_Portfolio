@@ -4,6 +4,9 @@ import CardProjects from "../components/CardProjects.tsx";
 ---
 <BaseLayout title="Projects" subtitles="Some of my projects" current="/projects">
     <div class="z-40">
-        <CardProjects client:load />
+        <!-- NEW wrapper -->
+        <div class="max-w-6xl mx-auto px-4 md:px-1">
+            <CardProjects client:load />
+        </div>
     </div>
 </BaseLayout>
