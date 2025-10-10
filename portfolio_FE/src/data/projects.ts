@@ -41,8 +41,8 @@ export const projects = [
   },
   {
     "projectTitle": "Quiz game",
-    "description": "Quiz game, practicing serialization, local database and serverSocket for multiplayer concurrency. +\n" +
-    "Comes with it's own cute soundtrack.",
+    "description": "Quiz game, practicing serialization, local database and serverSocket for multiplayer concurrency. \n" +
+        "Comes with it's own cute soundtrack.",
     "image": "/pictures/QuizGame1.png",
     "link": "https://github.com/cfrank3N/quiz-game",
     "songSrc": "/audio/quizThemeSong.wav",
@@ -52,7 +52,8 @@ export const projects = [
   },
   {
     "projectTitle": "Yacht Strike",
-    "description": "Battleship in the command line. Multiplayer. +\n" +
+    "description": "Battleship in the command line. \n " +
+        "Multiplayer. \n " +
         "Has the best soundtrack.",
     "image": "/pictures/Yachstrike.png",
     "link": "https://github.com/Gaurgle/YachtStrikeVGAndreasRoos",
