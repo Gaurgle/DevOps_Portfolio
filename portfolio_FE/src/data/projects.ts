@@ -35,6 +35,7 @@ export const projects = [
         "Utilizing a built in audio converter and player for in game audio music and effects!",
     "image": "/pictures/15game.png",
     "link": "https://github.com/Gaurgle/15-game/",
+    "songSrc": "/audio/Game15_1.0.wav",
     // "demoUrl": null,
     // "order": 2
   },
@@ -44,6 +45,8 @@ export const projects = [
     "Comes with it's own cute soundtrack.",
     "image": "/pictures/QuizGame1.png",
     "link": "https://github.com/cfrank3N/quiz-game",
+    "songSrc": "/audio/quizThemeSong.wav",
+
     // "demoUrl": null,
     // "order": 3
   },
@@ -53,6 +56,7 @@ export const projects = [
         "Has the best soundtrack.",
     "image": "/pictures/Yachstrike.png",
     "link": "https://github.com/Gaurgle/YachtStrikeVGAndreasRoos",
+    "songSrc": "/audio/wavYachtTheme.wav",
     // "demoUrl": null,
     // "order": 3
   },

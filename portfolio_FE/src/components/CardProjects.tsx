@@ -1,6 +1,70 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BorderBeam from "./HibubbaIO/BorderBeam.tsx";
 import { projects } from "../data/projects.ts";
+
+/** Tiny, self-contained play/pause button for one audio source */
+function PlayButton({ src, title }: { src: string; title: string }) {
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    // Pause this button when another one starts
+    useEffect(() => {
+        const onGlobalPlay = () => {
+            if (audioRef.current) audioRef.current.pause();
+        };
+        window.addEventListener("card-audio:play", onGlobalPlay);
+        return () => window.removeEventListener("card-audio:play", onGlobalPlay);
+    }, []);
+
+    // Keep UI in sync with audio state
+    useEffect(() => {
+        const a = (audioRef.current ??= new Audio(src));
+        const onEnd = () => setIsPlaying(false);
+        const onPause = () => setIsPlaying(false);
+        const onPlay = () => setIsPlaying(true);
+
+        a.addEventListener("ended", onEnd);
+        a.addEventListener("pause", onPause);
+        a.addEventListener("play", onPlay);
+
+        return () => {
+            a.removeEventListener("ended", onEnd);
+            a.removeEventListener("pause", onPause);
+            a.removeEventListener("play", onPlay);
+            a.pause();
+        };
+    }, [src]);
+
+    const toggle = async () => {
+        const a = (audioRef.current ??= new Audio(src));
+        a.preload = "none";
+
+        if (a.paused) {
+            // tell other cards to pause
+            window.dispatchEvent(new CustomEvent("card-audio:play"));
+            try {
+                await a.play();
+                setIsPlaying(true);
+            } catch {
+                setIsPlaying(false);
+            }
+        } else {
+            a.pause();
+            setIsPlaying(false);
+        }
+    };
+
+    return (
+        <button
+            onClick={toggle}
+            aria-label={`Play ${title}`}
+            title={`Play ${title}`}
+            className="w-8 h-8 grid place-items-center rounded bg-black/80 text-gray-100 text-xs hover:bg-black transition"
+        >
+            {isPlaying ? "II" : "▶"}
+        </button>
+    );
+}
 
 export default function ProjectCards() {
     return (
@@ -22,6 +86,7 @@ export default function ProjectCards() {
                     {/* Content */}
                     <div className="p-5 flex flex-col justify-between h-[220px]">
                         <div>
+                            {/* Title */}
                             <h3 className="text-lg font-semibold mb-2 text-white">
                                 {project.projectTitle}
                             </h3>
@@ -49,12 +114,19 @@ export default function ProjectCards() {
                                 rel="noopener noreferrer"
                                 className="text-sm font-medium text-white hover:underline self-start"
                             >
-                                View on GitHub→
+                                View on GitHub →
                             </a>
                         </div>
                     </div>
 
-                    <BorderBeam className="rounded-2xl z-10" />
+                    {/* Play Button */}
+                    {project.songSrc && (
+                        <div className="absolute top-2 right-2 z-20">
+                            <PlayButton src={project.songSrc} title={project.projectTitle}/>
+                        </div>
+                    )}
+
+                    <BorderBeam className="rounded-2xl z-10"/>
                 </div>
             ))}
         </div>
