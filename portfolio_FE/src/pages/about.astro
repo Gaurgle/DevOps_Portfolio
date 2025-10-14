@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TechStack from "../components/TechStack.tsx";
 ---
 
 <BaseLayout>
@@ -33,6 +34,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         an internship at WSI Sigma in Stockholm through out the year.
                     </p>
                 </div>
+
+                <div class="mt-auto flex flex-col items-center p-8 bg-black rounded-lg shadow-lg text-left ">
+                    <h2 class="text-3xl font-semibold mb-4"></h2>
+                    <!--    TODO add logos-->
+                    <div class="flex gap-5 items-center justify-center">
+                        <TechStack/>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
