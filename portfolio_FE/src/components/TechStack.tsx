@@ -29,9 +29,13 @@ const icons = [
 
 export default function TechStack() {
     return (
-        <div className="flex gap-6 items-center justify-center fixed bottom-8 left-1/2 transform -translate-x-1/2">
+        <div className="z-50 w-full h-12
+         bg-black/70 backdrop-blur supports-[backdrop-filter]:bg-black/50
+         border-b border-white/0
+         transition-opacity md:opacity-20 md:hover:opacity-100 md:hover:backdrop-blur-lg
+         [&[data-scrolled]]:shadow-lg flex gap-2 items-center justify-center fixed bottom-0 left-0">
             {icons.map((Icon, i) => (
-                <Icon key={i} className="w-8 h-8"/>
+                <Icon key={i} className=" sm:w-4 sm:h-4 md:w-6 md:h-6"/>
             ))}
         </div>
     );
