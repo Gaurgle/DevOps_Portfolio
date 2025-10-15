@@ -35,7 +35,10 @@ export default function TechStack() {
          transition-opacity md:opacity-20 md:hover:opacity-100 md:hover:backdrop-blur-lg
          [&[data-scrolled]]:shadow-lg flex gap-2 items-center justify-center fixed bottom-0 left-0">
             {icons.map((Icon, i) => (
-                <Icon key={i} className=" sm:w-4 sm:h-4 md:w-6 md:h-6"/>
+                <Icon
+                    key={i}
+                    className="sm:w-4 sm:h-4 md:w-6 md:h-6 transition-transform duration-200 hover:scale-125"
+                />
             ))}
         </div>
     );
