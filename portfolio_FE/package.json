@@ -16,7 +16,8 @@
     "astro": "^5.14.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "tech-stack-icons": "^3.3.2"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",
@@ -26,6 +27,6 @@
     "vite": "^7.1.6"
   },
   "engines": {
-    "node": "20.19.0"
+    "node": ">=24.8.0"
   }
 }
