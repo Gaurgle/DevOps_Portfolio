@@ -47,9 +47,9 @@ const links = [
 export default function TechStack() {
     return (
         <div className="z-50 w-full h-12
-         bg-black/70 backdrop-blur supports-[backdrop-filter]:bg-black/50
-         border-b border-white/0
-         transition-opacity md:opacity-20 md:hover:opacity-100 md:hover:backdrop-blur-lg
+         bg-black/70 backdrop-blur-[1px] supports-[backdrop-filter]:bg-black/50
+         border-b border-white/0 mb-4
+         transition-opacity md:opacity-30 md:hover:opacity-100 md:hover:backdrop-blur-[0px]
          [&[data-scrolled]]:shadow-lg flex gap-2 items-center justify-center fixed bottom-0 left-0">
             {icons.map((Icon, i) => (
                 <a
@@ -57,9 +57,9 @@ export default function TechStack() {
                     href={links[i]}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="sm:w-4 sm:h-4 md:w-6 md:h-6 transition-transform duration-200 hover:scale-125"
+                    className="sm:w-4 sm:h-4 md:w-8 md:h-8 transition-transform duration-400 hover:scale-125 blur-[1px] hover:blur-0"
                 >
-                    <Icon/>
+                    <Icon className="w-full h-full"/>
                 </a>
             ))}
         </div>
