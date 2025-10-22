@@ -72,7 +72,7 @@ export default function ProjectCards() {
             {projects.map((project, idx) => (
                 <div
                     key={idx}
-                    className="relative group bg-black dark:bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden hover:border-yellow-500/20 transition-all"
+                    className="relative group bg-black dark:bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden transition-all border:blur-[2px]"
                 >
                     {/* Image */}
                     <div className="h-48 w-full overflow-hidden">
@@ -126,7 +126,7 @@ export default function ProjectCards() {
                         </div>
                     )}
 
-                    <BorderBeam className="rounded-2xl z-10"/>
+                    <BorderBeam className="rounded-2xl z-10 blur-lg"/>
                 </div>
             ))}
         </div>
