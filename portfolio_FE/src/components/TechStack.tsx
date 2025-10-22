@@ -3,6 +3,7 @@ import {
     SiKotlin,
     SiSpring,
     SiAndroid,
+    SiJetpackcompose,
     SiPython,
     SiMysql,
     SiPostgresql,
@@ -18,6 +19,7 @@ const icons = [
     DiJava,         // <-- better Java logo
     SiSpring,
     SiAndroid,
+    SiJetpackcompose,
     SiPython,
     SiMysql,
     SiPostgresql,
