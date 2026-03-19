@@ -1,7 +1,7 @@
 @font-face {
     font-family: "Ramose";
-    src: url("/public/fonts/Ramose-Regular.woff") format("woff"),
-    url("/public/fonts/Ramose-Regular.woff2") format("woff2");
+    src: url("/fonts/Ramose-Regular.woff2") format("woff2"),
+         url("/fonts/Ramose-Regular.woff") format("woff");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -15,12 +15,7 @@ html, body {
     min-height: 100%;
     height: auto;
     overflow-y: auto;
-    @apply bg-black text-white min-h-screen border-gray-950;
-}
-
-@keyframes pulse-slow {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.55; transform: scale(1.02); }
+    @apply bg-black text-white min-h-screen;
 }
 
 .particle-bg {
@@ -36,47 +31,223 @@ html, body {
     }
 }
 
-.banner {
-    @apply bg-black;
-    /*background: linear-gradient(90deg, #131313, #2a2a2a);*/
-    color: white;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 60;
+/* Animation stagger delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+.stagger-7 { animation-delay: 0.7s; }
 
-}.sidebar {
-    @apply bg-black border-solid ;
-    /*background: linear-gradient(90deg, #131313, #2a2a2a);*/
-    color: white;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    font-weight: 400;
+/* Terminal card chrome */
+.terminal-card {
+    @apply border border-zinc-800 rounded-lg overflow-hidden bg-black/50 backdrop-blur-sm;
 }
 
-.container {
-    @apply max-w-6xl mx-auto px-6;
+.terminal-bar {
+    @apply flex items-center gap-1.5 px-4 py-2.5 bg-zinc-900/80 border-b border-zinc-800;
 }
 
-.card {
-    @apply rounded-2xl bg-white shadow p-6;
+.terminal-dot {
+    @apply w-2.5 h-2.5 rounded-full;
 }
 
-.btn {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium
-    bg-blue-600 text-white hover:bg-blue-700 transition;
+/* ASCII art — close gaps between Unicode block chars */
+.ascii-art {
+    line-height: 0.72;
+    letter-spacing: 0;
+    transform: scaleY(1.18);
+    transform-origin: top center;
 }
 
-.link {
-    @apply text-blue-600 hover:underline;
+/* ASCII glow — catppuccin accent tints */
+.ascii-glow {
+    text-shadow:
+        0 0 10px rgba(203, 166, 247, 0.25),
+        0 0 40px rgba(245, 194, 231, 0.12),
+        0 0 80px rgba(249, 226, 175, 0.08);
 }
 
-.Sidebar {
-    background: linear-gradient(90deg, #131313, #2a2a2a);
-    color: white;
-    padding: 2rem;
-    border-radius: 1rem;
+/* Subtle glow pulse for banner logo */
+@keyframes terminal-glow {
+    0%, 100% {
+        text-shadow: 0 0 5px rgba(203,166,247,0.12);
+        opacity: 0.75;
+    }
+    50% {
+        text-shadow: 0 0 12px rgba(203,166,247,0.25), 0 0 25px rgba(245,194,231,0.12);
+        opacity: 1;
+    }
+}
+
+.animate-terminal-glow {
+    animation: terminal-glow 4s ease-in-out infinite;
+}
+
+/* Pixel art ROOS logo pulse */
+@keyframes pixel-roos-pulse {
+    0%, 100% {
+        opacity: 0.55;
+        filter: drop-shadow(0 0 1px rgba(148, 226, 213, 0.1));
+    }
+    50% {
+        opacity: 1;
+        filter: drop-shadow(0 0 4px rgba(148, 226, 213, 0.35)) drop-shadow(0 0 10px rgba(203, 166, 247, 0.12));
+    }
+}
+
+.pixel-roos-glow {
+    animation: pixel-roos-pulse 5s ease-in-out infinite;
+}
+
+/* rm -rf / easter egg — screen glitch */
+@keyframes rm-rf-shake {
+    0%   { transform: translate(0);        filter: none; }
+    10%  { transform: translate(-3px, 1px); filter: hue-rotate(90deg); }
+    20%  { transform: translate(2px, -2px); filter: hue-rotate(180deg) brightness(1.5); }
+    30%  { transform: translate(-1px, 2px); filter: invert(0.15); }
+    40%  { transform: translate(3px, -1px); filter: hue-rotate(270deg); }
+    50%  { transform: translate(0, 1px);    filter: brightness(0.6); }
+    60%  { transform: translate(-2px, -1px);filter: hue-rotate(90deg) saturate(2); }
+    70%  { transform: translate(1px, 2px);  filter: brightness(1.3); }
+    80%  { transform: translate(-1px);      filter: none; }
+    90%  { transform: translate(0, -1px);   filter: brightness(0.8); }
+    100% { transform: translate(0);         filter: none; }
+}
+
+body.rm-rf-glitch {
+    animation: rm-rf-shake 2s ease-out;
+}
+
+/* Konami code — quick green flash + scanlines + achievement */
+body.konami-active {
+    animation: konami-flash 0.8s ease-out forwards;
+}
+
+@keyframes konami-flash {
+    0%   { filter: brightness(2.5) hue-rotate(80deg) saturate(3); }
+    20%  { filter: brightness(1.3) hue-rotate(40deg) saturate(1.5); }
+    100% { filter: brightness(1) hue-rotate(0deg) saturate(1); }
+}
+
+body.konami-active::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 65, 0.1) 0px,
+        rgba(0, 255, 65, 0.1) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    animation: konami-scanlines 3s ease-out forwards;
+}
+
+@keyframes konami-scanlines {
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Konami achievement banner */
+.konami-banner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    z-index: 10000;
+    pointer-events: none;
+    font-family: 'Noto Sans Mono', monospace;
+    text-align: center;
+    animation: konami-banner-in 3s ease-out forwards;
+}
+
+@keyframes konami-banner-in {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); filter: brightness(3); }
+    10%  { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+    20%  { transform: translate(-50%, -50%) scale(1); }
+    70%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -60%) scale(1); }
+}
+
+/* View Transitions — default (subtle terminal blink) */
+@keyframes term-out {
+    0%   { opacity: 1; filter: brightness(1); }
+    70%  { opacity: 0.5; filter: brightness(2) saturate(0); }
+    100% { opacity: 0; filter: brightness(3) saturate(0); }
+}
+
+@keyframes term-in {
+    0%   { opacity: 0; filter: brightness(0); }
+    50%  { opacity: 0.7; filter: brightness(0.5); }
+    100% { opacity: 1; filter: brightness(1); }
+}
+
+/* View Transitions — CRT mode (dramatic phosphor collapse) */
+@keyframes crt-out {
+    0%   { opacity: 1; transform: scaleY(1); filter: brightness(1); }
+    50%  { opacity: 1; transform: scaleY(1); filter: brightness(2.5) saturate(0) sepia(0.4) hue-rotate(70deg); }
+    100% { opacity: 0.6; transform: scaleY(0.005); filter: brightness(4) saturate(0); }
+}
+
+@keyframes crt-in {
+    0%   { opacity: 0; transform: scaleY(0.005); filter: brightness(0); }
+    35%  { opacity: 0.7; transform: scaleY(1.02); filter: brightness(0.5) sepia(0.3) hue-rotate(70deg); }
+    65%  { opacity: 1; transform: scaleY(0.99); filter: brightness(1.1); }
+    100% { opacity: 1; transform: scaleY(1); filter: brightness(1); }
+}
+
+/* CRT Mode — toggled via terminal command */
+body.crt-mode {
+    text-shadow: 0 0 1px rgba(0, 200, 40, 0.12);
+}
+
+body.crt-mode::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    background:
+        /* Subtle green tint */
+        linear-gradient(0deg, rgba(0, 200, 40, 0.025), rgba(0, 200, 40, 0.025)),
+        /* Scanlines */
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.25) 0px,
+            rgba(0, 0, 0, 0.25) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        /* Vignette */
+        radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.4) 100%),
+        /* Static noise */
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    background-size: auto, auto, auto, 256px 256px;
+    animation: crt-wobble 0.6s linear infinite, crt-static 0.12s steps(4) infinite;
+}
+
+@keyframes crt-static {
+    0%   { background-position: 0 0, 0 0, 0 0, 0 0; }
+    25%  { background-position: 0 0, 0 0, 0 0, -50px -30px; }
+    50%  { background-position: 0 0, 0 0, 0 0, 30px -60px; }
+    75%  { background-position: 0 0, 0 0, 0 0, -20px 40px; }
+    100% { background-position: 0 0, 0 0, 0 0, 50px 20px; }
+}
+
+@keyframes crt-wobble {
+    0%   { transform: translateY(0); }
+    10%  { transform: translateY(0.8px); }
+    20%  { transform: translateY(-0.4px); }
+    30%  { transform: translateY(0.6px); }
+    40%  { transform: translateY(-0.7px); }
+    50%  { transform: translateY(0.3px); }
+    60%  { transform: translateY(-0.5px); }
+    70%  { transform: translateY(0.9px); }
+    80%  { transform: translateY(-0.3px); }
+    90%  { transform: translateY(0.5px); }
+    100% { transform: translateY(0); }
 }

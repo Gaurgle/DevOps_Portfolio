@@ -3,8 +3,8 @@ import { cn } from "../../lib/utils.ts";
 
 type BorderBeamProps = {
     className?: string;
-    length?: number; // px
-    duration?: number; // seconds
+    length?: number;
+    duration?: number;
     colorFrom?: string;
     colorVia?: string;
     colorTo?: string;
@@ -14,9 +14,9 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
                                                    className,
                                                    length = 200,
                                                    duration = 10,
-                                                   colorFrom = "#ffdd00",
-                                                   colorVia = "#dc03f4",
-                                                   colorTo = "#1aff00",
+                                                   colorFrom = "#cba6f7",
+                                                   colorVia = "#f5c2e7",
+                                                   colorTo = "#a6e3a1",
                                                }) => {
     const fadeLength = Math.round(length * 0.85);
     const blurAmount = Math.round(length * 0.25);
@@ -35,18 +35,10 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
     const beamStyles = cn(
         "after:content-['']",
         "![mask-clip:padding-box,border-box] ![mask-composite:intersect] [mask:linear-gradient(transparent,transparent),linear-gradient(white,white)]",
-
-        // animation
         "after:absolute after:inset-0 after:m-auto after:aspect-square after:w-[calc(var(--length)*1px)] after:animate-border-beam",
-
-        // gradient + base blur
         "after:[background:linear-gradient(to_left,transparent,transparent_var(--fade-length),var(--color-from),var(--color-via),var(--color-to),transparent_calc(100%_-_var(--fade-length)),transparent)]",
         "after:[filter:blur(var(--blur-amount))]",
-
-        // follow rounded rect path
         "after:[offset-path:rect(0_auto_auto_0_round_calc(var(--length)*1px))]",
-
-        // hover → ADD extra glow instead of replacing blur
         "group-hover:after:[filter:blur(var(--blur-amount))_drop-shadow(0_0_6px_var(--color-from))_drop-shadow(0_0_8px_var(--color-via))_drop-shadow(0_0_10px_var(--color-to))]"
     );
 

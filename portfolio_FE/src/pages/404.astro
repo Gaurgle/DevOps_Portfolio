@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout title="404 — Not Found">
+    <div class="max-w-lg mx-auto px-4 flex flex-col items-center justify-center min-h-[60vh]">
+        <div class="terminal-card w-full opacity-0 animate-fade-up">
+            <div class="terminal-bar">
+                <span class="terminal-dot bg-ctp-red/80"></span>
+                <span class="terminal-dot bg-ctp-yellow/80"></span>
+                <span class="terminal-dot bg-ctp-green/80"></span>
+                <span class="font-mono text-[10px] text-zinc-500 ml-2">~/portfolio</span>
+            </div>
+            <div class="p-5 font-mono text-sm space-y-3">
+                <div>
+                    <span class="text-ctp-green">$ </span>
+                    <span class="text-zinc-300">cd /this-page</span>
+                </div>
+                <div class="text-ctp-red">
+                    bash: cd: /this-page: No such file or directory
+                </div>
+
+                <pre class="text-[11px] text-zinc-700 my-4 leading-tight select-none ascii-art">{`
+ _  _    ___  _  _
+| || |  / _ \\| || |
+| || |_| | | | || |_
+|__   _| | | |__   _|
+   | | | |_| |  | |
+   |_|  \\___/   |_|`}</pre>
+
+                <p class="text-zinc-500 text-xs">
+                    the page you're looking for doesn't exist.
+                </p>
+
+                <div class="mt-4 pt-3 border-t border-zinc-800/50">
+                    <span class="text-ctp-green">$ </span>
+                    <a href="/" class="text-zinc-300 hover:text-white transition-colors">
+                        cd ~<span class="animate-pulse text-ctp-green ml-1">▋</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</BaseLayout>
