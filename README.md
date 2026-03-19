@@ -1,3 +1,12 @@
+![Status](https://img.shields.io/badge/Status-Active-success)
+![GitHub last commit](https://img.shields.io/github/last-commit/Gaurgle/DevOps_Portfolio)
+![Frontend](https://img.shields.io/badge/Frontend-Astro-FF5A03?logo=astro)
+![Backend](https://img.shields.io/badge/Backend-Spring%20Boot-6DB33F?logo=springboot)
+![Database](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql)
+
+[![Frontend Demo](https://img.shields.io/badge/Frontend-Demo-blue?logo=vercel)](https://andreasroos.vercel.app)
+[![Backend Health](https://img.shields.io/badge/Backend-Health_Check-success?logo=springboot)](https://devopsportfolio-production.up.railway.app/actuator/health)
+
 # DevOps Portfolio
 This is a showcase portfolio application built as a part of the DevOps course at Nackademin.
 A full-stack developer portfolio built with **Astro (frontend)** and **Spring Boot (backend)**, connected to a **PostgreSQL database** on **Render** and deployed using **Vercel**, **Railway**, and **GitHub Actions**.
