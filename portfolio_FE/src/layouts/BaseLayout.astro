@@ -1,40 +1,46 @@
 ---
-import {ViewTransitions} from "astro:transitions"
 import CommonHead from "../components/CommonHead.astro";
 import "../styles/global.css";
 import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
 import ParticleBg from "../../public/js/ParticleBg";
-import MusicPlayerWrapper from "../components/MusicPlayerWrapper";
+import EasterEggs from "../components/EasterEggs";
 
 const {title, description, current = "/"} = Astro.props;
 const isHome = Astro.url.pathname === "/";
-
 ---
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <CommonHead {title}/>
-    <title>Portfolio</title>
-    <ViewTransitions/>
+    <CommonHead {title} {description} />
 </head>
 
 <body class="font-sans bg-black text-white relative">
-<ParticleBg client:load className="bg-behind pointer-events-none" />
+<ParticleBg client:idle className="bg-behind pointer-events-none" />
+
+<!-- SVG filter for pixelated glow -->
+<svg class="absolute w-0 h-0 overflow-hidden" aria-hidden="true">
+    <defs>
+        <filter id="pixel" x="-20%" y="-20%" width="140%" height="140%">
+            <feFlood x="4" y="4" height="2" width="2"/>
+            <feComposite width="14" height="14"/>
+            <feTile result="a"/>
+            <feComposite in="SourceGraphic" in2="a" operator="in"/>
+            <feMorphology operator="dilate" radius="7"/>
+        </filter>
+    </defs>
+</svg>
 
 <!-- BANNER -->
 <header class="fixed inset-x-0 top-0 z-50 pointer-events-auto">
     <Banner isHome={isHome} />
 </header>
 
-
 <!-- SIDEBAR -->
 <Sidebar/>
 
 <!-- GRID CONTAINER -->
 <div class="relative z-20 min-h-screen md:ml-54 md:pl-54">
-
-    <!-- MAIN (scrolls; important: min-h-0) -->
     <main class="relative z-10 min-h-screen p-4 md:p-6 pt-[80px] md:pt-[120px] pb-60">
         <div class="hero mb-4">
             <slot name="hero"/>
@@ -42,8 +48,9 @@ const isHome = Astro.url.pathname === "/";
         <slot/>
     </main>
 </div>
-<!-- Persistent Music Player -->
-<!--<MusicPlayerWrapper client:load />-->
+
+<!-- Easter eggs (React component for reliable hydration with ClientRouter) -->
+<EasterEggs client:load />
 
 </body>
 </html>

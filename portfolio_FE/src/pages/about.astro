@@ -3,45 +3,103 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import TechStack from "../components/TechStack.tsx";
 ---
 
-<BaseLayout>
-    <div class="about-section my-8 px-6 max-w-4xl mx-auto space-y-8 text-center">
+<BaseLayout title="About" current="/about">
+    <div class="max-w-4xl mx-auto px-4 space-y-6">
 
-        <div class="container mx-auto px-6 lg:px-16">
-            <div class="max-w-4xl mx-auto text-center">
-                <!--<h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-6">About Me</h1>-->
-                <p class="text-lg text-gray-400 leading-relaxed mb-12">
+        <!-- Page header -->
+        <div class="opacity-0 animate-fade-up">
+            <p class="font-mono text-sm text-zinc-500 mb-6">
+                <span class="text-ctp-green">$</span> cat about.txt
+            </p>
+        </div>
 
-                </p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <!-- Placeholder for personal details section -->
-                <div class="flex flex-col items-start p-8 bg-black bg-opacity-70 rounded-lg shadow-lg">
-                    <h2 class="text-2xl md:text-3xl font-semibold mb-4">Who I Am</h2>
-                    <p class="text-gray-400 leading-relaxed text-left">
-                        I'm Andreas, a 22 year old student from Stockholm, Sweden. <br>
+        <!-- Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
+            <!-- Who I Am -->
+            <div class="terminal-card opacity-0 animate-fade-up stagger-1">
+                <div class="terminal-bar">
+                    <span class="terminal-dot bg-ctp-red/80"></span>
+                    <span class="terminal-dot bg-ctp-yellow/80"></span>
+                    <span class="terminal-dot bg-ctp-green/80"></span>
+                    <span class="font-mono text-xs text-zinc-500 ml-2">who.txt</span>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-lg font-semibold mb-3">Who I Am</h2>
+                    <p class="text-sm text-zinc-400 leading-relaxed">
+                        I'm Andreas, 36, from Stockholm, Sweden.
+                        Currently studying coding and system development at
+                        <span class="text-zinc-300">Nackademin</span>, and doing an internship at
+                        <span class="text-zinc-300">WSI Sigma</span> throughout the year.
                     </p>
                 </div>
-                <!-- Placeholder for professional skills section -->
-                <div class="flex flex-col items-start p-8 bg-black bg-opacity-70 rounded-lg shadow-lg">
-                    <h2 class="text-2xl md:text-3xl font-semibold mb-4">My Work</h2>
-                    <p class="text-gray-400 leading-relaxed text-left">
-                        In my career in music, I've had the pleasure to work as a drummer, producer,
-                        mixing engineer and live technitian all around the world.
-                        It has been a great experience to learn and grow in this field.
-                        But time has come to try new things in life.
-                        I'm currently studying coding and system development at Nackademin in Stockholm, and will be doing <br>
-                        an internship at WSI Sigma in Stockholm through out the year.
+            </div>
+
+            <!-- Background -->
+            <div class="terminal-card opacity-0 animate-fade-up stagger-2">
+                <div class="terminal-bar">
+                    <span class="terminal-dot bg-ctp-red/80"></span>
+                    <span class="terminal-dot bg-ctp-yellow/80"></span>
+                    <span class="terminal-dot bg-ctp-green/80"></span>
+                    <span class="font-mono text-xs text-zinc-500 ml-2">background.txt</span>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-lg font-semibold mb-3">Background</h2>
+                    <p class="text-sm text-zinc-400 leading-relaxed">
+                        In my career in music, I've worked as a drummer, producer,
+                        mixing engineer and live technician all around the world.
+                        A great experience in learning, collaborating, and solving
+                        problems under pressure. Now channeling that into code.
                     </p>
                 </div>
-
-                <div class="mt-auto flex flex-col items-center p-8 bg-black rounded-lg shadow-lg text-left ">
-                    <div class="flex items-center justify-center">
-                        <TechStack/>
-                    </div>
-                </div>
-
             </div>
+
+            <!-- As a Developer — full width -->
+            <div class="terminal-card md:col-span-2 opacity-0 animate-fade-up stagger-3">
+                <div class="terminal-bar">
+                    <span class="terminal-dot bg-ctp-red/80"></span>
+                    <span class="terminal-dot bg-ctp-yellow/80"></span>
+                    <span class="terminal-dot bg-ctp-green/80"></span>
+                    <span class="font-mono text-xs text-zinc-500 ml-2">developer.txt</span>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-lg font-semibold mb-3">As a Developer</h2>
+                    <p class="text-sm text-zinc-400 leading-relaxed mb-3">
+                        Backend is where I feel most at home &mdash;
+                        <span class="text-zinc-300">Spring Boot</span> with
+                        <span class="text-zinc-300">Kotlin</span>,
+                        <span class="text-zinc-300">Docker</span>,
+                        <span class="text-zinc-300">PostgreSQL</span>.
+                        Building things that run reliably and hold up at scale.
+                        I care about clean architecture, proper testing, and understanding
+                        what's happening under the hood rather than just above it.
+                    </p>
+                    <p class="text-sm text-zinc-400 leading-relaxed">
+                        I'm also deep into
+                        <span class="text-zinc-300">Android</span> development.
+                        Currently building a BLE testing tool in Kotlin with
+                        <span class="text-zinc-300">Jetpack Compose</span> &mdash;
+                        it connects to Bluetooth Low Energy devices, digs into GATT services
+                        and characteristics, and runs automated test scripts through an
+                        embedded Lua engine. Kotlin coroutines, thread-safe operation queuing,
+                        and working close to the hardware is the kind of work I find most interesting.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tech Stack — full width -->
+            <div class="terminal-card md:col-span-2 opacity-0 animate-fade-up stagger-4">
+                <div class="terminal-bar">
+                    <span class="terminal-dot bg-ctp-red/80"></span>
+                    <span class="terminal-dot bg-ctp-yellow/80"></span>
+                    <span class="terminal-dot bg-ctp-green/80"></span>
+                    <span class="font-mono text-xs text-zinc-500 ml-2">stack.txt</span>
+                </div>
+                <div class="p-6">
+                    <TechStack client:idle />
+                </div>
+            </div>
+
         </div>
     </div>
 </BaseLayout>

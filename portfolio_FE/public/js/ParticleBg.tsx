@@ -10,8 +10,8 @@ function hexToRgb(hex: string): number[] {
 type Props = {
   quantity?: number;
   size?: number;
-  color?: string;          // light mode
-  darkModeColor?: string;  // dark mode
+  color?: string;
+  darkModeColor?: string;
   speed?: number;
   className?: string;
   children?: React.ReactNode;
@@ -23,7 +23,7 @@ type Circle = {
 };
 
 const ParticleBg: React.FC<Props> = ({
-                                       quantity = 200,
+                                       quantity = 80,
                                        size = 0.1,
                                        color = "#000000",
                                        darkModeColor = "#ffffff",
@@ -35,9 +35,10 @@ const ParticleBg: React.FC<Props> = ({
   const ctx = useRef<CanvasRenderingContext2D | null>(null);
   const circles = useRef<Circle[]>([]);
   const canvasSize = useRef({ w: 0, h: 0 });
-  const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+  const rafRef = useRef<number>(0);
+  const mountedRef = useRef(true);
+  const dpr = typeof window !== "undefined" ? Math.min(window.devicePixelRatio || 1, 2) : 1;
 
-  // detect dark mode without next-themes
   const [isDark, setIsDark] = useState<boolean>(() =>
       typeof window !== "undefined" && window.matchMedia
           ? window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -52,6 +53,7 @@ const ParticleBg: React.FC<Props> = ({
   }, []);
 
   const rgb = useMemo(() => hexToRgb(isDark ? darkModeColor : color), [isDark, darkModeColor, color]);
+  const rgbStr = useMemo(() => rgb.join(","), [rgb]);
 
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -81,58 +83,59 @@ const ParticleBg: React.FC<Props> = ({
     };
   }, [size]);
 
-  const drawCircle = useCallback((c: Circle, update = false) => {
-    if (!ctx.current) return;
-    ctx.current.shadowBlur = c.size * 3;
-    ctx.current.shadowColor = `rgba(${rgb.join(",")}, ${c.alpha})`;
-    ctx.current.beginPath();
-    ctx.current.arc(c.x, c.y, c.size, 0, Math.PI * 2);
-    ctx.current.fillStyle = `rgba(${rgb.join(",")}, ${c.alpha})`;
-    ctx.current.fill();
-    if (!update) circles.current.push(c);
-  }, [rgb]);
-
-  const clear = useCallback(() => {
-    ctx.current?.clearRect(0, 0, canvasSize.current.w, canvasSize.current.h);
-  }, []);
-
-  const drawInitial = useCallback(() => {
-    clear();
-    for (let i = 0; i < quantity; i++) drawCircle(newCircle());
-  }, [clear, drawCircle, newCircle, quantity]);
-
   const animate = useCallback(() => {
-    clear();
+    if (!mountedRef.current || !ctx.current) return;
+    const c2d = ctx.current;
+    const {w, h} = canvasSize.current;
+    const arr = circles.current;
+
+    c2d.clearRect(0, 0, w, h);
     const now = performance.now();
-    for (let i = circles.current.length - 1; i >= 0; i--) {
-      const c = circles.current[i];
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+      const c = arr[i];
       const elapsed = now - c.fadeInStartTime;
-      const fadeCycle = Math.sin(elapsed * c.fadeSpeed);
-      c.alpha = 0.3 + 0.3 * fadeCycle;
+      c.alpha = 0.3 + 0.3 * Math.sin(elapsed * c.fadeSpeed);
       c.x += c.dx;
       c.y += c.dy - speed;
-      drawCircle(c, true);
-      if (c.x < -c.size || c.x > canvasSize.current.w + c.size || c.y < -c.size) {
-        circles.current.splice(i, 1);
+
+      // Draw without shadowBlur (major perf win)
+      c2d.beginPath();
+      c2d.arc(c.x, c.y, c.size, 0, Math.PI * 2);
+      c2d.fillStyle = `rgba(${rgbStr},${c.alpha})`;
+      c2d.fill();
+
+      if (c.x < -c.size || c.x > w + c.size || c.y < -c.size) {
+        // Swap-and-pop instead of splice (O(1) vs O(n))
+        arr[i] = arr[arr.length - 1];
+        arr.pop();
         const n = newCircle();
-        n.y = canvasSize.current.h + n.size;
-        drawCircle(n);
+        n.y = h + n.size;
+        arr.push(n);
       }
     }
-    requestAnimationFrame(animate);
-  }, [clear, drawCircle, newCircle, speed]);
+    rafRef.current = requestAnimationFrame(animate);
+  }, [newCircle, speed, rgbStr]);
 
   useEffect(() => {
+    mountedRef.current = true;
     resizeCanvas();
-    drawInitial();
-    const onResize = () => { resizeCanvas(); drawInitial(); };
-    window.addEventListener("resize", onResize);
-    const raf = requestAnimationFrame(animate);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      cancelAnimationFrame(raf);
+    // Init circles
+    for (let i = 0; i < quantity; i++) circles.current.push(newCircle());
+    rafRef.current = requestAnimationFrame(animate);
+
+    const onResize = () => {
+      resizeCanvas();
+      for (let i = 0; i < quantity; i++) circles.current.push(newCircle());
     };
-  }, [animate, drawInitial, resizeCanvas]);
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      mountedRef.current = false;
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [animate, resizeCanvas, newCircle, quantity]);
 
   return (
       <div className={`relative w-full h-full overflow-hidden ${className || ""}`}>
