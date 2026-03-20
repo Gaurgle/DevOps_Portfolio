@@ -15,7 +15,7 @@ export default function EasterEggs() {
                     console.log('%c🎮 KONAMI CODE ACTIVATED!', 'color: #a6e3a1; font-size: 20px; font-weight: bold;');
                     window.dispatchEvent(new CustomEvent('konami'));
                     document.body.classList.add('konami-active');
-                    setTimeout(() => document.body.classList.remove('konami-active'), 3000);
+                    setTimeout(() => document.body.classList.remove('konami-active'), 4000);
 
                     // Achievement banner
                     const banner = document.createElement('div');
@@ -64,7 +64,8 @@ export default function EasterEggs() {
         window.addEventListener('rm-rf', onRmRf);
 
         console.log(
-            '%c ██████╗  ██████╗  ██████╗ ███████╗\n' +
+            '%c ' +
+            '██████╗  ██████╗  ██████╗ ███████╗\n' +
             '██╔══██╗██╔═══██╗██╔═══██╗██╔════╝\n' +
             '██████╔╝██║   ██║██║   ██║███████╗\n' +
             '██╔══██╗██║   ██║██║   ██║╚════██║\n' +
@@ -72,7 +73,7 @@ export default function EasterEggs() {
             '╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝',
             'color: #a6e3a1; font-family: monospace; font-size: 10px;'
         );
-        console.log('%c👋 hiring? → larsnilsandreas@pm.me', 'color: #cba6f7; font-size: 14px; padding: 8px 0;');
+        console.log('%c hiring? → larsnilsandreas@pm.me', 'color: #cba6f7; font-size: 14px; padding: 8px 0;');
         console.log('%c hint: try the konami code ↑↑↓↓←→←→ B A', 'color: #585b70; font-size: 11px;');
 
         return () => {
