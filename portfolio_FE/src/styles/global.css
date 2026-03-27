@@ -40,6 +40,75 @@ html, body {
 .stagger-6 { animation-delay: 0.6s; }
 .stagger-7 { animation-delay: 0.7s; }
 
+/* Tech stack icon glow blob */
+.tech-icon-wrap {
+    position: relative;
+    z-index: 1;
+}
+
+.icon-blob {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    filter: blur(14px);
+    transition: opacity 0.8s ease, background 0.5s ease;
+    animation: icon-blob-morph 6s ease-in-out infinite;
+}
+
+@keyframes icon-blob-morph {
+    0%   { border-radius: 50% 35% 60% 40%; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    20%  { border-radius: 35% 55% 40% 60%; transform: translate(-50%, -50%) scale(1.1) rotate(8deg); }
+    40%  { border-radius: 60% 40% 35% 55%; transform: translate(-50%, -50%) scale(0.9) rotate(-5deg); }
+    60%  { border-radius: 40% 60% 55% 35%; transform: translate(-50%, -50%) scale(1.15) rotate(6deg); }
+    80%  { border-radius: 55% 35% 50% 45%; transform: translate(-50%, -50%) scale(0.95) rotate(-8deg); }
+    100% { border-radius: 50% 35% 60% 40%; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
+
+/* Text roll effect for sidebar links */
+.text-roll {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.text-roll .text-roll-top,
+.text-roll .text-roll-bottom {
+    display: inline-flex;
+}
+
+.text-roll .text-roll-top span,
+.text-roll .text-roll-bottom span {
+    display: inline-block;
+    transition: transform 0s;
+}
+
+.text-roll .text-roll-bottom {
+    position: absolute;
+    inset: 0;
+}
+
+.text-roll .text-roll-bottom span {
+    transform: translateY(100%);
+}
+
+.text-roll:hover .text-roll-top span,
+.text-roll:hover .text-roll-bottom span {
+    transition-duration: 0.25s;
+    transition-delay: var(--d, 0s);
+}
+
+.text-roll:hover .text-roll-top span {
+    transform: translateY(-100%);
+}
+
+.text-roll:hover .text-roll-bottom span {
+    transform: translateY(0);
+}
+
 /* Terminal card chrome */
 .terminal-card {
     @apply border border-zinc-800 rounded-lg overflow-hidden bg-black/50 backdrop-blur-sm;
@@ -64,9 +133,12 @@ html, body {
 /* ASCII glow — catppuccin accent tints */
 .ascii-glow {
     text-shadow:
-        0 0 10px rgba(203, 166, 247, 0.25),
-        0 0 40px rgba(245, 194, 231, 0.12),
-        0 0 80px rgba(249, 226, 175, 0.08);
+        0 0 10px rgba(203, 166, 247, 0.7),
+        2px 2px 30px rgba(245, 194, 231, 0.5),
+        -2px 3px 60px rgba(166, 227, 161, 0.35),
+        3px -2px 100px rgba(137, 180, 250, 0.25),
+        0 0 150px rgba(203, 166, 247, 0.15);
+    cursor: default;
 }
 
 /* Subtle glow pulse for banner logo */
@@ -98,7 +170,14 @@ html, body {
 }
 
 .pixel-roos-glow {
-    animation: pixel-roos-pulse 5s ease-in-out infinite;
+    opacity: 1;
+    filter: drop-shadow(0 0 3px rgba(148, 226, 213, 0.25)) drop-shadow(0 0 8px rgba(203, 166, 247, 0.1));
+}
+
+/* Eagle border beam — sharp 1px line under eagle */
+.eagle-beam {
+    width: 55px;
+    opacity: 0.35;
 }
 
 /* rm -rf / easter egg — screen glitch */

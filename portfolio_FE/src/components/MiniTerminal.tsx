@@ -29,7 +29,7 @@ const NEOFETCH = `  ██████╗     andreas@portfolio
                Term    mini-terminal v1
                CPU     vite @ 6.2
                Memory  6 projects loaded
-               Uptime  since 2024
+               Uptime  since 2025
                Contact larsnilsandreas@pm.me`;
 
 const SL = `      ____
@@ -39,9 +39,9 @@ const SL = `      ____
   (O)    (O)`;
 
 const RESPONSES: Record<string, string> = {
-    help: 'try: whoami, ls, cat about.txt, cd projects, neofetch, crt, clear',
-    ls: 'projects/  about.txt  contact.txt  secret.txt',
-    'cat about.txt': 'developer, 36, stockholm.\nbackend, android, BLE, docker.',
+    help: 'try: whoami, ls, cat about.txt, cd projects, cv, neofetch, crt, clear',
+    ls: 'projects/  about.txt  contact.txt  secret.txt  cv/',
+    'cat about.txt': 'backend & android dev, 36, stockholm.\nkotlin, java, spring boot, BLE, docker.',
     'ls projects': 'portfolio/  booking-program/  webshop/\n15-game/  quiz-game/  yacht-strike/',
     'ls projects/': 'portfolio/  booking-program/  webshop/\n15-game/  quiz-game/  yacht-strike/',
     pwd: '~/portfolio',
@@ -60,7 +60,7 @@ const RESPONSES: Record<string, string> = {
     top: 'PID  CMD          CPU\n  1  astro        2.1%\n  2  react        1.8%\n  3  tailwind     0.4%\n  4  pixel-eagle  0.1%',
     htop: 'PID  CMD          CPU\n  1  astro        2.1%\n  2  react        1.8%\n  3  tailwind     0.4%\n  4  pixel-eagle  0.1%',
     'cat /etc/passwd': 'nice try.',
-    uptime: 'up since 2024, 6 projects loaded',
+    uptime: 'up since 2025, 6 projects loaded',
     hostname: 'portfolio.local',
     'ping google.com': 'PING google.com: 64 bytes, time=0.42ms\n...just kidding, this is a fake terminal.',
     cowsay: ' ________\n< mooo!  >\n --------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||',
@@ -148,6 +148,40 @@ export default function MiniTerminal() {
             return;
         }
 
+        if (cmd === 'cv' || cmd === 'resume' || cmd === 'ls cv' || cmd === 'ls cv/') {
+            setHistory(h => [...h, {
+                cmd: raw,
+                out: 'cv/\n  andreas-roos-cv-en.pdf\n  andreas-roos-cv-sv.pdf\n\nto download: dl cv en | dl cv sv',
+            }]);
+            return;
+        }
+
+        if (cmd === 'dl cv en' || cmd === 'dl cv' || cmd === 'download cv en' || cmd === 'download cv') {
+            const a = document.createElement('a');
+            a.href = '/cv/andreas-roos-cv-en.pdf';
+            a.download = 'andreas-roos-cv-en.pdf';
+            a.click();
+            setHistory(h => [...h, {
+                cmd: raw,
+                out: 'downloading cv (en)...',
+                className: 'text-ctp-green',
+            }]);
+            return;
+        }
+
+        if (cmd === 'dl cv sv' || cmd === 'download cv sv' || cmd === 'cv sv') {
+            const a = document.createElement('a');
+            a.href = '/cv/andreas-roos-cv-sv.pdf';
+            a.download = 'andreas-roos-cv-sv.pdf';
+            a.click();
+            setHistory(h => [...h, {
+                cmd: raw,
+                out: 'downloading cv (sv)...',
+                className: 'text-ctp-green',
+            }]);
+            return;
+        }
+
         if (cmd === 'crt') {
             const active = document.body.classList.toggle('crt-mode');
             if (active) localStorage.setItem('crt-mode', '1');
@@ -180,7 +214,7 @@ export default function MiniTerminal() {
                 <span className="terminal-dot bg-ctp-green/80"></span>
                 <span className="font-mono text-[10px] text-zinc-500 ml-2">~/portfolio</span>
             </div>
-            <div ref={scrollRef} className="p-3 font-mono text-xs max-h-48 overflow-y-auto space-y-1">
+            <div ref={scrollRef} className="p-3 font-mono text-xs max-h-80 overflow-y-auto space-y-1">
                 <div className="text-zinc-600">type help</div>
                 {history.map((entry, i) => (
                     <div key={i}>

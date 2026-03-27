@@ -39,10 +39,9 @@ export default function EasterEggs() {
             setTimeout(() => document.body.classList.remove('rm-rf-glitch'), 2000);
         };
 
-        // Restore CRT mode from localStorage
-        if (localStorage.getItem('crt-mode') === '1') {
-            document.body.classList.add('crt-mode');
-        }
+        // Always start with CRT mode off
+        localStorage.removeItem('crt-mode');
+        document.body.classList.remove('crt-mode');
 
         // Swap view-transition CSS based on CRT mode before each navigation
         const vtStyle = document.createElement('style');
@@ -73,6 +72,8 @@ export default function EasterEggs() {
             'color: #a6e3a1; font-family: monospace; font-size: 10px;'
         );
         console.log('%c👋 hiring? → larsnilsandreas@pm.me', 'color: #cba6f7; font-size: 14px; padding: 8px 0;');
+        console.log('%c📄 cv (en): %c/cv/andreas-roos-cv-en.pdf', 'color: #89b4fa; font-size: 12px;', 'color: #a6e3a1; font-size: 12px; text-decoration: underline;');
+        console.log('%c📄 cv (sv): %c/cv/andreas-roos-cv-sv.pdf', 'color: #89b4fa; font-size: 12px;', 'color: #a6e3a1; font-size: 12px; text-decoration: underline;');
         console.log('%c hint: try the konami code ↑↑↓↓←→←→ B A', 'color: #585b70; font-size: 11px;');
 
         return () => {

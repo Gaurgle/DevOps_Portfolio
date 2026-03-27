@@ -20,7 +20,17 @@ type Props = {
 type Circle = {
   x: number; y: number; size: number; alpha: number;
   fadeInStartTime: number; fadeSpeed: number; dx: number; dy: number;
+  rgb: string;
 };
+
+const CTP_COLORS = [
+  '166,227,161', // green
+  '148,226,213', // teal
+  '137,180,250', // blue
+  '203,166,247', // mauve
+  '245,194,231', // pink
+  '250,179,135', // peach
+];
 
 const ParticleBg: React.FC<Props> = ({
                                        quantity = 80,
@@ -80,6 +90,7 @@ const ParticleBg: React.FC<Props> = ({
       fadeInStartTime: performance.now(),
       fadeSpeed: Math.random() * 0.0009 + 0.0006,
       dx, dy,
+      rgb: CTP_COLORS[Math.floor(Math.random() * CTP_COLORS.length)],
     };
   }, [size]);
 
@@ -102,7 +113,7 @@ const ParticleBg: React.FC<Props> = ({
       // Draw without shadowBlur (major perf win)
       c2d.beginPath();
       c2d.arc(c.x, c.y, c.size, 0, Math.PI * 2);
-      c2d.fillStyle = `rgba(${rgbStr},${c.alpha})`;
+      c2d.fillStyle = `rgba(${c.rgb},${c.alpha})`;
       c2d.fill();
 
       if (c.x < -c.size || c.x > w + c.size || c.y < -c.size) {

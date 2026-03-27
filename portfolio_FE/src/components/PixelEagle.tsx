@@ -76,6 +76,7 @@ const shotLeft = toShadow(SHOT);
 
 export default function PixelEagle() {
     const ref = useRef<HTMLDivElement>(null);
+    const glowRef = useRef<HTMLDivElement>(null);
     const scaredRef = useRef(false);
     const shotRef = useRef(false);
     const runningRef = useRef(false);
@@ -169,12 +170,24 @@ export default function PixelEagle() {
                 if (y > 80 || y < -60) {
                     el.style.display = 'none';
                     el.style.transform = 'scale(3)';
+                    if (glowRef.current) glowRef.current.style.display = 'none';
                     runningRef.current = false;
                     timeout = window.setTimeout(run, 45000 + Math.random() * 60000);
                     return;
                 }
 
                 el.style.left = `${x}px`;
+
+                // Update beam under eagle — only while walking on the ground
+                if (glowRef.current) {
+                    if (!shot && !flying && y < 2) {
+                        glowRef.current.style.left = `${x + 15}px`;
+                        glowRef.current.style.display = 'block';
+                    } else {
+                        glowRef.current.style.display = 'none';
+                    }
+                }
+
                 raf = requestAnimationFrame(step);
             };
 
@@ -233,20 +246,37 @@ export default function PixelEagle() {
     }, []);
 
     return (
-        <div
-            ref={ref}
-            style={{
-                display: 'none',
-                position: 'absolute',
-                bottom: 0,
-                left: -50,
-                width: '1px',
-                height: '1px',
-                transform: 'scale(3)',
-                transformOrigin: 'bottom left',
-                pointerEvents: 'none',
-                zIndex: 10,
-            }}
-        />
+        <>
+            <div
+                ref={ref}
+                style={{
+                    display: 'none',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: -50,
+                    width: '1px',
+                    height: '1px',
+                    transform: 'scale(3)',
+                    transformOrigin: 'bottom left',
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                }}
+            />
+            <div
+                ref={glowRef}
+                className="eagle-beam"
+                style={{
+                    display: 'none',
+                    position: 'absolute',
+                    bottom: '0',
+                    left: 0,
+                    height: '1px',
+                    background: 'linear-gradient(90deg, transparent, #cba6f7, #f5c2e7, #a6e3a1, transparent)',
+                    transform: 'translateX(-50%)',
+                    pointerEvents: 'none',
+                    zIndex: 9,
+                }}
+            />
+        </>
     );
 }

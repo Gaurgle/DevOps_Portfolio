@@ -68,7 +68,7 @@ export default function ProjectCards() {
     return (
         <div>
             <p className="font-mono text-sm text-zinc-500 mb-6">
-                <span className="text-ctp-green">$</span> ls projects/
+                <span className="text-ctp-blue">$</span> ls projects/
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
