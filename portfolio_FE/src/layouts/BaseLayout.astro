@@ -37,11 +37,11 @@ const isHome = Astro.url.pathname === "/";
 </header>
 
 <!-- SIDEBAR -->
-<Sidebar/>
+<Sidebar {current} />
 
 <!-- GRID CONTAINER -->
 <div class="relative z-20 min-h-screen md:ml-54 md:pl-54">
-    <main class="relative z-10 min-h-screen p-4 md:p-6 pt-[80px] md:pt-[120px] pb-60">
+    <main class="relative z-10 min-h-screen p-4 md:p-6 pt-[80px] md:pt-[100px] pb-60">
         <div class="hero mb-4">
             <slot name="hero"/>
         </div>

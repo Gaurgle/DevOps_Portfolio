@@ -9,7 +9,7 @@ import TechStack from "../components/TechStack.tsx";
         <!-- Page header -->
         <div class="opacity-0 animate-fade-up">
             <p class="font-mono text-sm text-zinc-500 mb-6">
-                <span class="text-ctp-green">$</span> cat about.txt
+                <span class="text-ctp-mauve">$</span> cat about.txt
             </p>
         </div>
 
@@ -27,10 +27,14 @@ import TechStack from "../components/TechStack.tsx";
                 <div class="p-6">
                     <h2 class="text-lg font-semibold mb-3">Who I Am</h2>
                     <p class="text-sm text-zinc-400 leading-relaxed">
-                        I'm Andreas, 36, from Stockholm, Sweden.
-                        Currently studying coding and system development at
-                        <span class="text-zinc-300">Nackademin</span>, and doing an internship at
-                        <span class="text-zinc-300">WSI Sigma</span> throughout the year.
+                        Backend and Android developer building APIs, services, and apps with
+                        <span class="text-zinc-300">Kotlin</span>,
+                        <span class="text-zinc-300">Java</span>, and
+                        <span class="text-zinc-300">Spring Boot</span>/<span class="text-zinc-300">Ktor</span>.
+                        Hands-on with Bluetooth LE, Jetpack Compose, and full-stack systems.
+                        Currently studying at
+                        <span class="text-zinc-300">Nackademin</span> and interning at
+                        <span class="text-zinc-300">Sigma Connectivity</span>.
                     </p>
                 </div>
             </div>
@@ -46,10 +50,16 @@ import TechStack from "../components/TechStack.tsx";
                 <div class="p-6">
                     <h2 class="text-lg font-semibold mb-3">Background</h2>
                     <p class="text-sm text-zinc-400 leading-relaxed">
-                        In my career in music, I've worked as a drummer, producer,
-                        mixing engineer and live technician all around the world.
-                        A great experience in learning, collaborating, and solving
-                        problems under pressure. Now channeling that into code.
+                        Before tech: 10+ years in the music industry as a drummer, producer,
+                        mixing engineer and live technician. Produced and worked with
+                        <span class="text-zinc-300">Liam Payne</span>,
+                        <span class="text-zinc-300">Benjamin Ingrosso</span> (incl. Eurovision),
+                        <span class="text-zinc-300">Loreen</span>,
+                        <span class="text-zinc-300">Astrid S</span>,
+                        <span class="text-zinc-300">Veronica Maggio</span>, and
+                        <span class="text-zinc-300">Vault Boy</span>.
+                        That's where the habit of solving problems under pressure comes from &mdash;
+                        now channeling it into code.
                     </p>
                 </div>
             </div>
@@ -88,15 +98,15 @@ import TechStack from "../components/TechStack.tsx";
             </div>
 
             <!-- Tech Stack — full width -->
-            <div class="terminal-card md:col-span-2 opacity-0 animate-fade-up stagger-4">
-                <div class="terminal-bar">
+            <div id="stack-card" class="terminal-card md:col-span-2 opacity-0 animate-fade-up stagger-4 !overflow-visible">
+                <div class="terminal-bar rounded-t-lg">
                     <span class="terminal-dot bg-ctp-red/80"></span>
                     <span class="terminal-dot bg-ctp-yellow/80"></span>
                     <span class="terminal-dot bg-ctp-green/80"></span>
                     <span class="font-mono text-xs text-zinc-500 ml-2">stack.txt</span>
                 </div>
                 <div class="p-6">
-                    <TechStack client:idle />
+                    <TechStack client:idle parentId="stack-card" />
                 </div>
             </div>
 

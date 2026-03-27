@@ -44,7 +44,7 @@ export default function ContactForm() {
     return (
         <div className="max-w-xl mx-auto">
             <p className="font-mono text-sm text-zinc-500 mb-4">
-                <span className="text-ctp-green">$</span> mail -s &quot;hello&quot; andreas
+                <span className="text-ctp-peach">$</span> mail -s &quot;hello&quot; andreas
             </p>
             <p className="font-mono text-xs text-zinc-600 mb-6">
                 or reach me at{' '}
@@ -73,7 +73,7 @@ export default function ContactForm() {
 
                     <label className="block">
                         <span className="font-mono text-xs text-zinc-500 mb-1.5 block">
-                            <span className="text-ctp-green/60">$</span> name
+                            <span className="text-ctp-peach/60">$</span> name
                         </span>
                         <input
                             name="name"
@@ -87,7 +87,7 @@ export default function ContactForm() {
 
                     <label className="block">
                         <span className="font-mono text-xs text-zinc-500 mb-1.5 block">
-                            <span className="text-ctp-green/60">$</span> email
+                            <span className="text-ctp-peach/60">$</span> email
                         </span>
                         <input
                             type="email"
@@ -102,7 +102,7 @@ export default function ContactForm() {
 
                     <label className="block">
                         <span className="font-mono text-xs text-zinc-500 mb-1.5 block">
-                            <span className="text-ctp-green/60">$</span> message
+                            <span className="text-ctp-peach/60">$</span> message
                         </span>
                         <textarea
                             name="message"

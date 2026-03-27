@@ -4,18 +4,11 @@ import PixelEagle from "../components/PixelEagle";
 
 const {isHome = false} = Astro.props;
 
-// ROOS in 4×5 pixel font, 1px gap between letters
-const R  = [[0,0],[1,0],[2,0], [0,1],[3,1], [0,2],[1,2],[2,2], [0,3],[2,3], [0,4],[3,4]];
-const O1 = [[6,0],[7,0], [5,1],[8,1], [5,2],[8,2], [5,3],[8,3], [6,4],[7,4]];
-const O2 = [[11,0],[12,0], [10,1],[13,1], [10,2],[13,2], [10,3],[13,3], [11,4],[12,4]];
-const S  = [[16,0],[17,0],[18,0], [15,1], [16,2],[17,2], [18,3], [15,4],[16,4],[17,4]];
-const roosShadow = [...R,...O1,...O2,...S].map(([x,y]: number[]) => `${x}px ${y}px #ddd`).join(',');
 ---
 <header
     id="site-header"
     class="sticky top-0 z-50
-     bg-black/70 backdrop-blur supports-[backdrop-filter]:bg-black/80
-     border-b border-white/5
+     bg-black/80
      transition-shadow
      [&[data-scrolled]]:shadow-lg">
 
@@ -27,22 +20,15 @@ const roosShadow = [...R,...O1,...O2,...S].map(([x,y]: number[]) => `${x}px ${y}
                 <SidebarToggle client:load/>
             </div>
 
-            <!-- CENTER: cursor + pixel art ROOS (hidden on home) -->
+            <!-- CENTER: Andreas Roos (hidden on home) -->
             {!isHome ? (
-                <a href="/" class="relative inline-flex items-center justify-self-center group gap-1.5">
-                    <!-- Blinking cursor -->
+                <a href="/" class="relative inline-flex items-center justify-self-center group gap-2">
                     <span
-                        class="w-[6px] rounded-sm animate-pulse"
-                        style={`height: 15px; background: #7c9a82;`}
+                        class="w-[2px] h-[14px] rounded-sm animate-pulse bg-ctp-green/60 translate-y-[1px]"
                     ></span>
-
-                    <!-- Pixel art ROOS -->
-                    <div style={`width: 57px; height: 15px; position: relative;`}>
-                        <div
-                            class="pixel-roos-glow"
-                            style={`position: absolute; top: 0; left: 0; width: 1px; height: 1px; box-shadow: ${roosShadow}; transform: scale(3); transform-origin: top left;`}
-                        ></div>
-                    </div>
+                    <span class="font-mono text-lg text-zinc-200 group-hover:text-white transition-colors duration-200">
+                        andreas roos
+                    </span>
                 </a>
             ) : (
                 <div aria-hidden="true" class="justify-self-center"></div>
