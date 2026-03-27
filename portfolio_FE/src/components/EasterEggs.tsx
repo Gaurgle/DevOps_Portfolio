@@ -15,7 +15,7 @@ export default function EasterEggs() {
                     console.log('%c🎮 KONAMI CODE ACTIVATED!', 'color: #a6e3a1; font-size: 20px; font-weight: bold;');
                     window.dispatchEvent(new CustomEvent('konami'));
                     document.body.classList.add('konami-active');
-                    setTimeout(() => document.body.classList.remove('konami-active'), 3000);
+                    setTimeout(() => document.body.classList.remove('konami-active'), 4000);
 
                     // Achievement banner
                     const banner = document.createElement('div');
@@ -63,7 +63,8 @@ export default function EasterEggs() {
         window.addEventListener('rm-rf', onRmRf);
 
         console.log(
-            '%c ██████╗  ██████╗  ██████╗ ███████╗\n' +
+            '%c ' +
+            '██████╗  ██████╗  ██████╗ ███████╗\n' +
             '██╔══██╗██╔═══██╗██╔═══██╗██╔════╝\n' +
             '██████╔╝██║   ██║██║   ██║███████╗\n' +
             '██╔══██╗██║   ██║██║   ██║╚════██║\n' +
