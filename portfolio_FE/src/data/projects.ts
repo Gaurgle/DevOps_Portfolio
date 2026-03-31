@@ -1,9 +1,30 @@
 export const projects = [
     {
+        projectTitle: "BLE Testing App",
+        description: "Android app for testing Bluetooth LE and LE Audio devices. Lua scripting engine for custom test sequences, GATT discovery and real-time device communication.",
+        tags: ["Kotlin", "Jetpack Compose", "BLE", "Lua", "MVVM"],
+        image: "/pictures/ble-testing-1.png",
+        link: "#",
+    },
+    {
+        projectTitle: "Wireless Test Platform",
+        description: "REST API for BLE and LE Audio test session management and result storage. Real-time SSE events, Svelte + TypeScript frontend, containerized with Docker.",
+        tags: ["Kotlin", "Ktor", "PostgreSQL", "Docker", "Svelte", "TypeScript"],
+        image: ["/pictures/WTP 1 Screenshot 2026-03-31 at 23.16.18.png", "/pictures/WTP 2 Screenshot 2026-03-31 at 23.16.58.png", "/pictures/WTP 3 Screenshot 2026-03-31 at 23.18.22.png"],
+        link: "#",
+    },
+    {
+        projectTitle: "Audio Watermark",
+        description: "Desktop tool that embeds imperceptible, cryptographically signed watermarks into audio. Survives compression, editing, and format conversion with real-time spectrogram visualization.",
+        tags: ["C++20", "JUCE", "DSP", "CMake"],
+        image: ["/pictures/WM 1 Screenshot 2026-03-31 at 23.27.01.png", "/pictures/WM 2 Screenshot 2026-03-31 at 23.27.58.png"],
+        link: "#",
+    },
+    {
         projectTitle: "Portfolio",
         description: "This site. A fullstack portfolio built with Spring Boot (Kotlin), Astro, React, and TailwindCSS, backed by PostgreSQL on Render.",
         tags: ["Kotlin", "Spring Boot", "Astro", "React", "Tailwind", "PostgreSQL"],
-        image: "/pictures/Portfolio.png",
+        image: ["/pictures/Portfolio 1 Screenshot 2026-03-31 at 20.15.34.png", "/pictures/Portfolio 2 Screenshot 2026-03-31 at 23.19.40.png", "/pictures/Portfolio 3 Screenshot 2026-03-31 at 23.18.59.png"],
         link: "https://github.com/gaurgle/DevOps_Portfolio/",
         demoUrl: "https://andreasroos.vercel.app",
     },
