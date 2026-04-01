@@ -259,7 +259,7 @@ export default function PixelEagle() {
                     transform: 'scale(3)',
                     transformOrigin: 'bottom left',
                     pointerEvents: 'none',
-                    zIndex: 10,
+                    zIndex: 1,
                 }}
             />
             <div

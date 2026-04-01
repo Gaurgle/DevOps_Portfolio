@@ -260,13 +260,17 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
             )}
 
             {/* Content */}
-            <div className="p-5 flex flex-col gap-3 flex-1">
+            <div className="p-5 flex flex-col gap-3 flex-1 min-h-0">
                 <h3 className="font-mono text-sm font-semibold text-white">
                     {project.projectTitle}
                 </h3>
 
+                <div className="flex-1 min-h-0 overflow-y-auto text-xs text-zinc-500 leading-relaxed">
+                    <p>{project.description}</p>
+                </div>
+
                 {project.tags && (
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap-reverse gap-1.5">
                         {project.tags.map((tag: string) => (
                             <span
                                 key={tag}
@@ -279,12 +283,8 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
                     </div>
                 )}
 
-                <p className="text-xs text-zinc-500 leading-relaxed line-clamp-3">
-                    {project.description}
-                </p>
-
                 {/* Links */}
-                <div className="flex gap-3 mt-auto pt-3 border-t border-zinc-800/50">
+                <div className="flex gap-3 pt-3 border-t border-zinc-800/50 min-h-[2.5rem]">
                     {project.demoUrl && (
                         <a
                             href={project.demoUrl}
