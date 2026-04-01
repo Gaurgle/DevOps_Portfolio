@@ -40,8 +40,8 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
 
-    // Email (Brevo)
-    implementation 'com.sendinblue:sib-api-v3-sdk:7.0.0'
+    // Email (Resend)
+    implementation 'com.resend:resend-java:4.4.0'
 
     // Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

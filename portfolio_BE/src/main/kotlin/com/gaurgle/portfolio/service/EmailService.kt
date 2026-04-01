@@ -1,16 +1,9 @@
 package com.gaurgle.portfolio.service
 
 import com.gaurgle.portfolio.config.EmailSettings
+import com.resend.Resend
+import com.resend.services.emails.model.SendEmailRequest
 import org.springframework.stereotype.Service
-import sendinblue.ApiClient
-import sendinblue.ApiException
-import sendinblue.Configuration
-import sendinblue.auth.ApiKeyAuth
-import sibApi.TransactionalEmailsApi
-import sibModel.SendSmtpEmail
-import sibModel.SendSmtpEmailReplyTo
-import sibModel.SendSmtpEmailSender
-import sibModel.SendSmtpEmailTo
 
 interface EmailService {
     fun sendContactEmail(name: String, email: String, message: String)
@@ -27,20 +20,13 @@ class EmailServiceImpl(
             return
         }
 
-        require(settings.apiKey.isNotBlank()) { "BREVO_API_KEY is missing" }
+        require(settings.apiKey.isNotBlank()) { "RESEND_API_KEY is missing" }
         require(settings.to.isNotBlank()) { "app.email.to is missing" }
-        require(settings.from.isNotBlank()) { "app.email.fromAddress is missing" }
+        require(settings.from.isNotBlank()) { "app.email.from is missing" }
 
-        // Helpful debug line – remove later
         println("[EmailService] enabled=${settings.enabled} from=${settings.from} to=${settings.to} keyPrefix=${settings.apiKey.take(8)}")
 
-        val client: ApiClient = Configuration.getDefaultApiClient()
-        val apiKeyAuth = client.getAuthentication("api-key") as ApiKeyAuth
-        apiKeyAuth.apiKey = settings.apiKey
-        val api = TransactionalEmailsApi(client)
-
-        val from = SendSmtpEmailSender().email(settings.from).name(settings.fromName)
-        val to = listOf(SendSmtpEmailTo().email(settings.to))
+        val resend = Resend(settings.apiKey)
 
         val subject = "New contact message from $name"
         val html = """
@@ -50,21 +36,19 @@ class EmailServiceImpl(
             <pre style="white-space:pre-wrap">${escape(message)}</pre>
         """.trimIndent()
 
-        val mail = SendSmtpEmail()
-            .sender(from)
-            .to(to)
+        val request = SendEmailRequest.builder()
+            .from("${settings.fromName} <${settings.from}>")
+            .to(settings.to)
             .subject(subject)
-            .htmlContent(html)
-            .replyTo(SendSmtpEmailReplyTo().email(email).name(name))
+            .html(html)
+            .replyTo(email)
+            .build()
 
         try {
-            val resp = api.sendTransacEmail(mail)
-            println("[EmailService] sent OK: $resp")
-        } catch (e: ApiException) {
-            println("[EmailService] failed (ApiException): code=${e.code}, body=${e.responseBody}, headers=${e.responseHeaders}")
-            e.printStackTrace()
+            val response = resend.emails().send(request)
+            println("[EmailService] sent OK: id=${response.id}")
         } catch (e: Exception) {
-            println("[EmailService] failed (Exception): ${e::class.simpleName}: ${e.message}")
+            println("[EmailService] failed: ${e::class.simpleName}: ${e.message}")
             e.printStackTrace()
         }
     }
