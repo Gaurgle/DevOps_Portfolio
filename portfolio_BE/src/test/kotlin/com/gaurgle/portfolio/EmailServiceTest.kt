@@ -4,8 +4,8 @@ import com.gaurgle.portfolio.config.EmailSettings
 import com.gaurgle.portfolio.service.EmailServiceImpl
 import com.resend.Resend
 import com.resend.services.emails.Emails
-import com.resend.services.emails.model.SendEmailRequest
-import com.resend.services.emails.model.SendEmailResponse
+import com.resend.services.emails.model.CreateEmailOptions
+import com.resend.services.emails.model.CreateEmailResponse
 import io.mockk.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -67,8 +67,8 @@ class EmailServiceTest {
         every { settings.from } returns "system@example.com"
         every { settings.fromName } returns "Portfolio"
 
-        val requestSlot = slot<SendEmailRequest>()
-        val response = mockk<SendEmailResponse>()
+        val requestSlot = slot<CreateEmailOptions>()
+        val response = mockk<CreateEmailResponse>()
         every { response.id } returns "test-id"
         every { mockEmails.send(capture(requestSlot)) } returns response
 

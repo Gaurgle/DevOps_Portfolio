@@ -2,7 +2,7 @@ package com.gaurgle.portfolio.service
 
 import com.gaurgle.portfolio.config.EmailSettings
 import com.resend.Resend
-import com.resend.services.emails.model.SendEmailRequest
+import com.resend.services.emails.model.CreateEmailOptions
 import org.springframework.stereotype.Service
 
 interface EmailService {
@@ -36,7 +36,7 @@ class EmailServiceImpl(
             <pre style="white-space:pre-wrap">${escape(message)}</pre>
         """.trimIndent()
 
-        val request = SendEmailRequest.builder()
+        val request = CreateEmailOptions.builder()
             .from("${settings.fromName} <${settings.from}>")
             .to(settings.to)
             .subject(subject)
