@@ -51,8 +51,8 @@ const SidebarToggle: React.FC = () => {
             />
             <button
                 id="sidebar-toggle"
-                className="md:hidden fixed top-5 left-4 z-[90] p-2 rounded-lg bg-gray-950 border border-black
-                 hover:bg-gray-800 focus:outline-none"
+                className="md:hidden fixed top-5 left-4 z-[90] p-2 rounded-lg
+                 text-zinc-300 hover:text-zinc-200 transition-colors duration-200 focus:outline-none"
                 aria-label="Toggle Sidebar"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6"

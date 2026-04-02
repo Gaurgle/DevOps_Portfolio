@@ -1,5 +1,4 @@
 ---
-import SidebarToggle from "../components/SidebarToggle";
 import PixelEagle from "../components/PixelEagle";
 
 const {isHome = false} = Astro.props;
@@ -15,10 +14,8 @@ const {isHome = false} = Astro.props;
     <div class="relative overflow-hidden">
         <nav class="grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 h-16 md:h-20">
 
-            <!-- LEFT: Sidebar toggle -->
-            <div class="h-20 w-10 grid place-items-center">
-                <SidebarToggle client:load/>
-            </div>
+            <!-- LEFT: spacer (toggle is rendered at root level to avoid header stacking context) -->
+            <div class="h-20 w-10"></div>
 
             <!-- CENTER: Andreas Roos (hidden on home) -->
             {!isHome ? (

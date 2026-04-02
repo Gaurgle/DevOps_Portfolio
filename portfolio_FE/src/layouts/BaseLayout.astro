@@ -3,6 +3,7 @@ import CommonHead from "../components/CommonHead.astro";
 import "../styles/global.css";
 import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
+import SidebarToggle from "../components/SidebarToggle";
 import ParticleBg from "../../public/js/ParticleBg";
 import EasterEggs from "../components/EasterEggs";
 
@@ -35,6 +36,9 @@ const isHome = Astro.url.pathname === "/";
 <header class="fixed inset-x-0 top-0 z-50 pointer-events-auto">
     <Banner isHome={isHome} />
 </header>
+
+<!-- SIDEBAR TOGGLE (outside header to avoid z-50 stacking context trapping the overlay) -->
+<SidebarToggle client:load />
 
 <!-- SIDEBAR -->
 <Sidebar {current} />
