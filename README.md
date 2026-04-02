@@ -39,7 +39,7 @@ DevOps_Portfolio/
 **Frontend:** Astro, Tailwind CSS, TypeScript  
 **Backend:** Spring Boot (Kotlin), JPA, Flyway, PostgreSQL  
 **Infrastructure:** Vercel, Railway, Render, GitHub Actions  
-**Email:** Brevo API (via backend service)  
+**Email:** Resend API (via backend service)  
 **Database:** PostgreSQL (Render)  
 
 ---
@@ -49,7 +49,7 @@ DevOps_Portfolio/
 - Dynamic projects list
 - Contact form → backend API
 - Saves messages in PostgreSQL DB
-- Sends email via Brevo
+- Sends email via Resend
 - CI/CD pipelines for both FE & BE
 - Backend unit tests validated on each push
 
@@ -84,28 +84,5 @@ export SPRING_PROFILES_ACTIVE=local
 ./gradlew test
 ```
 
-
----
-
-### **2. Backend README (portfolio_BE/README.md)**
-**Goal:** document how the backend works, is tested, and deployed.
-
-Include:
-- stack
-- how to run locally
-- env vars
-- endpoints
-- CI/CD logic
-
----
-
-### **3. Frontend README (portfolio_FE/README.md)**
-**Goal:** explain setup, environment, and deployment for the Astro app.
-
-Include:
-- how to run locally
-- env vars (`PUBLIC_API_BASE`)
-- build command
-- where it’s deployed (Vercel)
 
 ---

@@ -28,7 +28,7 @@ Using:
 - Gradle.
 - Java SDK 21.
 - Flyway database migration.
-- Brevo email service (send in blue).
+- Resend email service.
 - Testing: JUnit5, Mockito, MockK.
 - Monitoring with Spring Actuator, Prometheus
 - Deployment: Docker.
@@ -87,7 +87,7 @@ The application uses PostgreSQL for data persistance. The schema is managed by F
 - Stores contact form submissions with name, emailaddress, message and status.
 
 ### 📬 **Email integration**
-The application uses [Brevo](https://www.brevo.com/?r=t) [SendInBlue](https://www.brevo.com/landing/product-sib/?utm_source=adwords_brand&utm_medium=lastclick&utm_content=SendinBlue&utm_extension=&utm_term=send%20in%20blue&utm_matchtype=e&utm_campaign=20011980164&utm_network=g&km_adid=753112475464&km_adposition=&km_device=c&utm_adgroupid=151171467351&gad_source=1&gad_campaignid=20011980164&gbraid=0AAAAADjx0RaPNr2BsKt8UP_33gW9bxOmI) for sending email notifications when new messages are recieved. 
+The application uses [Resend](https://resend.com) for sending email notifications when new messages are received.
 
 ### ⚠️ **Testing**
 The project includes an expanding set of tests with:

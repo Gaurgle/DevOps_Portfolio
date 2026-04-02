@@ -6,22 +6,23 @@ The main goal of the application is to provide a responsive and interactive inte
 - [Overview](#Overview)
 - [Features](#Features)
 - [Tech stack](#Tech)
-- [Developmjent notes](#Develompentnotes)
+- [Development notes](#Development-notes)
 - [BubbaUI](#BubbaUI)
-- [Astro](#Asatro)
-- [License](#Licsnse)
+- [Astro](#Astro)
+- [License](#License)
 
 
 ### 🐣 **Features**
 ##### Modern UI Design:
-- Utilizes React components like `HoverBlob` and `StaticBlobs` to add interactivity and animations for hoover effects and transitions.
-- Responsive layout implemented using [TailwindCSS](https://tailwindcss.com/) to maintain useability on all screen sizes.
+- Terminal/pixel-art aesthetic with Catppuccin color scheme
+- Interactive components: mini terminal, pixel eagle mascot, text-roll effects, tech stack glow blob
+- Responsive layout using [TailwindCSS](https://tailwindcss.com/) across all screen sizes
 
 ##### 🧑‍✈️ **Nav bar**
-- A sticky navigation bar built using Astro, React and Tailwind. It dynamically renders:
-	- Links to `Projects`, `About` and `Contact`
-	- Sociial media thumbnails for GitHub and LinkedIn.
-- Hover effects and animations for links and social icons are handled through the `HoverBlobs` component.
+- A sticky navigation bar built using Astro, React and Tailwind with:
+	- Collapsible sidebar with links to `Projects`, `About` and `Contact`
+	- Social media icons for GitHub and LinkedIn
+	- Pixel eagle animation walking across the banner
 
 ### ⚙️ **Tech**
 - Astro: Static site generator that inegrates seamlessly with React components.
@@ -35,90 +36,61 @@ The main goal of the application is to provide a responsive and interactive inte
 /src/
   ├── components/
   │    ├── HibubbaIO/
-  │    │    ├── BorderBeam.tsx		 # Moving border effect
-  │    │    ├── HoverBlobs.tsx       # Interactive hoverable element
-  │    │    ├── StaticBlobs.tsx      # Static visual components
-  │    ├── Banner.astro              # Banner component, includes navigation
-  │    ├── CardProjects.tsx          # Creates cards for projects 
-  │    ├── CommonHead.astro          # Shared head used in BaseLayout.astro
-  │    ├── ContactForm.tsx           # Creates the contact form
-  │    ├── Sidebar.astro             # Creates the sidebar component
-  │    ├── SidebarToggle.tsx         # Handles the sidebar toggle button
+  │    │    ├── BorderBeam.tsx        # Moving border effect on project cards
+  │    │    ├── HoverBlobs.tsx        # Interactive hoverable element
+  │    │    ├── StaticBlobs.tsx       # Static visual components
+  │    ├── Banner.astro               # Sticky header with nav and eagle
+  │    ├── CardProjects.tsx           # Project cards with lightbox carousel
+  │    ├── CommonHead.astro           # Shared <head> used in BaseLayout
+  │    ├── ContactForm.tsx            # Contact form with backend integration
+  │    ├── EasterEggs.tsx             # Console ASCII art, CRT mode, rm -rf glitch
+  │    ├── MiniTerminal.tsx           # Interactive terminal on the homepage
+  │    ├── MusicPlayer.tsx            # Audio player component
+  │    ├── PixelEagle.tsx             # Pixel art eagle mascot animation
+  │    ├── Sidebar.astro              # Fixed sidebar with nav links and CV downloads
+  │    ├── SidebarNav.tsx             # Sidebar navigation with text-roll effect
+  │    ├── SidebarToggle.tsx          # Hamburger menu toggle (mobile)
+  │    ├── TechStack.tsx              # Tech stack grid with glow blob effect
+  │    ├── TextRoll.tsx               # Character roll animation for links
   │
   ├── styles/
-  │    ├── @fontsource				 # importing fonts
-  │    ├── global.css              	 # CSS styles
+  │    ├── @fontsource                # Font imports
+  │    ├── global.css                 # Global styles, animations, CRT mode
+  │
+  ├── data/
+  │    ├── projects.ts                # Project data (titles, images, tags, links)
   │
   ├── pages/
-  │    ├── index.astro               # Homepage
-  │    ├── projects.astro            # Projects page
-  │    ├── about.astro               # About page
-  │    ├── contact.astro             # Contact page
-  │
-  ├── public/
-  │    ├── icons/
-  │    │    ├── github.svg           # GitHub icon used in the navbar
-  │    │    ├── linkedin.svg         # LinkedIn icon used in the navbar
+  │    ├── index.astro                # Homepage with ASCII art and terminal
+  │    ├── projects.astro             # Projects page
+  │    ├── about.astro                # About page with bento grid
+  │    ├── contact.astro              # Contact page
+  │    ├── 404.astro                  # Custom 404 page
   │
   ├── layouts/
-  │    ├── BaseLayout.astro          # Reusable layout wrapping all pages
+  │    ├── BaseLayout.astro           # Reusable layout wrapping all pages
 ```
 
 
-### **Develompent notes**
+### **Development notes**
 - Astro enables server-side rendering (SSR) and integrates seamlessly with React.
 - TailwindCSS configuration is defined in `tailwind.config.cjs`
 
 ### 🌈 **BubbaUI**
-- Imported React and TS/JS components from Bubba UI like `Animated Blobs` and `Particle Background` from [Bubba UI](https://bubba-ui-one.vercel.app/) for 
+- Imported React/TS components from [Bubba UI](https://bubba-ui-one.vercel.app/) — `BorderBeam`, `HoverBlobs`, `StaticBlobs`, and `ParticleBg`.
 
-
-
-# **Astro:**
-
-## Astro Starter Kit: Minimal
-
-```sh
-npm create astro@latest -- --template minimal
-```
-
-
-## 🚀 **Project Structure**
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
+---
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+All commands are run from `portfolio_FE/`:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
+| Command           | Action                                      |
+| :---------------- | :------------------------------------------ |
+| `npm install`     | Installs dependencies                       |
+| `npm run dev`     | Starts local dev server at `localhost:4321`  |
+| `npm run build`   | Build production site to `./dist/`          |
+| `npm run preview` | Preview build locally before deploying      |
 
 ### License
 This project is licensed under the **MIT License**. See the `LICENSE` file for more details.
