@@ -165,8 +165,8 @@ export default function TechStack({ parentId }: { parentId?: string }) {
                     key={name}
                     className="tech-icon-wrap flex flex-col items-center gap-1.5 group cursor-default"
                 >
-                    <Icon className="tech-icon w-6 h-6 text-zinc-600 group-hover:text-white transition-all duration-300" />
-                    <span className="font-mono text-[10px] text-zinc-700 group-hover:text-zinc-400 transition-colors duration-300">
+                    <Icon className="tech-icon w-6 h-6 text-zinc-500 group-hover:text-white transition-all duration-300" />
+                    <span className="font-mono text-[10px] text-zinc-500 group-hover:text-zinc-300 transition-colors duration-300">
                         {name}
                     </span>
                 </div>

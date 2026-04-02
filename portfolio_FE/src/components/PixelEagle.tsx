@@ -218,18 +218,15 @@ export default function PixelEagle() {
         };
         window.addEventListener('scare-eagle', handleScare);
 
-        // Konami code & terminal shoot = eagle gets shot
+        // Terminal shoot = eagle gets shot
         const handleShoot = () => {
             if (runningRef.current) {
-                // Already on screen — shoot immediately
                 shotRef.current = true;
             } else {
-                // Not on screen — fly in, then get shot after 40 frames (~0.7s)
                 clearTimeout(timeout);
                 run(30, 40);
             }
         };
-        window.addEventListener('konami', handleShoot);
         window.addEventListener('shoot-eagle', handleShoot);
 
         timeout = window.setTimeout(run, 15000 + Math.random() * 20000);
@@ -240,7 +237,6 @@ export default function PixelEagle() {
             cancelAnimationFrame(raf);
             header?.removeEventListener('click', handleBannerClick);
             window.removeEventListener('scare-eagle', handleScare);
-            window.removeEventListener('konami', handleShoot);
             window.removeEventListener('shoot-eagle', handleShoot);
         };
     }, []);

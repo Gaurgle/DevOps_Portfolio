@@ -64,7 +64,7 @@ const RESPONSES: Record<string, string> = {
     hostname: 'portfolio.local',
     'ping google.com': 'PING google.com: 64 bytes, time=0.42ms\n...just kidding, this is a fake terminal.',
     cowsay: ' ________\n< mooo!  >\n --------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||',
-    'cat secret.txt': 'psst... try the konami code.\n\u2191 \u2191 \u2193 \u2193 \u2190 \u2192 \u2190 \u2192 B A\n\nalso... type crt',
+    'cat secret.txt': 'psst... type crt',
 };
 
 const NAV: Record<string, string> = {

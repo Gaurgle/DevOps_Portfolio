@@ -14,13 +14,13 @@ const cursorColor = {
     aria-hidden="true"
     class="fixed left-0 top-[64px] md:top-[80px]
      z-40 h-[calc(100vh-64px)] md:h-[calc(100vh-80px)]
-     w-54 bg-black/80
+     w-54 bg-black/60
      transform transition-transform duration-300
      -translate-x-full md:translate-x-0">
 
     <nav class="relative h-full p-8 pt-16 md:pt-8">
         <!-- Terminal path -->
-        <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide">
+        <p class="font-mono text-xs text-zinc-300 mb-6 tracking-wide">
             ~/portfolio <span class:list={["animate-pulse", cursorColor]}>_</span>
         </p>
 
@@ -29,20 +29,20 @@ const cursorColor = {
 
         <!-- CV downloads -->
         <div class="mt-8 space-y-1">
-            <p class="font-mono text-[10px] text-zinc-400 mb-2 tracking-wide">~/cv</p>
+            <p class="font-mono text-[10px] text-zinc-300 mb-2 tracking-wide">~/cv</p>
             <a class="group flex items-center gap-2 py-1.5 font-mono text-sm text-zinc-300 hover:text-white transition-colors duration-200"
                href="/cv/andreas-roos-cv-en.pdf" download>
-                <span class="text-zinc-500 group-hover:text-ctp-red transition-colors">↓</span> cv (en)
+                <span class="text-zinc-400 group-hover:text-ctp-red transition-colors">↓</span> cv (en)
             </a>
             <a class="group flex items-center gap-2 py-1.5 font-mono text-sm text-zinc-300 hover:text-white transition-colors duration-200"
                href="/cv/andreas-roos-cv-sv.pdf" download>
-                <span class="text-zinc-500 group-hover:text-ctp-red transition-colors">↓</span> cv (sv)
+                <span class="text-zinc-400 group-hover:text-ctp-red transition-colors">↓</span> cv (sv)
             </a>
         </div>
 
         <!-- ASCII footer -->
         <div class="absolute bottom-8 left-8 right-8">
-            <pre class="font-mono text-[9px] text-zinc-600 leading-relaxed select-none">
+            <pre class="font-mono text-[9px] text-zinc-500 leading-relaxed select-none">
 ┌──────────────┐
 │  &copy; 2026 roos │
 └──────────────┘</pre>

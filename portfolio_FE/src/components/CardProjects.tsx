@@ -73,36 +73,13 @@ function Lightbox({images, startIndex, title, onClose}: {
 }) {
     const hasMultiple = images.length > 1;
     const [currentIndex, setCurrentIndex] = useState(startIndex);
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-    useEffect(() => {
-        if (hasMultiple) {
-            intervalRef.current = setInterval(() => {
-                setCurrentIndex(prev => (prev + 1) % images.length);
-            }, 3000);
-        }
-        return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current);
-        };
-    }, [hasMultiple, images.length]);
-
-    const resetTimer = () => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        if (hasMultiple) {
-            intervalRef.current = setInterval(() => {
-                setCurrentIndex(prev => (prev + 1) % images.length);
-            }, 3000);
-        }
-    };
 
     const goNext = () => {
         setCurrentIndex(prev => (prev + 1) % images.length);
-        resetTimer();
     };
 
     const goPrev = () => {
         setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
-        resetTimer();
     };
 
     useEffect(() => {
@@ -150,18 +127,18 @@ function Lightbox({images, startIndex, title, onClose}: {
                             <button
                                 onClick={goPrev}
                                 aria-label="Previous image"
-                                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center
-                                           rounded-full bg-black/40 text-white/60 hover:bg-black/60 hover:text-white
-                                           transition-all duration-200 font-mono text-sm"
+                                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center
+                                           rounded-full bg-black/50 text-white/80 hover:bg-black/70 hover:text-white
+                                           transition-all duration-200 text-2xl"
                             >
                                 &#8249;
                             </button>
                             <button
                                 onClick={goNext}
                                 aria-label="Next image"
-                                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center
-                                           rounded-full bg-black/40 text-white/60 hover:bg-black/60 hover:text-white
-                                           transition-all duration-200 font-mono text-sm"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center
+                                           rounded-full bg-black/50 text-white/80 hover:bg-black/70 hover:text-white
+                                           transition-all duration-200 text-2xl"
                             >
                                 &#8250;
                             </button>
@@ -193,7 +170,7 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
         if (!hasMultiple) return;
         intervalRef.current = setInterval(() => {
             setCurrentIndex(prev => (prev + 1) % images.length);
-        }, 2500);
+        }, 4000);
     };
 
     const handleMouseLeave = () => {
