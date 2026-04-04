@@ -38,17 +38,17 @@ export default function ContactForm() {
     };
 
     const inputClass = `w-full px-3 py-2.5 bg-zinc-900/80 border border-zinc-800 rounded-lg text-white text-sm
-        placeholder-zinc-600 focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600
+        placeholder-zinc-500 focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600
         transition-colors duration-200`;
 
     return (
         <div className="max-w-xl mx-auto">
-            <p className="font-mono text-sm text-zinc-400 mb-4">
+            <p className="font-mono text-sm text-zinc-300 mb-4">
                 <span className="text-ctp-peach">$</span> mail -s &quot;hello&quot; andreas
             </p>
-            <p className="font-mono text-xs text-zinc-500 mb-6">
+            <p className="font-mono text-xs text-zinc-400 mb-6">
                 or reach me at{' '}
-                <a href="mailto:larsnilsandreas@pm.me" className="text-zinc-400 hover:text-white transition-colors">
+                <a href="mailto:larsnilsandreas@pm.me" className="text-zinc-300 hover:text-white transition-colors">
                     larsnilsandreas@pm.me
                 </a>
             </p>
@@ -58,7 +58,7 @@ export default function ContactForm() {
                     <span className="terminal-dot bg-ctp-red/80"></span>
                     <span className="terminal-dot bg-ctp-yellow/80"></span>
                     <span className="terminal-dot bg-ctp-green/80"></span>
-                    <span className="font-mono text-xs text-zinc-400 ml-2">compose</span>
+                    <span className="font-mono text-xs text-zinc-300 ml-2">compose</span>
                 </div>
 
                 <form onSubmit={onSubmit} className="p-6 space-y-5">
@@ -72,7 +72,7 @@ export default function ContactForm() {
                     />
 
                     <label className="block">
-                        <span className="font-mono text-xs text-zinc-400 mb-1.5 block">
+                        <span className="font-mono text-xs text-zinc-300 mb-1.5 block">
                             <span className="text-ctp-peach/60">$</span> name
                         </span>
                         <input
@@ -86,7 +86,7 @@ export default function ContactForm() {
                     </label>
 
                     <label className="block">
-                        <span className="font-mono text-xs text-zinc-400 mb-1.5 block">
+                        <span className="font-mono text-xs text-zinc-300 mb-1.5 block">
                             <span className="text-ctp-peach/60">$</span> email
                         </span>
                         <input
@@ -101,7 +101,7 @@ export default function ContactForm() {
                     </label>
 
                     <label className="block">
-                        <span className="font-mono text-xs text-zinc-400 mb-1.5 block">
+                        <span className="font-mono text-xs text-zinc-300 mb-1.5 block">
                             <span className="text-ctp-peach/60">$</span> message
                         </span>
                         <textarea
