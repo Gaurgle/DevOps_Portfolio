@@ -107,7 +107,7 @@ function Lightbox({images, startIndex, title, onClose}: {
                     <button onClick={onClose} className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-400 transition-colors" aria-label="Close"/>
                     <span className="w-3 h-3 rounded-full bg-yellow-500/80"/>
                     <span className="w-3 h-3 rounded-full bg-green-500/80"/>
-                    <span className="ml-3 font-mono text-xs text-zinc-500">{title}</span>
+                    <span className="ml-3 font-mono text-xs text-zinc-400">{title}</span>
                 </div>
 
                 {/* Image area */}
@@ -242,7 +242,7 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
                     {project.projectTitle}
                 </h3>
 
-                <div className="flex-1 min-h-0 overflow-y-auto text-xs text-zinc-500 leading-relaxed">
+                <div className="flex-1 min-h-0 overflow-y-auto text-xs text-zinc-400 leading-relaxed">
                     <p>{project.description}</p>
                 </div>
 
@@ -252,7 +252,7 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
                             <span
                                 key={tag}
                                 className="px-2 py-0.5 text-[10px] font-mono rounded
-                                           bg-zinc-800/80 text-zinc-500 border border-zinc-800"
+                                           bg-zinc-800/80 text-zinc-400 border border-zinc-800"
                             >
                                 {tag}
                             </span>
@@ -267,7 +267,7 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
                             href={project.demoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-mono text-xs text-zinc-500 hover:text-white transition-colors duration-200"
+                            className="font-mono text-xs text-zinc-400 hover:text-white transition-colors duration-200"
                         >
                             live &rarr;
                         </a>
@@ -277,7 +277,7 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-mono text-xs text-zinc-500 hover:text-white transition-colors duration-200"
+                            className="font-mono text-xs text-zinc-400 hover:text-white transition-colors duration-200"
                         >
                             github &rarr;
                         </a>
@@ -299,7 +299,7 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
 export default function ProjectCards() {
     return (
         <div>
-            <p className="font-mono text-sm text-zinc-500 mb-6">
+            <p className="font-mono text-sm text-zinc-400 mb-6">
                 <span className="text-ctp-blue">$</span> ls projects/
             </p>
 

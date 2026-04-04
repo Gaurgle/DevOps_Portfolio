@@ -18,6 +18,13 @@ html, body {
     @apply bg-black text-white min-h-screen;
 }
 
+/* Prevent iOS auto-zoom on input focus (triggers below 16px) */
+@media (hover: none) and (pointer: coarse) {
+    input, textarea, select {
+        font-size: max(16px, 1em) !important;
+    }
+}
+
 .particle-bg {
     position: fixed;
     inset: 0;
