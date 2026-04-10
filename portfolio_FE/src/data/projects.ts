@@ -39,6 +39,14 @@ export const projects = [
     link: "https://github.com/Gaurgle/notez-cli",
   },
   {
+    projectTitle: "noiz",
+    description:
+      "Terminal noise generator for focus. Real-time stereo noise synthesis (white, pink, brown) with binaural brainwave presets, rain overlay, and a minimal TUI. Everything generated in real-time — no samples needed.",
+    tags: ["Rust", "cpal", "ratatui", "DSP", "Audio"],
+    image: "/pictures/noiz.png",
+    link: "https://github.com/Gaurgle/noiz",
+  },
+  {
     projectTitle: "repoz",
     description:
       "CLI tool that shows what changed across your Git repos since you last sat down. Compares local state with GitHub, groups by time slots, and surfaces uncommitted work — no config needed.",
