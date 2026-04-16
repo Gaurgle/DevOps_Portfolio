@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sL \"https://repo1.maven.org/maven2/com/resend/resend-java/4.4.0/resend-java-4.4.0.jar\" -o /tmp/resend.jar)",
+      "Bash(jar tf:*)",
+      "Bash(javap -p -cp /tmp/resend.jar com.resend.services.emails.Emails)",
+      "Bash(javap -p -cp /tmp/resend.jar com.resend.services.emails.model.CreateEmailOptions)",
+      "Bash(javap -p -cp /tmp/resend.jar 'com.resend.services.emails.model.CreateEmailOptions$Builder')"
+    ]
+  }
+}
