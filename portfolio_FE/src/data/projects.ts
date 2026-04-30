@@ -12,7 +12,7 @@ export const projects = [
     description:
       "Local-first CLI note-taking tool. Notes live in your project directory, mirrored to a home folder via symlinks. Interactive todo manager with subtasks, tree navigator with vim keys, daily logs — all in one Rust binary.",
     tags: ["Rust", "ratatui", "CLI"],
-    image: ["/pictures/notez-local.png", "/pictures/todoz-local.png", "/pictures/todoz-global.png"],
+    image: ["/pictures/notez-local.png", "/pictures/notez-global.png", "/pictures/todoz-local.png", "/pictures/todoz-global.png"],
     link: "https://github.com/Gaurgle/notez-cli",
   },
   {
