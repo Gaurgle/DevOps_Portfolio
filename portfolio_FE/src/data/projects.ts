@@ -2,7 +2,7 @@ export const projects = [
   {
     projectTitle: "repoz",
     description:
-      "CLI tool that shows what changed across your Git repos since you last sat down. Compares local state with GitHub, groups by time slots, and surfaces uncommitted work — no config needed.",
+      "CLI tool that shows what changed across your Git repos since you last sat down. Compares local state with GitHub, groups by time slots, and surfaces uncommitted work, no config needed.",
     tags: ["Bash", "GitHub CLI", "jq", "Git"],
     image: "/pictures/repoz.png",
     link: "https://github.com/Gaurgle/repoz",
@@ -10,7 +10,7 @@ export const projects = [
   {
     projectTitle: "notez",
     description:
-      "Local-first CLI note-taking tool. Notes live in your project directory, mirrored to a home folder via symlinks. Interactive todo manager with subtasks, tree navigator with vim keys, daily logs — all in one Rust binary.",
+      "Local-first CLI note-taking tool. Notes live in your project directory, mirrored to a home folder via symlinks. Interactive todo manager with subtasks, tree navigator with vim keys, daily logs, all in one Rust binary.",
     tags: ["Rust", "ratatui", "CLI"],
     image: ["/pictures/notez-local.png", "/pictures/notez-global.png", "/pictures/todoz-local.png", "/pictures/todoz-global.png"],
     link: "https://github.com/Gaurgle/notez-cli",
@@ -18,10 +18,28 @@ export const projects = [
   {
     projectTitle: "noiz",
     description:
-      "Terminal noise generator for focus. Real-time stereo noise synthesis (white, pink, brown) with binaural brainwave presets, rain overlay, and a minimal TUI. Everything generated in real-time — no samples needed.",
+      "Terminal noise generator for focus. Real-time stereo noise synthesis (white, pink, brown) with binaural brainwave presets, rain overlay, and a minimal TUI. Everything generated in real-time, no samples needed.",
     tags: ["Rust", "cpal", "ratatui", "DSP", "Audio"],
     image: "/pictures/noiz.png",
     link: "https://github.com/Gaurgle/noiz",
+  },
+  {
+    projectTitle: "spaze",
+    description:
+      "Terminal-first, self-hostable team chat in a single static Rust binary. Inline #note and #todo capture through a slash-command parser, GitHub OAuth identity, server-side full-text search, and a ratatui TUI where mouse, vim, and buttons are all first-class.",
+    tags: ["Rust", "ratatui", "SQLite", "TUI"],
+    image: null,
+    wip: true,
+    link: "https://github.com/Gaurgle/spaze",
+  },
+  {
+    projectTitle: "glanze",
+    description:
+      "macOS menu-bar app for ambient awareness of running AI coding-agent sessions. Agent-agnostic by design, with v1 support for Claude Code and adapters for other agent CLIs that drop in without touching the menu-bar app.",
+    tags: ["Swift", "macOS"],
+    image: null,
+    wip: true,
+    link: "#",
   },
   {
     projectTitle: "Wireless Testing App",

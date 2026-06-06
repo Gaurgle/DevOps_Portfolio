@@ -31,7 +31,7 @@ export default function ContactForm() {
             setForm({name: "", email: "", message: ""});
         } catch (err: any) {
             const msg = err.message === "Failed to fetch"
-                ? "backend offline — try larsnilsandreas@pm.me instead"
+                ? "backend offline, try larsnilsandreas@pm.me instead"
                 : err.message || "something went wrong";
             setStatus({loading: false, ok: false, error: msg});
         }

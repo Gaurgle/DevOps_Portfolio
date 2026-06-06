@@ -33,7 +33,7 @@ const CTP_COLORS = [
 ];
 
 const ParticleBg: React.FC<Props> = ({
-                                       quantity = 80,
+                                       quantity = 40,
                                        size = 0.1,
                                        color = "#000000",
                                        darkModeColor = "#ffffff",
@@ -130,14 +130,38 @@ const ParticleBg: React.FC<Props> = ({
 
   useEffect(() => {
     mountedRef.current = true;
+
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    // Fewer particles on small screens; respect reduced-motion preference
+    const count = window.innerWidth < 640 ? Math.round(quantity / 2) : quantity;
+
+    // Paint one static frame (used when motion is reduced)
+    const paintStatic = () => {
+      const c2d = ctx.current;
+      if (!c2d) return;
+      const {w, h} = canvasSize.current;
+      c2d.clearRect(0, 0, w, h);
+      for (const c of circles.current) {
+        c2d.beginPath();
+        c2d.arc(c.x, c.y, c.size, 0, Math.PI * 2);
+        c2d.fillStyle = `rgba(${c.rgb},0.4)`;
+        c2d.fill();
+      }
+    };
+
     resizeCanvas();
-    // Init circles
-    for (let i = 0; i < quantity; i++) circles.current.push(newCircle());
-    rafRef.current = requestAnimationFrame(animate);
+    for (let i = 0; i < count; i++) circles.current.push(newCircle());
+
+    if (reduceMotion) {
+      paintStatic();
+    } else {
+      rafRef.current = requestAnimationFrame(animate);
+    }
 
     const onResize = () => {
       resizeCanvas();
-      for (let i = 0; i < quantity; i++) circles.current.push(newCircle());
+      for (let i = 0; i < count; i++) circles.current.push(newCircle());
+      if (reduceMotion) paintStatic();
     };
     window.addEventListener("resize", onResize);
 

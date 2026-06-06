@@ -116,7 +116,7 @@ function Lightbox({images, startIndex, title, onClose}: {
                         <img
                             key={src}
                             src={src}
-                            alt={`${title}${hasMultiple ? ` — slide ${i + 1}` : ""}`}
+                            alt={`${title}${hasMultiple ? ` slide ${i + 1}` : ""}`}
                             className={`w-full max-h-[75vh] object-contain transition-opacity duration-700
                                        ${i === currentIndex ? "opacity-100" : "opacity-0 absolute inset-0"}`}
                         />
@@ -160,7 +160,8 @@ function Lightbox({images, startIndex, title, onClose}: {
 }
 
 function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: number }) {
-    const images = Array.isArray(project.image) ? project.image : [project.image];
+    const images = (Array.isArray(project.image) ? project.image : [project.image]).filter(Boolean);
+    const hasImage = images.length > 0;
     const hasMultiple = images.length > 1;
     const [currentIndex, setCurrentIndex] = useState(0);
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -196,37 +197,48 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            {/* Image slideshow */}
-            <div
-                className="h-44 w-full overflow-hidden flex-shrink-0 relative cursor-zoom-in"
-                onClick={() => setLightboxOpen(true)}
-            >
-                {images.map((src, i) => (
-                    <img
-                        key={src}
-                        src={src}
-                        alt={`${project.projectTitle}${hasMultiple ? ` — slide ${i + 1}` : ""}`}
-                        loading="lazy"
-                        className={`absolute inset-0 h-full w-full object-cover transition-all duration-700
-                                   grayscale group-hover:grayscale-0 group-hover:scale-105
-                                   ${i === currentIndex ? "opacity-100" : "opacity-0"}`}
-                    />
-                ))}
+            {/* Image slideshow / placeholder */}
+            {hasImage ? (
+                <div
+                    className="h-44 w-full overflow-hidden flex-shrink-0 relative cursor-zoom-in"
+                    onClick={() => setLightboxOpen(true)}
+                >
+                    {images.map((src, i) => (
+                        <img
+                            key={src}
+                            src={src}
+                            alt={`${project.projectTitle}${hasMultiple ? ` slide ${i + 1}` : ""}`}
+                            loading="lazy"
+                            className={`absolute inset-0 h-full w-full object-cover transition-all duration-700
+                                       grayscale group-hover:grayscale-0 group-hover:scale-105
+                                       ${i === currentIndex ? "opacity-100" : "opacity-0"}`}
+                        />
+                    ))}
 
-                {hasMultiple && (
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                        {images.map((_, i) => (
-                            <span
-                                key={i}
-                                className={`block w-1.5 h-1.5 rounded-full transition-all duration-300
-                                           ${i === currentIndex ? "bg-white/90 scale-110" : "bg-white/30"}`}
-                            />
-                        ))}
+                    {hasMultiple && (
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                            {images.map((_, i) => (
+                                <span
+                                    key={i}
+                                    className={`block w-1.5 h-1.5 rounded-full transition-all duration-300
+                                               ${i === currentIndex ? "bg-white/90 scale-110" : "bg-white/30"}`}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="h-44 w-full flex-shrink-0 relative flex items-center justify-center
+                                bg-zinc-900/30 border-b border-zinc-800/50 overflow-hidden select-none">
+                    <div className="font-mono text-xs text-zinc-600 text-center leading-relaxed">
+                        <span className="text-ctp-mauve">$</span> ./preview
+                        <br />
+                        <span className="text-zinc-700">no screenshot yet</span>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
 
-            {lightboxOpen && createPortal(
+            {lightboxOpen && hasImage && createPortal(
                 <Lightbox
                     images={images}
                     startIndex={currentIndex}
@@ -234,6 +246,13 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
                     onClose={() => setLightboxOpen(false)}
                 />,
                 document.body
+            )}
+
+            {project.wip && (
+                <span className="absolute top-2 left-2 z-20 px-2 py-0.5 text-[10px] font-mono rounded
+                                 bg-ctp-yellow/15 text-ctp-yellow border border-ctp-yellow/30">
+                    under construction
+                </span>
             )}
 
             {/* Content */}

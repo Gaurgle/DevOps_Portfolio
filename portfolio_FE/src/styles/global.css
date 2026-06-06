@@ -139,12 +139,12 @@ html, body {
 
 /* ASCII glow — catppuccin accent tints */
 .ascii-glow {
+    /* Kept light on purpose: large-radius stacked text-shadows are a very
+       expensive paint and were re-running on every navigation to home. */
     text-shadow:
-        0 0 10px rgba(203, 166, 247, 0.7),
-        2px 2px 30px rgba(245, 194, 231, 0.5),
-        -2px 3px 60px rgba(166, 227, 161, 0.35),
-        3px -2px 100px rgba(137, 180, 250, 0.25),
-        0 0 150px rgba(203, 166, 247, 0.15);
+        0 0 8px rgba(203, 166, 247, 0.6),
+        0 0 22px rgba(245, 194, 231, 0.35),
+        0 0 45px rgba(137, 180, 250, 0.2);
     cursor: default;
 }
 

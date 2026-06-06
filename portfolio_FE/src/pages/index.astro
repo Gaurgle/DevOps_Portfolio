@@ -12,16 +12,16 @@ import MiniTerminal from "../components/MiniTerminal";
                 <span class="text-ctp-green">$</span> whoami
             </p>
 
-            <!-- Pixelated glow blobs -->
-            <div class="absolute inset-[-40%] -z-10 opacity-30" style="filter: url(#pixel)">
+            <!-- Soft color glow blobs (static; SVG #pixel filter removed - too costly to rasterize on page entry) -->
+            <div class="absolute inset-[-40%] -z-10 opacity-30">
                 <div class="relative w-full h-full blur-2xl">
-                    <div class="absolute inset-0 bg-[#3d2e54]/35 rounded-full animate-blob"></div>
-                    <div class="absolute inset-0 bg-[#54303d]/30 rounded-full animate-blob" style="animation-delay: 1.6s"></div>
-                    <div class="absolute inset-0 bg-[#2e3d54]/25 rounded-full animate-blob" style="animation-delay: 0.9s"></div>
+                    <div class="absolute inset-0 bg-[#3d2e54]/35 rounded-full" style="transform: translate(8%, -6%) scale(1.05)"></div>
+                    <div class="absolute inset-0 bg-[#54303d]/30 rounded-full" style="transform: translate(-7%, 5%) scale(0.95)"></div>
+                    <div class="absolute inset-0 bg-[#2e3d54]/25 rounded-full" style="transform: translate(3%, 6%)"></div>
                 </div>
             </div>
 
-            <pre class="font-mono text-[8px] sm:text-xs md:text-sm ascii-art text-white ascii-glow select-none" set:html={`
+            <pre data-roos class="font-mono text-[8px] sm:text-xs md:text-sm ascii-art text-white ascii-glow select-none" set:html={`
 ██████╗  ██████╗  ██████╗ ███████╗
 ██╔══██╗██╔═══██╗██╔═══██╗██╔════╝
 ██████╔╝██║   ██║██║   ██║███████╗
@@ -58,3 +58,22 @@ import MiniTerminal from "../components/MiniTerminal";
         </div>
     </div>
 </BaseLayout>
+
+<script>
+    import { sketchOnHover } from "../lib/sketch";
+
+    // Hover ROOS: roll a fresh rough style + Catppuccin color each time
+    document.addEventListener("astro:page-load", () => {
+        const roos = document.querySelector("[data-roos]");
+        if (roos instanceof HTMLElement) {
+            sketchOnHover(roos, {
+                randomize: true, // roll a fresh color each hover...
+                type: "underline", // ...but always an underline
+                strokeWidth: 2,
+                padding: 8,
+                drawMs: 850,
+                undrawMs: 320,
+            });
+        }
+    });
+</script>

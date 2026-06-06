@@ -32,11 +32,11 @@ const cursorColor = {
             <p class="font-mono text-[10px] text-zinc-300 mb-2 tracking-wide">~/cv</p>
             <a class="group flex items-center gap-2 py-1.5 font-mono text-sm text-zinc-300 hover:text-white transition-colors duration-200"
                href="/cv/andreas-roos-cv-en.pdf" download>
-                <span class="text-zinc-400 group-hover:text-ctp-red transition-colors">↓</span> cv (en)
+                <span class="text-zinc-400 group-hover:text-ctp-red transition-colors">↓</span> <span data-cv>cv (en)</span>
             </a>
             <a class="group flex items-center gap-2 py-1.5 font-mono text-sm text-zinc-300 hover:text-white transition-colors duration-200"
                href="/cv/andreas-roos-cv-sv.pdf" download>
-                <span class="text-zinc-400 group-hover:text-ctp-red transition-colors">↓</span> cv (sv)
+                <span class="text-zinc-400 group-hover:text-ctp-red transition-colors">↓</span> <span data-cv>cv (sv)</span>
             </a>
         </div>
 
@@ -49,3 +49,23 @@ const cursorColor = {
         </div>
     </nav>
 </aside>
+
+<script>
+    import { sketchOnHover } from "../lib/sketch";
+
+    // CV downloads: rough red underline on hover, matching their ctp-red accent
+    document.addEventListener("astro:page-load", () => {
+        document.querySelectorAll("[data-cv]").forEach((el) => {
+            if (el instanceof HTMLElement) {
+                sketchOnHover(el, {
+                    color: "#f38ba8", // catppuccin red
+                    type: "underline",
+                    strokeWidth: 1.5,
+                    padding: 3,
+                    drawMs: 420,
+                    undrawMs: 220,
+                });
+            }
+        });
+    });
+</script>
