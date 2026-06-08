@@ -1,7 +1,7 @@
 import {useState} from "react";
 import type {ChangeEvent, FormEvent} from "react";
 
-const API_BASE = import.meta.env.PUBLIC_API_BASE ?? "http://localhost:8080";
+const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
 export default function ContactForm() {
     const [form, setForm] = useState({name: "", email: "", message: ""});
@@ -18,20 +18,27 @@ export default function ContactForm() {
         if (robot) return;
         setStatus({loading: true, ok: null, error: ""});
         try {
-            const res = await fetch(`${API_BASE}/api/contact`, {
+            const res = await fetch("https://api.web3forms.com/submit", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(form),
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                body: JSON.stringify({
+                    access_key: WEB3FORMS_KEY,
+                    name: form.name,
+                    email: form.email,
+                    message: form.message,
+                    subject: `Portfolio contact from ${form.name}`,
+                    from_name: "Portfolio Contact Form",
+                }),
             });
-            if (!res.ok) {
-                const text = await res.text();
-                throw new Error(text || `HTTP error ${res.status}`);
+            const data = await res.json();
+            if (!data.success) {
+                throw new Error(data.message || `HTTP error ${res.status}`);
             }
             setStatus({loading: false, ok: true, error: ""});
             setForm({name: "", email: "", message: ""});
         } catch (err: any) {
             const msg = err.message === "Failed to fetch"
-                ? "backend offline, try larsnilsandreas@pm.me instead"
+                ? "network error, try larsnilsandreas@pm.me instead"
                 : err.message || "something went wrong";
             setStatus({loading: false, ok: false, error: msg});
         }
