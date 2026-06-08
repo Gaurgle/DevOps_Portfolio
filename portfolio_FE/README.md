@@ -42,7 +42,7 @@ The main goal of the application is to provide a responsive and interactive inte
   │    ├── Banner.astro               # Sticky header with nav and eagle
   │    ├── CardProjects.tsx           # Project cards with lightbox carousel
   │    ├── CommonHead.astro           # Shared <head> used in BaseLayout
-  │    ├── ContactForm.tsx            # Contact form with backend integration
+  │    ├── ContactForm.tsx            # Contact form (Web3Forms — client-side, no backend)
   │    ├── EasterEggs.tsx             # Console ASCII art, CRT mode, rm -rf glitch
   │    ├── MiniTerminal.tsx           # Interactive terminal on the homepage
   │    ├── MusicPlayer.tsx            # Audio player component
@@ -75,6 +75,7 @@ The main goal of the application is to provide a responsive and interactive inte
 ### **Development notes**
 - Astro enables server-side rendering (SSR) and integrates seamlessly with React.
 - TailwindCSS configuration is defined in `tailwind.config.cjs`
+- The contact form posts to [Web3Forms](https://web3forms.com) and needs `PUBLIC_WEB3FORMS_KEY` in `.env.local` (free access key, public-safe). Without it the form renders but submissions fail.
 
 ### 🌈 **BubbaUI**
 - Imported React/TS components from [Bubba UI](https://bubba-ui-one.vercel.app/) — `BorderBeam`, `HoverBlobs`, `StaticBlobs`, and `ParticleBg`.

@@ -24,7 +24,7 @@ The application is built with Kotlin and Spring Boot, trying to follow best prac
 ### ⚙️ **Tech**
 Using:
 - Kotlin (1.9.25)
-- Spring Boot (2.5.6)
+- Spring Boot (3.5.6)
 - Gradle.
 - Java SDK 21.
 - Flyway database migration.
@@ -101,7 +101,7 @@ The application can be deployed using Docker.
 Dockerfile and docker-compose.yml are provided for containerization.
 
 ### Hosting:
-The backend service is hosted on Railway.
+The backend was previously deployed on Railway. It is no longer hosted — it is kept here as a containerized showcase. Run it locally with `./gradlew bootRun` or via the provided `Dockerfile` / `docker-compose.yml`. The portfolio's live contact form now uses Web3Forms (see the frontend), so no running backend is required.
 
 ### Monitoring:
 The application exposes metrics via Spring actuator and Prometheus for monitoring of:

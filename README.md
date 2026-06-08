@@ -5,11 +5,11 @@
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql)
 
 [![Frontend Demo](https://img.shields.io/badge/Frontend-Demo-blue?logo=vercel)](https://andreasroos.vercel.app)
-[![Backend Health](https://img.shields.io/badge/Backend-Health_Check-success?logo=springboot)](https://devopsportfolio-production.up.railway.app/actuator/health)
 
 # DevOps Portfolio
 This is a showcase portfolio application built as a part of the DevOps course at Nackademin.
-A full-stack developer portfolio built with **Astro (frontend)** and **Spring Boot (backend)**, connected to a **PostgreSQL database** on **Render** and deployed using **Vercel**, **Railway**, and **GitHub Actions**.
+
+A full-stack developer portfolio with an **Astro** frontend (live on **Vercel**) and a containerized **Spring Boot + PostgreSQL** backend kept as a DevOps showcase (Docker, Flyway, GitHub Actions CI). The live site's contact form is handled by **Web3Forms** — no server or database required to run.
 
 ---
 ## 📖 Documentation
@@ -21,7 +21,8 @@ A full-stack developer portfolio built with **Astro (frontend)** and **Spring Bo
 
 ## 🌍 Live Demo
 - **Frontend (Portfolio site)** → [https://andreasroos.vercel.app](https://andreasroos.vercel.app)
-- **Backend (API)** → [https://devopsportfolio-production.up.railway.app/actuator/health](https://devopsportfolio-production.up.railway.app/actuator/health)
+
+> **Note:** The Spring Boot backend is no longer deployed. It lives in `portfolio_BE/` as a containerized showcase you can run locally (see below). The live contact form uses Web3Forms instead of the self-hosted API.
 
 ---
 
@@ -29,38 +30,34 @@ A full-stack developer portfolio built with **Astro (frontend)** and **Spring Bo
 
 ```text
 DevOps_Portfolio/
-├── portfolio_FE/    → Astro frontend (Vercel)
-└── portfolio_BE/    → Spring Boot backend (Railway)
+├── portfolio_FE/    → Astro frontend (deployed on Vercel)
+└── portfolio_BE/    → Spring Boot backend (containerized showcase, run locally)
 ```
 
 ---
 
 ## ⚙️ Tech Stack
 **Frontend:** Astro, Tailwind CSS, TypeScript  
-**Backend:** Spring Boot (Kotlin), JPA, Flyway, PostgreSQL  
-**Infrastructure:** Vercel, Railway, Render, GitHub Actions  
-**Email:** Resend API (via backend service)  
-**Database:** PostgreSQL (Render)  
+**Contact:** Web3Forms (client-side form handling — no backend)  
+**Backend (showcase):** Spring Boot (Kotlin), JPA, Flyway, PostgreSQL, Resend API  
+**Infrastructure:** Vercel (frontend), Docker, GitHub Actions (CI)  
 
 ---
 
 ## 🧩 Features
 - Responsive portfolio built in Astro
 - Dynamic projects list
-- Contact form → backend API
-- Saves messages in PostgreSQL DB
-- Sends email via Resend
-- CI/CD pipelines for both FE & BE
-- Backend unit tests validated on each push
+- Contact form powered by Web3Forms (sends email, no backend or database)
+- CI/CD: Vercel auto-deploys the frontend; GitHub Actions builds and tests the backend on every push
+- **Backend showcase** (`portfolio_BE/`): REST contact API, message persistence in PostgreSQL via JPA/Flyway, and email via the Resend API — containerized with Docker and runnable locally
 
 ---
 
 ## 🔄 CI/CD Overview
 | Component | Platform | Trigger | Result |
 |------------|-----------|----------|----------|
-| **Backend** | GitHub Actions + Railway | Push to `main` | Runs tests → deploys if all pass |
 | **Frontend** | Vercel | Push to `main` | Auto-deploys new build |
-| **Database** | Render | Always-on Postgres instance |
+| **Backend** | GitHub Actions | Push to `main` (`portfolio_BE/**`) | Builds JAR and runs tests against a Postgres service |
 
 ---
 
@@ -69,10 +66,12 @@ DevOps_Portfolio/
 ```bash
 cd portfolio_FE
 npm install
+# add your Web3Forms key (free at https://web3forms.com)
+echo "PUBLIC_WEB3FORMS_KEY=your-access-key-here" > .env.local
 npm run dev
 ```
 
-### Backend
+### Backend (showcase)
 ```bash
 cd portfolio_BE
 export SPRING_PROFILES_ACTIVE=local
