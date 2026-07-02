@@ -4,24 +4,26 @@ import MiniTerminal from "../components/MiniTerminal";
 import AboutSection from "../components/sections/AboutSection.astro";
 import JourneySection from "../components/sections/JourneySection.astro";
 import ContactPanel from "../components/sections/ContactPanel.astro";
+import FeaturedShowcase from "../components/sections/FeaturedShowcase.astro";
 import TechMarquee from "../components/TechMarquee.tsx";
-import ProjectsStack from "../components/ProjectsStack.tsx";
+import ProjectsGrid from "../components/ProjectsGrid.tsx";
 ---
 <BaseLayout title="Andreas Roos" current="/" revealFooter>
     <ContactPanel slot="reveal-panel" />
 
     <!-- ================= HERO ================= -->
-    <section id="home" data-section="home" data-snap
-             class="relative min-h-[calc(100vh-120px)] flex items-center justify-center">
+    <!-- Negative top margin cancels the layout's header padding, so the hero
+         is pinned and truly centered at scroll 0 (no tiny settle-scroll) -->
+    <!-- Pin holds until the ROOS dissolve completes (~0.63vh of scrub) -->
+    <section id="home" data-section="home" data-snap data-pin="0.75"
+             data-cmd="whoami" data-cmd-color="#a6e3a1"
+             class="relative -mt-[80px] md:-mt-[100px]">
+        <div class="pin-viewport relative min-h-[calc(100vh-120px)] flex flex-col items-center justify-center">
         <div data-hero-scrub class="max-w-4xl mx-auto px-4 flex flex-col items-center justify-center text-center">
 
-            <!-- ASCII Art Name with pixelated glow -->
-            <div class="relative mb-8 opacity-0 animate-fade-up">
-                <!-- Prompt -->
-                <p class="font-mono text-xs text-zinc-400 mb-3 text-left">
-                    <span class="text-ctp-green">$</span> whoami
-                </p>
-
+            <!-- ASCII Art Name with pixelated glow (extra bottom margin keeps
+                 the hover sketch underline clear of the tagline) -->
+            <div class="relative mb-16 opacity-0 animate-fade-up">
                 <!-- Soft color glow blobs (static; SVG #pixel filter removed - too costly to rasterize on page entry) -->
                 <div class="absolute inset-[-40%] -z-10 opacity-30">
                     <div class="relative w-full h-full blur-2xl">
@@ -31,7 +33,7 @@ import ProjectsStack from "../components/ProjectsStack.tsx";
                     </div>
                 </div>
 
-                <pre data-roos class="font-mono text-[8px] sm:text-xs md:text-sm ascii-art text-white ascii-glow select-none" set:html={`
+                <pre data-roos class="font-mono text-xs sm:text-base md:text-xl lg:text-2xl ascii-art text-white ascii-glow select-none cursor-pointer" set:html={`
 ██████╗  ██████╗  ██████╗ ███████╗
 ██╔══██╗██╔═══██╗██╔═══██╗██╔════╝
 ██████╔╝██║   ██║██║   ██║███████╗
@@ -41,78 +43,74 @@ import ProjectsStack from "../components/ProjectsStack.tsx";
 `} />
             </div>
 
-            <!-- Tagline -->
-            <p data-reveal data-reveal-delay="1" class="font-mono text-sm text-zinc-400 mb-10">
-                backend · android · kotlin // stockholm
+            <!-- Terminal path: outside the ASCII block so the hover sketch
+                 (drawn around ROOS) never collides with it -->
+            <p class="font-mono text-sm text-zinc-400 mt-2 mb-2">
+                ~/portfolio <span class="animate-pulse text-ctp-green">_</span>
             </p>
 
-            <!-- CTA Buttons -->
-            <div data-reveal data-reveal-delay="3" class="flex flex-col sm:flex-row gap-3 mb-12">
-                <a href="#projects"
-                   class="group px-5 py-2.5 rounded-lg bg-white/[0.03] border border-zinc-800 text-sm font-medium text-zinc-200
-                          hover:bg-white/[0.08] hover:border-zinc-600 hover:text-white transition-all duration-300">
-                    <span class="font-mono text-ctp-blue/70 mr-1.5 group-hover:text-ctp-blue transition-colors">$</span>
-                    ls projects/
-                </a>
-                <a href="#contact"
-                   class="group px-5 py-2.5 rounded-lg bg-white/[0.03] border border-zinc-800 text-sm font-medium text-zinc-200
-                          hover:bg-white/[0.08] hover:border-zinc-600 hover:text-white transition-all duration-300">
-                    <span class="font-mono text-ctp-peach/70 mr-1.5 group-hover:text-ctp-peach transition-colors">$</span>
-                    cat contact.txt
-                </a>
-            </div>
-
-            <!-- Interactive Mini Terminal -->
-            <div data-reveal data-reveal-delay="4" class="w-full max-w-md">
-                <MiniTerminal client:idle />
-            </div>
         </div>
 
-        <!-- Scroll cue -->
-        <div class="scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-xs text-zinc-500 select-none">
-            scroll ↓
         </div>
     </section>
 
     <!-- ================= ABOUT ================= -->
     <AboutSection />
 
-    <!-- ================= JOURNEY (pinned horizontal) ================= -->
+    <!-- ================= JOURNEY (pinned card stack) ================= -->
     <JourneySection />
 
-    <!-- ================= TECH MARQUEE ================= -->
-    <TechMarquee client:idle />
+    <!-- ================= TECH MARQUEE (pinned) ================= -->
+    <section data-snap data-pin="0.5" class="relative md:-mt-[30vh]">
+        <div class="pin-viewport w-full flex items-center justify-center">
+            <div class="w-full">
+                <TechMarquee client:idle />
+            </div>
+        </div>
+    </section>
 
     <!-- ================= PROJECTS ================= -->
-    <section id="projects" data-section="projects" data-snap class="relative max-w-6xl mx-auto px-4 pt-24 pb-16">
-        <div class="ghost-num font-mono" data-parallax-rel="0.12" aria-hidden="true">03</div>
-        <div class="scroll-prompt">
-            <p class="font-mono text-sm text-zinc-300 mb-6">
-                <span class="text-ctp-blue">$</span> <span data-type-cmd="ls projects/ --featured"></span>
-            </p>
+    <section id="projects" data-section="projects" data-snap
+             data-cmd="ls projects/" data-cmd-color="#89b4fa"
+             class="relative max-w-6xl mx-auto px-4 pb-16">
+        <!-- Flagship projects: pinned horizontal filmstrip; the 03 chapter
+             mark lives inside the strip's viewport and gets pushed out by
+             the first card -->
+        <FeaturedShowcase />
+
+        <!-- ...then the rest: entry hold + cushion walls over the grid -->
+        <div data-hold="0.9" class="relative z-10 mt-10 md:mt-[6vh]">
+            <!-- Wall matches the hold's early engagement (15vh above the grid) -->
+            <div data-snap class="absolute left-0 -top-[15vh] h-0 w-0" aria-hidden="true"></div>
+            <div data-snap class="absolute left-0 top-[180vh] h-0 w-0" aria-hidden="true"></div>
+            <div data-snap class="absolute left-0 top-[270vh] h-0 w-0" aria-hidden="true"></div>
+            <div data-snap class="absolute left-0 top-[360vh] h-0 w-0" aria-hidden="true"></div>
+            <!-- Frozen against scroll for the hold, then rides along -->
+            <div data-hold-content class="relative">
+                <h3 class="font-bold uppercase tracking-[0.3em] text-xl md:text-2xl text-white/80 select-none mb-10">
+                    <span class="text-ctp-blue font-mono mr-2">//</span>more projects
+                </h3>
+                <ProjectsGrid client:load />
+            </div>
         </div>
-        <ProjectsStack client:load />
     </section>
 
     <!-- Contact anchor sentinel: scrolling here reveals the fixed panel below the page -->
     <div id="contact" class="h-px"></div>
+
+    <!-- Secret terminal: summoned by clicking ROOS -->
+    <div id="secret-terminal" class="hidden fixed bottom-14 right-4 z-50 w-full max-w-md">
+        <MiniTerminal client:idle />
+    </div>
 </BaseLayout>
 
 <script>
-    import { sketchOnHover } from "../lib/sketch";
-
-    // Hover ROOS: roll a fresh rough style + Catppuccin color each time
     document.addEventListener("astro:page-load", () => {
+        // Secret: clicking ROOS summons the terminal
         const roos = document.querySelector("[data-roos]");
-        if (roos instanceof HTMLElement) {
-            sketchOnHover(roos, {
-                randomize: true, // roll a fresh color each hover...
-                type: "underline", // ...but always an underline
-                strokeWidth: 2,
-                padding: 8,
-                drawMs: 850,
-                undrawMs: 320,
-            });
+        const secret = document.getElementById("secret-terminal");
+        if (roos && secret) {
+            roos.addEventListener("click", () => secret.classList.toggle("hidden"));
         }
     });
 </script>

@@ -1,26 +1,50 @@
-import { stack } from "./TechStack";
+import { useRef } from "react";
+import { stack, lerpColor } from "./TechStack";
 
 /**
- * Infinite devicon marquee. The track holds the icon set twice; the scroll
- * engine (smoothScroll.ts) translates it every frame, drifting when idle and
- * accelerating/skewing with scroll velocity, wrapping at the halfway point.
+ * Infinite devicon marquee - now THE tech stack presence on the site. The
+ * track holds the icon set twice; the scroll engine (smoothScroll.ts)
+ * translates it every frame, drifting when idle and accelerating/skewing
+ * with scroll velocity, wrapping at the halfway point.
+ *
+ * Carries the cursor-follow glow from the old about-page stack card: a soft
+ * Catppuccin-tinted blob trails the pointer across the band.
  */
 export default function TechMarquee() {
     const items = [...stack, ...stack];
+    const blobRef = useRef<HTMLDivElement>(null);
+
+    const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const blob = blobRef.current;
+        if (!blob) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const rgb = lerpColor(x / rect.width);
+        blob.style.left = `${x}px`;
+        blob.style.top = "50%";
+        blob.style.opacity = "0.55";
+        blob.style.background =
+            `radial-gradient(ellipse at 40% 45%, rgba(${rgb},0.5) 0%, rgba(${rgb},0.15) 35%, transparent 60%)`;
+    };
+
+    const onLeave = () => {
+        if (blobRef.current) blobRef.current.style.opacity = "0";
+    };
 
     return (
-        <div className="tech-marquee" aria-hidden="true">
+        <div className="tech-marquee relative" aria-hidden="true" onMouseMove={onMove} onMouseLeave={onLeave}>
+            <div ref={blobRef} className="icon-blob" />
             <div data-marquee-track>
                 {items.map(({ icon: Icon, name, mono }, i) => (
-                    <div key={`${name}-${i}`} className="group flex items-center gap-3 cursor-default">
+                    <div key={`${name}-${i}`} className="group relative z-10 flex items-center gap-3 cursor-default">
                         <Icon
                             className={
                                 mono
-                                    ? "w-9 h-9 text-zinc-600 group-hover:text-white transition-all duration-300"
-                                    : "w-9 h-9 grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                                    ? "w-14 h-14 text-zinc-600 group-hover:text-white transition-all duration-300"
+                                    : "w-14 h-14 grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                             }
                         />
-                        <span className="font-mono text-xs text-zinc-600 group-hover:text-zinc-300 transition-colors duration-300 whitespace-nowrap">
+                        <span className="font-mono text-base text-zinc-600 group-hover:text-zinc-300 transition-colors duration-300 whitespace-nowrap">
                             {name}
                         </span>
                     </div>

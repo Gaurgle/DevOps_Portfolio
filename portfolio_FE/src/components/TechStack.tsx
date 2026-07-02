@@ -71,7 +71,7 @@ function getGlowColor(index: number, total: number): string {
 
 import { useRef, useCallback, useEffect } from 'react';
 
-function lerpColor(t: number): string {
+export function lerpColor(t: number): string {
     const clamped = Math.max(0, Math.min(1, t));
     const scaled = clamped * (glowColors.length - 1);
     const i = Math.floor(scaled);

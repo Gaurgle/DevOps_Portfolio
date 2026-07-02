@@ -197,6 +197,13 @@ export function ProjectCard({project, idx}: { project: (typeof projects)[number]
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
+            {/* Project name on top */}
+            <div className="px-5 pt-4 pb-3 border-b border-zinc-800/50">
+                <h3 className="font-mono text-sm font-semibold text-white">
+                    {project.projectTitle}
+                </h3>
+            </div>
+
             {/* Image slideshow / placeholder */}
             {hasImage ? (
                 <div
@@ -249,18 +256,14 @@ export function ProjectCard({project, idx}: { project: (typeof projects)[number]
             )}
 
             {project.wip && (
-                <span className="absolute top-2 left-2 z-20 px-2 py-0.5 text-[10px] font-mono rounded
+                <span className="absolute top-[60px] left-2 z-20 px-2 py-0.5 text-[10px] font-mono rounded
                                  bg-ctp-yellow/15 text-ctp-yellow border border-ctp-yellow/30">
                     under construction
                 </span>
             )}
 
-            {/* Content */}
+            {/* Content: info + links */}
             <div className="p-5 flex flex-col gap-3 flex-1 min-h-0">
-                <h3 className="font-mono text-sm font-semibold text-white">
-                    {project.projectTitle}
-                </h3>
-
                 <div className="flex-1 min-h-0 overflow-y-auto text-xs text-zinc-400 leading-relaxed">
                     <p>{project.description}</p>
                 </div>
@@ -305,7 +308,7 @@ export function ProjectCard({project, idx}: { project: (typeof projects)[number]
             </div>
 
             {project.songSrc && (
-                <div className="absolute top-2 right-2 z-20">
+                <div className="absolute top-[60px] right-2 z-20">
                     <PlayButton src={project.songSrc} title={project.projectTitle}/>
                 </div>
             )}

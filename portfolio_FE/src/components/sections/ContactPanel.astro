@@ -1,16 +1,24 @@
 ---
 import ContactForm from "../ContactForm.tsx";
+import ChapterMark from "./ChapterMark.astro";
 ---
 
 <!-- Fixed panel under the page; revealed as the content lifts away at the end -->
-<div class="contact-panel" data-section="contact">
-    <div class="w-full max-w-xl px-6 md:ml-54">
-        <p class="font-mono text-sm text-zinc-300 mb-2">
-            <span class="text-ctp-peach">$</span> <span data-type-cmd="mail roos"></span>
-        </p>
-        <h2 class="text-4xl md:text-6xl font-semibold text-white mb-8 leading-tight">
-            say <span class="text-ctp-peach">hello</span>.
-        </h2>
-        <ContactForm client:idle />
+<div class="contact-panel" data-section="contact" data-cmd="mail roos" data-cmd-color="#fab387">
+    <div class="w-full max-w-6xl px-6 md:ml-54 md:flex items-center justify-between gap-10">
+        <!-- Form on the left -->
+        <div class="w-full max-w-xl">
+            <p class="font-mono text-sm text-zinc-300 mb-6">
+                <span class="text-ctp-peach">$</span> <span data-type-cmd="mail roos"></span>
+            </p>
+            <ContactForm client:idle />
+        </div>
+
+        <!-- Chapter mark on the right (above the form on mobile) -->
+        <div class="shrink-0 order-first md:order-none mb-8 md:mb-0">
+            <ChapterMark n="04" label="CONTACT"
+                         pre="say " accent="hello" color="#fab387"
+                         width="w-[min(16rem,60vw)] md:w-[min(24rem,26vw)]" />
+        </div>
     </div>
 </div>

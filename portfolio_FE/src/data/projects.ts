@@ -14,6 +14,19 @@ export const projects = [
     tags: ["Rust", "ratatui", "CLI"],
     image: ["/pictures/notez-local.png", "/pictures/notez-global.png", "/pictures/todoz-local.png", "/pictures/todoz-global.png"],
     link: "https://github.com/Gaurgle/notez-cli",
+    featured: true,
+    details: {
+      long:
+        "Notes that live where the work lives: in the project directory, mirrored to a " +
+        "global home via symlinks so nothing is ever lost. The todoz TUI handles todos " +
+        "with subtasks, priorities and vim-style navigation.",
+      highlights: [
+        "Single static Rust binary, no runtime dependencies",
+        "Local-first with symlink mirroring to a global index",
+        "Interactive TUI: tree navigation, subtasks, colored priority flags",
+        "Daily logs and per-project public/private notes",
+      ],
+    },
   },
   {
     projectTitle: "noiz",
@@ -22,6 +35,19 @@ export const projects = [
     tags: ["Rust", "cpal", "ratatui", "DSP", "Audio"],
     image: "/pictures/noiz.png",
     link: "https://github.com/Gaurgle/noiz",
+    featured: true,
+    details: {
+      long:
+        "A focus tool that synthesizes its sound instead of playing samples: white, pink " +
+        "and brown noise generated in real time, with binaural brainwave presets and a " +
+        "rain overlay, all driven from a minimal terminal UI.",
+      highlights: [
+        "Real-time stereo DSP straight to the audio device via cpal",
+        "Binaural beat presets (focus, calm, deep work)",
+        "Procedural rain overlay, no audio files anywhere",
+        "Tiny ratatui interface with live parameter control",
+      ],
+    },
   },
   {
     projectTitle: "spaze",
@@ -48,6 +74,20 @@ export const projects = [
     tags: ["Kotlin", "Jetpack Compose", "BLE", "Lua", "MVVM"],
     image: ["/pictures/BLE app 1.png", "/pictures/BLE app 2.png"],
     link: "#",
+    featured: true,
+    details: {
+      long:
+        "An Android tool that talks to real hardware: it connects to BLE and LE Audio " +
+        "devices, digs through GATT services and characteristics live, and runs " +
+        "automated test sequences through an embedded Lua engine - predictable " +
+        "behavior out of unpredictable radios.",
+      highlights: [
+        "Embedded Lua engine scripts entire test sequences",
+        "Full GATT discovery with live characteristic read/write/notify",
+        "Serialized operation queue: thread-safe, deterministic hardware I/O",
+        "Jetpack Compose UI on a clean MVVM core",
+      ],
+    },
   },
   {
     projectTitle: "Wireless Test Platform",
@@ -60,6 +100,20 @@ export const projects = [
       "/pictures/WTP 3 Screenshot 2026-03-31 at 23.18.22.png",
     ],
     link: "#",
+    featured: true,
+    details: {
+      long:
+        "The backend for the bench: a Ktor REST API that manages BLE test sessions and " +
+        "stores results in PostgreSQL, streaming live progress over SSE to a Svelte + " +
+        "TypeScript frontend. The whole path from device on the bench to data in the " +
+        "database.",
+      highlights: [
+        "Ktor REST API with test-session lifecycle management",
+        "Real-time run progress via server-sent events",
+        "PostgreSQL persistence, containerized with Docker",
+        "Svelte + TypeScript dashboard frontend",
+      ],
+    },
   },
   {
     projectTitle: "Audio Watermark",

@@ -1,9 +1,12 @@
 ---
 /**
- * Pinned horizontal journey: on md+ the section pins while vertical scroll
- * drives the milestone cards sideways (transform set by smoothScroll.ts).
- * On mobile it degrades to a normal vertical stack.
+ * Journey: the chapter mark (02 JOURNEY + hook) stays on the left of the
+ * pinned viewport while the coaster pile builds on the right - vertical
+ * scroll lands each milestone card on the previous one with a cascade
+ * offset (smoothScroll.ts drives the transforms). Vertical stack on mobile.
  */
+import ChapterMark from "./ChapterMark.astro";
+
 const milestones = [
     {
         n: "01",
@@ -42,40 +45,42 @@ const milestones = [
 ];
 ---
 
-<section id="journey" data-section="journey" data-snap data-hscroll class="journey-pin relative">
-    <div class="journey-viewport">
-        <!-- Ghost numeral -->
-        <div class="ghost-num font-mono" data-parallax-rel="0.1" aria-hidden="true">02</div>
+<section id="journey" data-section="journey" data-snap
+         data-cmd="./journey --walk" data-cmd-color="#94e2d5"
+         class="relative">
 
-        <div data-hscroll-track class="relative z-10 px-4 py-10 md:py-0">
-            <!-- Intro panel -->
-            <div class="journey-card flex flex-col justify-center md:pr-10">
-                <p class="font-mono text-sm text-zinc-300 mb-4">
-                    <span class="text-ctp-green">$</span> <span data-type-cmd="./journey --walk"></span>
-                </p>
-                <h2 class="text-3xl md:text-5xl font-semibold leading-tight mb-4">
-                    From stage<br />to <span class="text-ctp-mauve">stack trace</span>.
-                </h2>
-                <p class="font-mono text-xs text-zinc-500 hidden md:block">scroll →</p>
-            </div>
-
-            {milestones.map((m, i) => (
-                <div class="journey-card" data-reveal data-reveal-delay={String((i % 3) + 1)}>
-                    <div class="terminal-card h-full">
-                        <div class="terminal-bar">
-                            <span class="terminal-dot bg-ctp-red/80"></span>
-                            <span class="terminal-dot bg-ctp-yellow/80"></span>
-                            <span class="terminal-dot bg-ctp-green/80"></span>
-                            <span class="font-mono text-xs text-zinc-300 ml-2">journey/{m.n}.log</span>
-                        </div>
-                        <div class="p-6 md:p-10">
-                            <div class={`font-mono text-xs mb-2 ${m.color}`}>{m.n} · {m.cmd}</div>
-                            <h3 class="text-xl md:text-3xl font-semibold text-white mb-4">{m.title}</h3>
-                            <p class="text-sm md:text-base text-zinc-300 leading-relaxed max-w-xl">{m.body}</p>
-                        </div>
-                    </div>
+    <div data-cardstack data-off-x="26" data-off-y="48" class="journey-stack relative z-10">
+        <div class="journey-viewport">
+            <div class="relative z-10 w-full flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-[5vw] px-4 md:px-[4vw] py-10 md:py-0">
+                <!-- Chapter mark: stays for the whole pinned pile -->
+                <div class="shrink-0 text-center md:text-left">
+                    <ChapterMark n="02" label="JOURNEY"
+                                 line1="From stage to" accent="stack trace" color="#94e2d5"
+ />
                 </div>
-            ))}
+
+                <!-- The coaster pile -->
+                <div class="stack-area">
+                    {milestones.map((m, i) => (
+                        <div data-stack-card style={`z-index: ${i + 1}`}>
+                            <div class="terminal-card">
+                                <div class="terminal-bar">
+                                    <span class="terminal-dot bg-ctp-red/80"></span>
+                                    <span class="terminal-dot bg-ctp-yellow/80"></span>
+                                    <span class="terminal-dot bg-ctp-green/80"></span>
+                                    <span class="font-mono text-xs text-zinc-300 ml-2">journey/{m.n}.log</span>
+                                    <span class={`font-mono text-xs ml-auto mr-1 ${m.color}`}>{m.cmd}</span>
+                                </div>
+                                <div class="p-6 md:p-9">
+                                    <div class={`font-mono text-xs mb-2 ${m.color}`}>{m.n} · {m.cmd}</div>
+                                    <h3 class="text-xl md:text-3xl font-semibold text-white mb-4">{m.title}</h3>
+                                    <p class="text-sm md:text-base text-zinc-300 leading-relaxed max-w-xl">{m.body}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     </div>
 </section>

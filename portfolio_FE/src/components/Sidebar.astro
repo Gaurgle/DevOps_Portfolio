@@ -1,29 +1,17 @@
 ---
 import SidebarNav from "./SidebarNav";
-const { current = "/" } = Astro.props;
-const cursorColor = {
-    "/": "text-ctp-green",
-    "/projects": "text-ctp-blue",
-    "/about": "text-ctp-mauve",
-    "/contact": "text-ctp-peach",
-}[current] ?? "text-ctp-green";
 ---
 
 <aside
     id="sidebar"
     aria-hidden="true"
-    class="fixed left-0 top-[64px] md:top-[80px]
-     z-40 h-[calc(100vh-64px)] md:h-[calc(100vh-80px)]
-     w-54 bg-black/60
+    class="fixed left-0 top-0
+     z-40 h-screen
+     w-54 bg-black/85 md:bg-transparent md:backdrop-blur-[6px]
      transform transition-transform duration-300
      -translate-x-full md:translate-x-0">
 
-    <nav class="relative h-full p-8 pt-16 md:pt-8">
-        <!-- Terminal path -->
-        <p class="font-mono text-xs text-zinc-300 mb-6 tracking-wide">
-            ~/portfolio <span class:list={["animate-pulse", cursorColor]}>_</span>
-        </p>
-
+    <nav class="relative h-full p-8 pt-[88px] md:pt-[110px]">
         <!-- Links -->
         <SidebarNav client:load />
 
@@ -40,13 +28,6 @@ const cursorColor = {
             </a>
         </div>
 
-        <!-- ASCII footer -->
-        <div class="absolute bottom-8 left-8 right-8">
-            <pre class="font-mono text-[9px] text-zinc-400 leading-relaxed select-none">
-┌──────────────┐
-│  &copy; 2026 roos │
-└──────────────┘</pre>
-        </div>
     </nav>
 </aside>
 
