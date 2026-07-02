@@ -1,36 +1,49 @@
+import type { ComponentType } from 'react';
 import {
-    SiKotlin,
-    SiSpring,
-    SiKtor,
-    SiAndroid,
-    SiPython,
-    SiMysql,
-    SiPostgresql,
-    SiAstro,
-    SiReact,
-    SiSvelte,
-    SiTailwindcss,
-    SiDocker,
-    SiBluetooth,
-} from "react-icons/si";
-import {DiJava, DiDatabase} from "react-icons/di";
+    KotlinIcon,
+    Java,
+    SpringIcon,
+    KtorIcon,
+    Android,
+    Bluetooth,
+    DockerIcon,
+    Python,
+    Mysql,
+    Postgresql,
+    ClaudeCode,
+    SvelteIcon,
+    TailwindIcon,
+} from "@dev.icons/react";
+// Astro's brand mark is near-black; the monochrome variant reads on a dark background.
+import { AstroIcon as AstroMonoIcon } from "@dev.icons/react/mono";
+// Exposed has no Devicon; keep the generic monochrome database glyph.
+import {DiDatabase} from "react-icons/di";
 
-const stack = [
-    {icon: SiKotlin, name: "Kotlin"},
-    {icon: DiJava, name: "Java"},
-    {icon: SiSpring, name: "Spring"},
-    {icon: SiKtor, name: "Ktor"},
-    {icon: DiDatabase, name: "Exposed"},
-    {icon: SiAndroid, name: "Android"},
-    {icon: SiBluetooth, name: "BLE"},
-    {icon: SiDocker, name: "Docker"},
-    {icon: SiPython, name: "Python"},
-    {icon: SiMysql, name: "MySQL"},
-    {icon: SiPostgresql, name: "PostgreSQL"},
-    {icon: SiAstro, name: "Astro"},
-    {icon: SiReact, name: "React"},
-    {icon: SiSvelte, name: "Svelte"},
-    {icon: SiTailwindcss, name: "Tailwind"},
+type TechEntry = {
+    icon: ComponentType<{ className?: string }>;
+    name: string;
+    // Monochrome fallback icons fade gray → white instead of gray → brand color.
+    mono?: boolean;
+    // Hover color for mono icons (Tailwind class); defaults to white when omitted.
+    monoHover?: string;
+};
+
+const stack: TechEntry[] = [
+    {icon: KotlinIcon, name: "Kotlin"},
+    {icon: Java, name: "Java"},
+    {icon: SpringIcon, name: "Spring"},
+    {icon: KtorIcon, name: "Ktor"},
+    {icon: DiDatabase, name: "Exposed", mono: true},
+    {icon: Android, name: "Android"},
+    {icon: Bluetooth, name: "BLE"},
+    {icon: DockerIcon, name: "Docker"},
+    {icon: Python, name: "Python"},
+    {icon: Mysql, name: "MySQL"},
+    {icon: Postgresql, name: "PostgreSQL"},
+    {icon: AstroMonoIcon, name: "Astro", mono: true, monoHover: "group-hover:text-[#FF5D01]"},
+    {icon: SvelteIcon, name: "Svelte"},
+    {icon: TailwindIcon, name: "Tailwind"},
+    {icon: ClaudeCode, name: "Claude Code"},
 ];
 
 // Catppuccin gradient stops: green → teal → blue → mauve → pink → peach
@@ -160,13 +173,19 @@ export default function TechStack({ parentId }: { parentId?: string }) {
             className="relative flex flex-wrap gap-5 items-center justify-center"
         >
             <div ref={blobRef} className="icon-blob" />
-            {stack.map(({icon: Icon, name}) => (
+            {stack.map(({icon: Icon, name, mono, monoHover}) => (
                 <div
                     key={name}
-                    className="tech-icon-wrap flex flex-col items-center gap-1.5 group cursor-default"
+                    className="tech-icon-wrap relative flex flex-col items-center group cursor-default"
                 >
-                    <Icon className="tech-icon w-6 h-6 text-zinc-500 group-hover:text-white transition-all duration-300" />
-                    <span className="font-mono text-[10px] text-zinc-500 group-hover:text-zinc-300 transition-colors duration-300">
+                    <Icon
+                        className={
+                            mono
+                                ? `tech-icon w-8 h-8 text-zinc-500 ${monoHover ?? "group-hover:text-white"} transition-all duration-300`
+                                : "tech-icon w-8 h-8 grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                        }
+                    />
+                    <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 whitespace-nowrap font-mono text-[10px] text-zinc-300 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
                         {name}
                     </span>
                 </div>
