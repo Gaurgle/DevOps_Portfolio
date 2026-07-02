@@ -7,8 +7,8 @@ import TechStack from "../components/TechStack.tsx";
     <div class="max-w-4xl mx-auto px-4 space-y-6">
 
         <!-- Page header -->
-        <div class="opacity-0 animate-fade-up">
-            <p class="font-mono text-sm text-zinc-300 mb-6">
+        <div class="scroll-prompt">
+            <p data-reveal class="font-mono text-sm text-zinc-300 mb-6">
                 <span class="text-ctp-mauve">$</span> cat about.txt
             </p>
         </div>
@@ -18,7 +18,7 @@ import TechStack from "../components/TechStack.tsx";
 
             <!-- Who I Am -->
             <!-- TODO: add self-portrait image to this card or as a separate card -->
-            <div class="terminal-card opacity-0 animate-fade-up stagger-1" data-rn-card>
+            <div data-reveal data-reveal-delay="1" class="terminal-card" data-rn-card>
                 <div class="terminal-bar">
                     <span class="terminal-dot bg-ctp-red/80"></span>
                     <span class="terminal-dot bg-ctp-yellow/80"></span>
@@ -43,7 +43,7 @@ import TechStack from "../components/TechStack.tsx";
             </div>
 
             <!-- Background -->
-            <div class="terminal-card opacity-0 animate-fade-up stagger-2" data-rn-card>
+            <div data-reveal data-reveal-delay="2" class="terminal-card" data-rn-card>
                 <div class="terminal-bar">
                     <span class="terminal-dot bg-ctp-red/80"></span>
                     <span class="terminal-dot bg-ctp-yellow/80"></span>
@@ -68,7 +68,7 @@ import TechStack from "../components/TechStack.tsx";
             </div>
 
             <!-- As a Developer — full width -->
-            <div class="terminal-card md:col-span-2 opacity-0 animate-fade-up stagger-3" data-rn-card>
+            <div data-reveal data-reveal-delay="3" class="terminal-card md:col-span-2" data-rn-card>
                 <div class="terminal-bar">
                     <span class="terminal-dot bg-ctp-red/80"></span>
                     <span class="terminal-dot bg-ctp-yellow/80"></span>
@@ -104,7 +104,7 @@ import TechStack from "../components/TechStack.tsx";
             </div>
 
             <!-- Tech Stack — full width -->
-            <div id="stack-card" class="terminal-card md:col-span-2 opacity-0 animate-fade-up stagger-4 !overflow-visible">
+            <div id="stack-card" data-reveal data-reveal-delay="4" class="terminal-card md:col-span-2 !overflow-visible">
                 <div class="terminal-bar rounded-t-lg">
                     <span class="terminal-dot bg-ctp-red/80"></span>
                     <span class="terminal-dot bg-ctp-yellow/80"></span>

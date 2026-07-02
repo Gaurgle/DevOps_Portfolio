@@ -4,5 +4,7 @@ import ContactForm from "../components/ContactForm.tsx";
 ---
 
 <BaseLayout title="Contact" current="/contact">
-    <ContactForm client:load />
+    <div data-reveal>
+        <ContactForm client:load />
+    </div>
 </BaseLayout>
