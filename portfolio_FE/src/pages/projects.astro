@@ -1,12 +1,13 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import CardProjects from "../components/CardProjects.tsx";
+// The projects content now lives on the one-page site at /#projects.
 ---
-<BaseLayout title="Projects" subtitles="Some of my projects" current="/projects">
-    <div class="z-40">
-        <!-- NEW wrapper -->
-        <div class="max-w-6xl mx-auto px-4 md:px-1">
-            <CardProjects client:load />
-        </div>
-    </div>
-</BaseLayout>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0;url=/#projects" />
+    <link rel="canonical" href="/" />
+    <title>Redirecting…</title>
+</head>
+<body></body>
+</html>

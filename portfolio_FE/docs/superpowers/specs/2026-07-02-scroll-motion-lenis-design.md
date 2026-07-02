@@ -176,3 +176,39 @@ Both are prototyped live and kept only if they clearly improve the feel.
 
 - Timeline (A) exact years and stat (B) real numbers - needed from Andreas before
   those two land; everything else can proceed without them.
+
+---
+
+# Revision 2 (same day): One-page "terminal session" rebuild
+
+Approved direction change after seeing v1: bigger, immersive, single-scroll.
+
+## R2.1 Structure
+- `/` becomes ONE continuous page: hero -> about -> journey -> tech marquee ->
+  projects -> contact (footer reveal). Old routes (`/about`, `/projects`,
+  `/contact`) become meta-refresh redirects to `/#<section>`.
+- Sidebar links become smooth Lenis anchor jumps with a scroll-spy active state.
+- Lenis snap (`lenis/snap`, proximity) on major section starts; no snap inside
+  the horizontal journey zone.
+
+## R2.2 Showpieces
+- **Journey**: pinned section, vertical scroll drives milestone boxes
+  horizontally (terminal-card filmstrip). Vertical stack fallback on mobile.
+- **Tech marquee**: devicons in an infinite marquee; drifts idle, accelerates and
+  skews with scroll velocity.
+- **Hero dissolve**: ASCII ROOS scales/blurs/fades through into about.
+- **Projects**: sticky stacking cards (replaces carousel presentation).
+- **Footer reveal**: page lifts at the end to expose the contact panel.
+- Ghost oversized section numerals (01/02/03) with counter-parallax.
+- Section prompts type themselves (command typing + caret) on entry.
+- Per-word masked text reveals in about paragraphs.
+
+## R2.3 Particle background rework (performance)
+- Replace the always-animating canvas `ParticleBg` with 3-4 STATIC particle
+  layers (each painted once per resize, Catppuccin-tinted, different sizes and
+  densities) that move only via scroll parallax (`translate3d` + modulo wrap).
+  Zero idle cost, compositor-only during scroll.
+
+## R2.4 Cuts
+- Count-up stat tiles (v1 section 7.2): removed entirely per Andreas.
+- Vertical About timeline (v1 7.1): replaced by the horizontal journey.

@@ -1,0 +1,103 @@
+---
+/**
+ * Static particle background: 4 depth layers, each painted ONCE onto a canvas
+ * and moved only by scroll parallax (translate3d in smoothScroll.ts).
+ * Zero idle cost - replaces the always-animating ParticleBg canvas.
+ *
+ * Each canvas holds two copies of its pattern stacked vertically, so the
+ * engine can wrap the translate with a modulo and scroll can be any length.
+ */
+const layers = [
+    // back -> front: denser + dimmer + slower behind, sparser + brighter + faster in front
+    { speed: 0.04, density: 90, size: 1.0, alpha: 0.35, glow: 0, colors: "108,112,134|127,132,156" },          // overlay grays
+    { speed: 0.09, density: 55, size: 1.4, alpha: 0.45, glow: 0, colors: "137,180,250|148,226,213" },          // blue / teal
+    { speed: 0.16, density: 30, size: 1.9, alpha: 0.5,  glow: 3, colors: "203,166,247|245,194,231" },          // mauve / pink
+    { speed: 0.26, density: 14, size: 2.6, alpha: 0.6,  glow: 6, colors: "166,227,161|250,179,135" },          // green / peach
+];
+---
+
+<div class="particle-layers" aria-hidden="true">
+    {layers.map((l) => (
+        <div
+            class="particle-layer"
+            data-parallax-wrap
+            data-parallax-speed={String(l.speed)}
+            data-density={String(l.density)}
+            data-size={String(l.size)}
+            data-alpha={String(l.alpha)}
+            data-glow={String(l.glow)}
+            data-colors={l.colors}
+        >
+            <canvas></canvas>
+        </div>
+    ))}
+</div>
+
+<script>
+    function paintLayer(layer: HTMLElement) {
+        const canvas = layer.querySelector("canvas");
+        if (!canvas) return;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        // Two stacked copies of the same pattern -> seamless modulo wrap.
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * 2 * dpr);
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h * 2}px`;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h * 2);
+
+        const density = parseInt(layer.dataset.density ?? "40", 10);
+        const size = parseFloat(layer.dataset.size ?? "1.5");
+        const alpha = parseFloat(layer.dataset.alpha ?? "0.5");
+        const glow = parseFloat(layer.dataset.glow ?? "0");
+        const colors = (layer.dataset.colors ?? "255,255,255").split("|");
+
+        // Scale particle count with viewport area (density is per ~1080p screen).
+        const count = Math.round(density * ((w * h) / (1920 * 1080)) + density * 0.3);
+
+        // Random points generated once, drawn twice -> both copies identical.
+        const points = Array.from({ length: count }, (_, i) => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: size * (0.5 + Math.random()),
+            a: alpha * (0.4 + Math.random() * 0.6),
+            color: colors[i % colors.length],
+        }));
+
+        for (const yOffset of [0, h]) {
+            for (const p of points) {
+                if (glow > 0) {
+                    ctx.shadowBlur = glow;
+                    ctx.shadowColor = `rgba(${p.color},0.8)`;
+                }
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(${p.color},${p.a.toFixed(3)})`;
+                ctx.arc(p.x, p.y + yOffset, p.r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+    }
+
+    function paintAll() {
+        document
+            .querySelectorAll<HTMLElement>(".particle-layer")
+            .forEach(paintLayer);
+    }
+
+    let resizeTimer = 0;
+    window.addEventListener("resize", () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(paintAll, 250);
+    });
+
+    // Repaint after every ClientRouter navigation (fresh DOM, same session).
+    document.addEventListener("astro:page-load", paintAll);
+</script>

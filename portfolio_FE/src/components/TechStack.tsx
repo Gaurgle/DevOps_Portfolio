@@ -19,7 +19,7 @@ import { AstroIcon as AstroMonoIcon } from "@dev.icons/react/mono";
 // Exposed has no Devicon; keep the generic monochrome database glyph.
 import {DiDatabase} from "react-icons/di";
 
-type TechEntry = {
+export type TechEntry = {
     icon: ComponentType<{ className?: string }>;
     name: string;
     // Monochrome fallback icons fade gray → white instead of gray → brand color.
@@ -28,7 +28,7 @@ type TechEntry = {
     monoHover?: string;
 };
 
-const stack: TechEntry[] = [
+export const stack: TechEntry[] = [
     {icon: KotlinIcon, name: "Kotlin"},
     {icon: Java, name: "Java"},
     {icon: SpringIcon, name: "Spring"},

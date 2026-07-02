@@ -1,27 +1,37 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import MiniTerminal from "../components/MiniTerminal";
+import AboutSection from "../components/sections/AboutSection.astro";
+import JourneySection from "../components/sections/JourneySection.astro";
+import ContactPanel from "../components/sections/ContactPanel.astro";
+import TechMarquee from "../components/TechMarquee.tsx";
+import ProjectsStack from "../components/ProjectsStack.tsx";
 ---
-<BaseLayout title="Andreas Roos" current="/">
-    <div data-hero-scrub class="max-w-4xl mx-auto px-4 flex flex-col items-center justify-center min-h-[50vh] text-center">
+<BaseLayout title="Andreas Roos" current="/" revealFooter>
+    <ContactPanel slot="reveal-panel" />
 
-        <!-- ASCII Art Name with pixelated glow -->
-        <div class="relative mb-8 opacity-0 animate-fade-up">
-            <!-- Prompt -->
-            <p class="font-mono text-xs text-zinc-400 mb-3 text-left">
-                <span class="text-ctp-green">$</span> whoami
-            </p>
+    <!-- ================= HERO ================= -->
+    <section id="home" data-section="home" data-snap
+             class="relative min-h-[calc(100vh-120px)] flex items-center justify-center">
+        <div data-hero-scrub class="max-w-4xl mx-auto px-4 flex flex-col items-center justify-center text-center">
 
-            <!-- Soft color glow blobs (static; SVG #pixel filter removed - too costly to rasterize on page entry) -->
-            <div class="absolute inset-[-40%] -z-10 opacity-30">
-                <div class="relative w-full h-full blur-2xl">
-                    <div class="absolute inset-0 bg-[#3d2e54]/35 rounded-full" style="transform: translate(8%, -6%) scale(1.05)"></div>
-                    <div class="absolute inset-0 bg-[#54303d]/30 rounded-full" style="transform: translate(-7%, 5%) scale(0.95)"></div>
-                    <div class="absolute inset-0 bg-[#2e3d54]/25 rounded-full" style="transform: translate(3%, 6%)"></div>
+            <!-- ASCII Art Name with pixelated glow -->
+            <div class="relative mb-8 opacity-0 animate-fade-up">
+                <!-- Prompt -->
+                <p class="font-mono text-xs text-zinc-400 mb-3 text-left">
+                    <span class="text-ctp-green">$</span> whoami
+                </p>
+
+                <!-- Soft color glow blobs (static; SVG #pixel filter removed - too costly to rasterize on page entry) -->
+                <div class="absolute inset-[-40%] -z-10 opacity-30">
+                    <div class="relative w-full h-full blur-2xl">
+                        <div class="absolute inset-0 bg-[#3d2e54]/35 rounded-full" style="transform: translate(8%, -6%) scale(1.05)"></div>
+                        <div class="absolute inset-0 bg-[#54303d]/30 rounded-full" style="transform: translate(-7%, 5%) scale(0.95)"></div>
+                        <div class="absolute inset-0 bg-[#2e3d54]/25 rounded-full" style="transform: translate(3%, 6%)"></div>
+                    </div>
                 </div>
-            </div>
 
-            <pre data-roos class="font-mono text-[8px] sm:text-xs md:text-sm ascii-art text-white ascii-glow select-none" set:html={`
+                <pre data-roos class="font-mono text-[8px] sm:text-xs md:text-sm ascii-art text-white ascii-glow select-none" set:html={`
 ██████╗  ██████╗  ██████╗ ███████╗
 ██╔══██╗██╔═══██╗██╔═══██╗██╔════╝
 ██████╔╝██║   ██║██║   ██║███████╗
@@ -29,34 +39,63 @@ import MiniTerminal from "../components/MiniTerminal";
 ██║  ██║╚██████╔╝╚██████╔╝███████║
 ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
 `} />
+            </div>
+
+            <!-- Tagline -->
+            <p data-reveal data-reveal-delay="1" class="font-mono text-sm text-zinc-400 mb-10">
+                backend · android · kotlin // stockholm
+            </p>
+
+            <!-- CTA Buttons -->
+            <div data-reveal data-reveal-delay="3" class="flex flex-col sm:flex-row gap-3 mb-12">
+                <a href="#projects"
+                   class="group px-5 py-2.5 rounded-lg bg-white/[0.03] border border-zinc-800 text-sm font-medium text-zinc-200
+                          hover:bg-white/[0.08] hover:border-zinc-600 hover:text-white transition-all duration-300">
+                    <span class="font-mono text-ctp-blue/70 mr-1.5 group-hover:text-ctp-blue transition-colors">$</span>
+                    ls projects/
+                </a>
+                <a href="#contact"
+                   class="group px-5 py-2.5 rounded-lg bg-white/[0.03] border border-zinc-800 text-sm font-medium text-zinc-200
+                          hover:bg-white/[0.08] hover:border-zinc-600 hover:text-white transition-all duration-300">
+                    <span class="font-mono text-ctp-peach/70 mr-1.5 group-hover:text-ctp-peach transition-colors">$</span>
+                    cat contact.txt
+                </a>
+            </div>
+
+            <!-- Interactive Mini Terminal -->
+            <div data-reveal data-reveal-delay="4" class="w-full max-w-md">
+                <MiniTerminal client:idle />
+            </div>
         </div>
 
-        <!-- Tagline -->
-        <p data-reveal data-reveal-delay="1" class="font-mono text-sm text-zinc-400 mb-10">
-            backend · android · kotlin // stockholm
-        </p>
-
-        <!-- CTA Buttons -->
-        <div data-reveal data-reveal-delay="3" class="flex flex-col sm:flex-row gap-3 mb-12">
-            <a href="/projects"
-               class="group px-5 py-2.5 rounded-lg bg-white/[0.03] border border-zinc-800 text-sm font-medium text-zinc-200
-                      hover:bg-white/[0.08] hover:border-zinc-600 hover:text-white transition-all duration-300">
-                <span class="font-mono text-ctp-blue/70 mr-1.5 group-hover:text-ctp-blue transition-colors">$</span>
-                ls projects/
-            </a>
-            <a href="/contact"
-               class="group px-5 py-2.5 rounded-lg bg-white/[0.03] border border-zinc-800 text-sm font-medium text-zinc-200
-                      hover:bg-white/[0.08] hover:border-zinc-600 hover:text-white transition-all duration-300">
-                <span class="font-mono text-ctp-peach/70 mr-1.5 group-hover:text-ctp-peach transition-colors">$</span>
-                cat contact.txt
-            </a>
+        <!-- Scroll cue -->
+        <div class="scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-xs text-zinc-500 select-none">
+            scroll ↓
         </div>
+    </section>
 
-        <!-- Interactive Mini Terminal -->
-        <div data-reveal data-reveal-delay="4" class="w-full max-w-md">
-            <MiniTerminal client:idle />
+    <!-- ================= ABOUT ================= -->
+    <AboutSection />
+
+    <!-- ================= JOURNEY (pinned horizontal) ================= -->
+    <JourneySection />
+
+    <!-- ================= TECH MARQUEE ================= -->
+    <TechMarquee client:idle />
+
+    <!-- ================= PROJECTS ================= -->
+    <section id="projects" data-section="projects" data-snap class="relative max-w-6xl mx-auto px-4 pt-24 pb-16">
+        <div class="ghost-num font-mono" data-parallax-rel="0.12" aria-hidden="true">03</div>
+        <div class="scroll-prompt">
+            <p class="font-mono text-sm text-zinc-300 mb-6">
+                <span class="text-ctp-blue">$</span> <span data-type-cmd="ls projects/ --featured"></span>
+            </p>
         </div>
-    </div>
+        <ProjectsStack client:load />
+    </section>
+
+    <!-- Contact anchor sentinel: scrolling here reveals the fixed panel below the page -->
+    <div id="contact" class="h-px"></div>
 </BaseLayout>
 
 <script>

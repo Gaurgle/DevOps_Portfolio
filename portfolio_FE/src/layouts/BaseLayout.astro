@@ -4,11 +4,13 @@ import "../styles/global.css";
 import Banner from "../components/Banner.astro";
 import Sidebar from "../components/Sidebar.astro";
 import SidebarToggle from "../components/SidebarToggle";
-import ParticleBg from "../../public/js/ParticleBg";
+import ParticleLayers from "../components/ParticleLayers.astro";
 import EasterEggs from "../components/EasterEggs";
 import Footer from "../components/Footer.astro";
 
-const {title, description, current = "/"} = Astro.props;
+// revealFooter: the page content lifts away at the end to expose a fixed
+// panel (the contact section on the one-pager) sitting underneath.
+const {title, description, current = "/", revealFooter = false} = Astro.props;
 const isHome = Astro.url.pathname === "/";
 ---
 <!DOCTYPE html>
@@ -21,11 +23,6 @@ const isHome = Astro.url.pathname === "/";
 <!-- Scroll progress bar (driven by Lenis) -->
 <div id="scroll-progress"></div>
 
-<!-- Particle background as a parallax layer -->
-<div class="bg-behind pointer-events-none" data-parallax-speed="0.12">
-    <ParticleBg client:idle />
-</div>
-
 <!-- BANNER -->
 <header class="fixed inset-x-0 top-0 z-50 pointer-events-auto">
     <Banner isHome={isHome} />
@@ -37,8 +34,15 @@ const isHome = Astro.url.pathname === "/";
 <!-- SIDEBAR -->
 <Sidebar {current} />
 
+<!-- Fixed panel revealed as the page lifts at the end (one-pager contact) -->
+{revealFooter && <slot name="reveal-panel" />}
+
 <!-- GRID CONTAINER -->
-<div class="relative z-20 min-h-screen md:ml-54 md:pl-54">
+<div class:list={["min-h-screen md:ml-54 md:pl-54", revealFooter ? "page-over-panel" : "relative z-20"]}>
+    <!-- Static particle background, parallax-driven (inside the stacking
+         context so the opaque page background does not hide it) -->
+    <ParticleLayers />
+
     <main class="relative z-10 min-h-screen p-4 md:p-6 pt-[80px] md:pt-[100px] pb-60">
         <div class="hero mb-4">
             <slot name="hero"/>
@@ -57,9 +61,8 @@ const isHome = Astro.url.pathname === "/";
 </html>
 
 <script>
-    import { wireSmoothScroll, initSmoothScroll } from "../lib/smoothScroll";
-    // Register lifecycle hooks once; ClientRouter re-fires page-load per navigation.
+    import { wireSmoothScroll } from "../lib/smoothScroll";
+    // Register lifecycle hooks once; ClientRouter fires astro:page-load on the
+    // initial load as well as after every navigation.
     wireSmoothScroll();
-    // Init immediately if page-load already fired before this module ran (idempotent).
-    if (document.readyState !== "loading") initSmoothScroll();
 </script>

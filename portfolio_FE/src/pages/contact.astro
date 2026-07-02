@@ -1,10 +1,13 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import ContactForm from "../components/ContactForm.tsx";
+// The contact form now lives on the one-page site at /#contact.
 ---
-
-<BaseLayout title="Contact" current="/contact">
-    <div data-reveal>
-        <ContactForm client:load />
-    </div>
-</BaseLayout>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0;url=/#contact" />
+    <link rel="canonical" href="/" />
+    <title>Redirecting…</title>
+</head>
+<body></body>
+</html>

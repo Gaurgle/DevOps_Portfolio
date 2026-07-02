@@ -1,0 +1,81 @@
+---
+/**
+ * Pinned horizontal journey: on md+ the section pins while vertical scroll
+ * drives the milestone cards sideways (transform set by smoothScroll.ts).
+ * On mobile it degrades to a normal vertical stack.
+ */
+const milestones = [
+    {
+        n: "01",
+        cmd: "music",
+        color: "text-ctp-green",
+        title: "Studio & stage",
+        body: "10+ years as a drummer, producer, mixing engineer and live technician. " +
+            "Produced and worked with major artists, including Eurovision acts. " +
+            "Where the habit of solving problems under pressure comes from.",
+    },
+    {
+        n: "02",
+        cmd: "the pivot",
+        color: "text-ctp-blue",
+        title: "Traded the studio for the terminal",
+        body: "Started studying software development at Nackademin in Stockholm, " +
+            "channeling the same problem-solving into code.",
+    },
+    {
+        n: "03",
+        cmd: "sigma connectivity",
+        color: "text-ctp-mauve",
+        title: "Close to the hardware",
+        body: "Interning on Bluetooth LE and LE Audio: an Android/Kotlin testing tool " +
+            "that drives real devices over GATT and runs automated scripts through an " +
+            "embedded Lua engine.",
+    },
+    {
+        n: "04",
+        cmd: "now",
+        color: "text-ctp-peach",
+        title: "Backend & Android developer",
+        body: "Building APIs, services and apps end to end with Kotlin, Java, Spring " +
+            "Boot and Ktor, from a device on the bench to data in the database.",
+    },
+];
+---
+
+<section id="journey" data-section="journey" data-snap data-hscroll class="journey-pin relative">
+    <div class="journey-viewport">
+        <!-- Ghost numeral -->
+        <div class="ghost-num font-mono" data-parallax-rel="0.1" aria-hidden="true">02</div>
+
+        <div data-hscroll-track class="relative z-10 px-4 py-10 md:py-0">
+            <!-- Intro panel -->
+            <div class="journey-card flex flex-col justify-center md:pr-10">
+                <p class="font-mono text-sm text-zinc-300 mb-4">
+                    <span class="text-ctp-green">$</span> <span data-type-cmd="./journey --walk"></span>
+                </p>
+                <h2 class="text-3xl md:text-5xl font-semibold leading-tight mb-4">
+                    From stage<br />to <span class="text-ctp-mauve">stack trace</span>.
+                </h2>
+                <p class="font-mono text-xs text-zinc-500 hidden md:block">scroll →</p>
+            </div>
+
+            {milestones.map((m, i) => (
+                <div class="journey-card" data-reveal data-reveal-delay={String((i % 3) + 1)}>
+                    <div class="terminal-card h-full">
+                        <div class="terminal-bar">
+                            <span class="terminal-dot bg-ctp-red/80"></span>
+                            <span class="terminal-dot bg-ctp-yellow/80"></span>
+                            <span class="terminal-dot bg-ctp-green/80"></span>
+                            <span class="font-mono text-xs text-zinc-300 ml-2">journey/{m.n}.log</span>
+                        </div>
+                        <div class="p-6 md:p-10">
+                            <div class={`font-mono text-xs mb-2 ${m.color}`}>{m.n} · {m.cmd}</div>
+                            <h3 class="text-xl md:text-3xl font-semibold text-white mb-4">{m.title}</h3>
+                            <p class="text-sm md:text-base text-zinc-300 leading-relaxed max-w-xl">{m.body}</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+</section>

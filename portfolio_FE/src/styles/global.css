@@ -324,11 +324,12 @@ html.lenis, html.lenis body { height: auto; }
     pointer-events: none;
 }
 
-/* Hero scrub: fade + drift the intro as its first viewport scrolls away */
+/* Hero dissolve: scale up, blur and fade through into the next section */
 [data-hero-scrub] {
-    opacity: calc(1 - var(--scrub, 0) * 0.65);
-    transform: translateY(calc(var(--scrub, 0) * -32px));
-    will-change: opacity, transform;
+    opacity: calc(1 - var(--scrub, 0));
+    transform: scale(calc(1 + var(--scrub, 0) * 0.12)) translateY(calc(var(--scrub, 0) * -40px));
+    filter: blur(calc(var(--scrub, 0) * 6px));
+    will-change: opacity, transform, filter;
 }
 
 /* Sticky section prompt */
@@ -336,6 +337,158 @@ html.lenis, html.lenis body { height: auto; }
     position: sticky;
     top: 88px;
     z-index: 30;
+}
+
+/* Static particle layers (painted once, moved by scroll parallax) */
+.particle-layers {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.particle-layer {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+}
+.particle-layer canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Typed command prompts */
+[data-type-cmd] {
+    display: inline-block;
+    min-height: 1.25em;
+}
+[data-type-cmd].is-typing::after,
+[data-type-cmd].is-typed::after {
+    content: "▍";
+    margin-left: 2px;
+    color: rgb(161 161 170);
+}
+[data-type-cmd].is-typed::after {
+    animation: caret-blink 1.1s step-end infinite;
+}
+@keyframes caret-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+}
+
+/* Ghost section numerals */
+.ghost-num {
+    position: absolute;
+    top: -0.15em;
+    right: -0.05em;
+    z-index: 0;
+    font-size: clamp(8rem, 22vw, 20rem);
+    line-height: 1;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.028);
+    pointer-events: none;
+    user-select: none;
+    will-change: transform;
+}
+
+/* Sidebar scroll spy */
+.spy-active {
+    color: #fff !important;
+}
+.spy-active > span:first-child {
+    opacity: 1 !important;
+}
+
+/* Horizontal journey (pinned filmstrip on md+) */
+.journey-pin {
+    position: relative;
+}
+@media (min-width: 768px) {
+    .journey-pin .journey-viewport {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+    }
+    .journey-pin [data-hscroll-track] {
+        display: flex;
+        gap: 2.5rem;
+        padding: 0 12vw;
+        will-change: transform;
+    }
+}
+@media (max-width: 767px) {
+    .journey-pin [data-hscroll-track] {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+.journey-card {
+    flex-shrink: 0;
+}
+@media (min-width: 768px) {
+    .journey-card { width: min(44rem, 62vw); }
+}
+
+/* Velocity marquee */
+.tech-marquee {
+    overflow: hidden;
+    padding: 2.5rem 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+[data-marquee-track] {
+    display: flex;
+    align-items: center;
+    gap: 3.5rem;
+    width: max-content;
+    will-change: transform;
+}
+
+/* Stacking project cards */
+.stack-item {
+    position: sticky;
+    top: 110px;
+}
+.stack-item + .stack-item {
+    margin-top: 12vh;
+}
+
+/* Contact reveal panel (page lifts to expose it) */
+.contact-panel {
+    position: fixed;
+    inset-x: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 88vh;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0b0b12;
+    border-top: 1px solid rgb(39 39 42);
+}
+.page-over-panel {
+    position: relative;
+    z-index: 10;
+    background: #000;
+    margin-bottom: 88vh;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+}
+
+/* Scroll cue on the hero */
+.scroll-cue {
+    animation: cue-bob 2.2s ease-in-out infinite;
+}
+@keyframes cue-bob {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50%      { transform: translateY(6px); opacity: 1; }
 }
 
 /* Footer system-status line */
@@ -369,46 +522,15 @@ html.lenis, html.lenis body { height: auto; }
     50%      { opacity: 1; }
 }
 
-/* Journey timeline (About) */
-.timeline { position: relative; padding-left: 1.75rem; }
-.timeline::before {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 4px;
-    bottom: 4px;
-    width: 2px;
-    background: linear-gradient(180deg, #a6e3a1, #89b4fa, #cba6f7, #fab387);
-    opacity: 0.35;
-    transform-origin: top;
-    transform: scaleY(0);
-}
-/* Line draws itself once the timeline scrolls into view */
-.timeline.is-visible::before {
-    animation: timeline-grow 1.1s ease-out forwards;
-}
-@keyframes timeline-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-.timeline-node { position: relative; }
-.timeline-node::before {
-    content: "";
-    position: absolute;
-    left: -1.75rem;
-    top: 4px;
-    width: 12px;
-    height: 12px;
-    border-radius: 9999px;
-    background: #11111b;
-    border: 2px solid #89b4fa;
-    box-shadow: 0 0 8px rgba(137, 180, 250, 0.5);
-}
-
 @media (prefers-reduced-motion: reduce) {
     [data-reveal],
     [data-hero-scrub] {
         opacity: 1 !important;
         transform: none !important;
+        filter: none !important;
         animation: none !important;
     }
-    .timeline::before { transform: scaleY(1); animation: none; }
-    .status-dot { animation: none; }
+    .status-dot,
+    .scroll-cue { animation: none; }
+    [data-marquee-track] { transform: none !important; }
 }

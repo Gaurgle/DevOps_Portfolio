@@ -1,0 +1,16 @@
+---
+import ContactForm from "../ContactForm.tsx";
+---
+
+<!-- Fixed panel under the page; revealed as the content lifts away at the end -->
+<div class="contact-panel" data-section="contact">
+    <div class="w-full max-w-xl px-6 md:ml-54">
+        <p class="font-mono text-sm text-zinc-300 mb-2">
+            <span class="text-ctp-peach">$</span> <span data-type-cmd="mail roos"></span>
+        </p>
+        <h2 class="text-4xl md:text-6xl font-semibold text-white mb-8 leading-tight">
+            say <span class="text-ctp-peach">hello</span>.
+        </h2>
+        <ContactForm client:idle />
+    </div>
+</div>

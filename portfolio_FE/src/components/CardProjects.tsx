@@ -159,7 +159,7 @@ function Lightbox({images, startIndex, title, onClose}: {
     );
 }
 
-function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: number }) {
+export function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: number }) {
     const images = (Array.isArray(project.image) ? project.image : [project.image]).filter(Boolean);
     const hasImage = images.length > 0;
     const hasMultiple = images.length > 1;
@@ -315,18 +315,3 @@ function ProjectCard({project, idx}: { project: (typeof projects)[number]; idx: 
     );
 }
 
-export default function ProjectCards() {
-    return (
-        <div>
-            <p className="font-mono text-sm text-zinc-400 mb-6">
-                <span className="text-ctp-blue">$</span> ls projects/
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {projects.map((project, idx) => (
-                    <ProjectCard key={idx} project={project} idx={idx}/>
-                ))}
-            </div>
-        </div>
-    );
-}
