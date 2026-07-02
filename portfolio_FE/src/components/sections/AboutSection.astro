@@ -13,17 +13,17 @@ import ChapterMark from "./ChapterMark.astro";
 
     <div class="md:flex md:flex-row-reverse md:gap-10">
         <!-- Chapter mark: sticky on the right for the whole section -->
-        <div class="md:w-[42%] shrink-0 md:sticky md:top-0 md:h-screen flex flex-col justify-center md:items-end md:text-right pt-24 md:pt-0 z-0">
+        <div class="md:w-[42%] shrink-0 md:sticky md:top-0 md:h-screen flex flex-col justify-center items-center md:items-end md:text-right pt-24 md:pt-0 z-0">
             <ChapterMark n="01" label="ABOUT"
-                         line1="Developer with" pre="a " accent="backbeat" color="#cba6f7"
-                         size="text-[clamp(5.5rem,10vw,9.5rem)]" />
+                         line1="Backend. Android." accent="Audio" color="#cba6f7" />
         </div>
 
         <!-- Story cards on the left, with a small entry hold (little pin) -->
         <!-- Extra tail: about keeps the frame a while before journey arrives -->
         <div data-hold="0.35" class="md:w-[58%] relative z-10 pt-16 pb-8 md:pt-[18vh] md:pb-[30vh]">
-            <!-- Big gaps: each card gets the frame to itself for a while -->
-            <div data-hold-content class="space-y-[40vh]">
+            <!-- Big gaps on desktop (each card owns the frame); compact on
+                 mobile where there is no focus effect to justify them -->
+            <div data-hold-content class="space-y-14 md:space-y-[40vh]">
 
             <!-- Who I Am -->
             <!-- TODO: add self-portrait image to this card or as a separate card -->
@@ -38,9 +38,12 @@ import ChapterMark from "./ChapterMark.astro";
                         <span class="text-white" data-rn="underline">Java</span>, and
                         <span class="text-white" data-rn="underline">Spring Boot</span>/<span class="text-white" data-rn="underline">Ktor</span>.
                         Hands-on with Bluetooth LE, Jetpack Compose, and full-stack systems.
-                        Currently studying at
-                        <span class="text-white" data-rn="underline">Nackademin</span> and interning at
-                        <span class="text-white" data-rn="underline">Sigma Connectivity</span>.
+                        Java Developer program at
+                        <span class="text-white" data-rn="underline">Nackademin</span> and a
+                        BLE/LE Audio internship at
+                        <span class="text-white" data-rn="underline">Sigma Connectivity</span> behind me;
+                        currently mastering records at
+                        <span class="text-white" data-rn="underline">IMRSV Music</span>.
                     </p>
                 </div>
             </div>
@@ -50,16 +53,21 @@ import ChapterMark from "./ChapterMark.astro";
                 <div class="p-6">
                     <h3 class="text-base md:text-lg font-bold tracking-[0.2em] uppercase text-ctp-pink mb-3">Background</h3>
                     <p class="text-base md:text-lg text-zinc-100 leading-relaxed">
-                        Before tech: 10+ years in the music industry as a drummer, producer,
-                        mixing engineer and live technician. Produced and worked with
-                        <span class="text-white" data-rn="underline">Liam Payne</span>,
+                        15+ years in the music industry - and counting. Drums and musical
+                        direction with
                         <span class="text-white" data-rn="underline">Benjamin Ingrosso</span> (incl. Eurovision),
+                        MIDI and tracks engineering for
                         <span class="text-white" data-rn="circle">Loreen</span>,
-                        <span class="text-white" data-rn="underline">Astrid S</span>,
-                        <span class="text-white" data-rn="underline">Veronica Maggio</span>, and
-                        <span class="text-white" data-rn="underline">Vault Boy</span>.
+                        <span class="text-white" data-rn="underline">Veronica Maggio</span> and
+                        <span class="text-white" data-rn="underline">Eva Dahlgren</span>,
+                        mixing credits for
+                        <span class="text-white" data-rn="underline">Vault Boy</span>,
+                        <span class="text-white" data-rn="underline">Liam Payne</span> and
+                        <span class="text-white" data-rn="underline">Astrid S</span>;
+                        signed songwriter and producer at
+                        <span class="text-white" data-rn="underline">TEN Music Group</span>.
                         That's where the habit of solving problems under pressure comes from,
-                        now channeling it into code.
+                        now channeled into code.
                     </p>
                 </div>
             </div>

@@ -328,13 +328,33 @@ html.lenis, html.lenis body { height: auto; }
     pointer-events: none;
 }
 
-/* Hero dissolve: the name inflates to swallow the whole screen as it fades,
-   like scrolling straight through it */
-[data-hero-scrub] {
+/* Hero dissolve: [data-hero-scrub] (the pinned viewport) carries --scrub;
+   .hero-boom inflates to swallow the screen as it fades, .hero-path (the
+   ~/portfolio line) just fades out early without scaling. Scale + fade run
+   everywhere (compositor-only); blur is desktop-only - heavy on phone GPUs. */
+[data-hero-scrub] .hero-boom {
     opacity: calc(1 - var(--scrub, 0));
     transform: scale(calc(1 + var(--scrub, 0) * 4)) translateY(calc(var(--scrub, 0) * -30px));
-    filter: blur(calc(var(--scrub, 0) * 9px));
-    will-change: opacity, transform, filter;
+    will-change: opacity, transform;
+}
+@media (min-width: 768px) {
+    [data-hero-scrub] .hero-boom {
+        filter: blur(calc(var(--scrub, 0) * 9px));
+        will-change: opacity, transform, filter;
+    }
+}
+[data-hero-scrub] .hero-path {
+    opacity: calc(1 - min(1, var(--scrub, 0) * 1.8));
+}
+/* Mobile: smaller inflation (smaller composited textures) and no heavy
+   text-shadow glow on the scaling layer - keeps the explosion at 60fps */
+@media (max-width: 767px) {
+    [data-hero-scrub] .hero-boom {
+        transform: scale(calc(1 + var(--scrub, 0) * 1.9)) translateY(calc(var(--scrub, 0) * -20px));
+    }
+    .hero-boom .ascii-glow {
+        text-shadow: 0 0 8px rgba(203, 166, 247, 0.5);
+    }
 }
 
 /* Chapter mark: boxy display font for the hook lines, slashed-zero mono for
@@ -367,6 +387,13 @@ html.lenis, html.lenis body { height: auto; }
         display: flex;
         flex-direction: column;
         justify-content: center;
+    }
+}
+/* Sections opting into the pin on mobile too (the hero's explosion) */
+@media (max-width: 767px) {
+    [data-pin][data-pin-mobile] > .pin-viewport {
+        position: sticky;
+        top: 0;
     }
 }
 
@@ -490,9 +517,12 @@ html.lenis, html.lenis body { height: auto; }
     }
     .journey-stack .stack-area {
         position: relative;
-        /* card size + 3 cascade offsets (4 cards); offsets mirror data-off-x/y */
-        width: calc(min(40rem, 54vw) + 3 * 26px);
-        height: calc(min(30rem, 64vh) + 3 * 48px);
+        /* card size + 5 cascade offsets (6 cards); offsets mirror data-off-x/y */
+        width: calc(min(40rem, 54vw) + 5 * 26px);
+        height: calc(min(28rem, 58vh) + 5 * 48px);
+    }
+    .journey-stack [data-stack-card] {
+        height: min(28rem, 58vh);
     }
     .journey-stack [data-stack-card] {
         position: absolute;
@@ -564,7 +594,9 @@ html.lenis, html.lenis body { height: auto; }
     left: 0;
     right: 0;
     bottom: 0;
+    /* dvh: stays correct under mobile Safari's collapsing URL bar */
     height: 88vh;
+    height: 88dvh;
     z-index: 5;
     display: flex;
     flex-direction: column;
@@ -574,54 +606,31 @@ html.lenis, html.lenis body { height: auto; }
        deepens into the indigo - the reveal reads as one continuous surface */
     background: linear-gradient(180deg, #000, #0b0b12 45%);
 }
+/* Mobile: mark + form can exceed the fixed panel height - let it scroll */
+@media (max-width: 767px) {
+    .contact-panel {
+        justify-content: flex-start;
+        overflow-y: auto;
+        padding: 3.5rem 0 4rem;
+    }
+}
 .page-over-panel {
     position: relative;
     z-index: 10;
     background: #000;
     margin-bottom: 88vh;
+    margin-bottom: 88dvh;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
-}
-
-/* Footer system-status line */
-.scroll-status {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 40;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.35rem 0.9rem;
-    font-size: 10px;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
-    border-top: 1px solid rgb(39 39 42);
-    color: rgb(113 113 122);
-    pointer-events: none;
-}
-.scroll-status .status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 9999px;
-    background: #a6e3a1;
-    box-shadow: 0 0 6px rgba(166, 227, 161, 0.7);
-    animation: status-pulse 2.4s ease-in-out infinite;
-}
-@keyframes status-pulse {
-    0%, 100% { opacity: 0.5; }
-    50%      { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
     [data-reveal],
-    [data-hero-scrub] {
+    [data-hero-scrub] .hero-boom,
+    [data-hero-scrub] .hero-path {
         opacity: 1 !important;
         transform: none !important;
         filter: none !important;
         animation: none !important;
     }
-    .status-dot,
-    .scroll-cue { animation: none; }
     [data-marquee-track] { transform: none !important; }
 }

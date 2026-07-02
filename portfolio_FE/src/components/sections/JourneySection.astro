@@ -13,34 +13,70 @@ const milestones = [
         cmd: "music",
         color: "text-ctp-green",
         title: "Studio & stage",
-        body: "10+ years as a drummer, producer, mixing engineer and live technician. " +
-            "Produced and worked with major artists, including Eurovision acts. " +
-            "Where the habit of solving problems under pressure comes from.",
+        paras: [
+            "15+ years in music. Drums and musical direction with Benjamin " +
+            "Ingrosso, MIDI and tracks engineering for Loreen, Veronica Maggio " +
+            "and Eva Dahlgren.",
+            "Mixing credits: Vault Boy, Benjamin Ingrosso, Liam Payne, Astrid S " +
+            "and many more. Signed producer at TEN Music Group - these days " +
+            "mastering at IMRSV Music.",
+        ],
     },
     {
         n: "02",
         cmd: "the pivot",
         color: "text-ctp-blue",
-        title: "Traded the studio for the terminal",
-        body: "Started studying software development at Nackademin in Stockholm, " +
-            "channeling the same problem-solving into code.",
+        title: "Then code happened",
+        paras: [
+            "Took the Java Developer program at Nackademin. Turns out running " +
+            "live shows and writing software use the same muscles: " +
+            "preparation, redundancy, staying calm when things break.",
+        ],
     },
     {
         n: "03",
-        cmd: "sigma connectivity",
-        color: "text-ctp-mauve",
-        title: "Close to the hardware",
-        body: "Interning on Bluetooth LE and LE Audio: an Android/Kotlin testing tool " +
-            "that drives real devices over GATT and runs automated scripts through an " +
-            "embedded Lua engine.",
+        cmd: "backend",
+        color: "text-ctp-teal",
+        title: "The foundation",
+        paras: [
+            "Kotlin and Java, Spring Boot and Ktor. Backend is my foundation: " +
+            "APIs, data models, PostgreSQL - the part of the system that " +
+            "simply has to be correct.",
+        ],
     },
     {
         n: "04",
-        cmd: "now",
+        cmd: "android",
+        color: "text-ctp-mauve",
+        title: "Android development",
+        paras: [
+            "Kotlin, Jetpack Compose, Clean Architecture. My main focus: " +
+            "building apps end to end - UI, state, testing, and the tricky " +
+            "seams where software meets real hardware.",
+        ],
+    },
+    {
+        n: "05",
+        cmd: "ble · le audio",
+        color: "text-ctp-pink",
+        title: "BLE & LE Audio",
+        paras: [
+            "Close to the hardware - not all the way down, but close: nRF dev " +
+            "kits, radio protocols, GATT, PAC records, Auracast. Wireless " +
+            "audio is where my two worlds meet, and it's the niche I'm " +
+            "digging into.",
+        ],
+    },
+    {
+        n: "06",
+        cmd: "how i build",
         color: "text-ctp-peach",
-        title: "Backend & Android developer",
-        body: "Building APIs, services and apps end to end with Kotlin, Java, Spring " +
-            "Boot and Ktor, from a device on the bench to data in the database.",
+        title: "Products, not just code",
+        paras: [
+            "What I care about: apps that feel smooth and reliable, look " +
+            "modern, and stay fast, safe and robust underneath. I pick the " +
+            "tools the problem needs - not the other way around.",
+        ],
     },
 ];
 ---
@@ -74,7 +110,11 @@ const milestones = [
                                 <div class="p-6 md:p-9">
                                     <div class={`font-mono text-xs mb-2 ${m.color}`}>{m.n} · {m.cmd}</div>
                                     <h3 class="text-xl md:text-3xl font-semibold text-white mb-4">{m.title}</h3>
-                                    <p class="text-sm md:text-base text-zinc-300 leading-relaxed max-w-xl">{m.body}</p>
+                                    <div class="space-y-3">
+                                        {m.paras.map((p) => (
+                                            <p class="text-sm md:text-base text-zinc-300 leading-relaxed max-w-xl">{p}</p>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>

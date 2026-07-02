@@ -3,44 +3,30 @@ import React, { useEffect } from 'react';
 
 const SidebarToggle: React.FC = () => {
     useEffect(() => {
-        const setupSidebarToggle = () => {
+        // One delegated listener: survives ClientRouter DOM swaps and can
+        // never stack duplicate handlers (the old per-button wiring re-added
+        // a fresh closure on every page-load, making taps toggle twice).
+        const setState = (hidden: boolean) => {
             const sidebar = document.getElementById("sidebar");
-            const toggleButton = document.getElementById("sidebar-toggle");
             const overlay = document.getElementById("sidebar-overlay");
-
-            if (!sidebar || !toggleButton) return;
-
-            const closeSidebar = () => {
-                sidebar.classList.add("-translate-x-full");
-                sidebar.setAttribute("aria-hidden", "true");
-                overlay?.classList.add("hidden");
-            };
-
-            const toggleSidebar = () => {
-                sidebar.classList.toggle("-translate-x-full");
-                const isHidden = sidebar.classList.contains("-translate-x-full");
-                sidebar.setAttribute("aria-hidden", isHidden.toString());
-                overlay?.classList.toggle("hidden", isHidden);
-            };
-
-            toggleButton.removeEventListener('click', toggleSidebar);
-            toggleButton.addEventListener('click', toggleSidebar);
-            overlay?.removeEventListener('click', closeSidebar);
-            overlay?.addEventListener('click', closeSidebar);
-
-            return () => {
-                toggleButton.removeEventListener('click', toggleSidebar);
-                overlay?.removeEventListener('click', closeSidebar);
-            };
+            if (!sidebar) return;
+            sidebar.classList.toggle("-translate-x-full", hidden);
+            sidebar.setAttribute("aria-hidden", String(hidden));
+            overlay?.classList.toggle("hidden", hidden);
         };
 
-        const cleanup = setupSidebarToggle();
-        document.addEventListener('astro:page-load', setupSidebarToggle);
-
-        return () => {
-            cleanup?.();
-            document.removeEventListener('astro:page-load', setupSidebarToggle);
+        const onClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            if (target.closest("#sidebar-toggle")) {
+                const sidebar = document.getElementById("sidebar");
+                setState(!sidebar?.classList.contains("-translate-x-full"));
+            } else if (target.closest("#sidebar-overlay")) {
+                setState(true);
+            }
         };
+
+        document.addEventListener("click", onClick);
+        return () => document.removeEventListener("click", onClick);
     }, []);
 
     return (

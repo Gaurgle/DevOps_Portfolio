@@ -8,7 +8,9 @@
 import { projects } from "../../data/projects";
 import ChapterMark from "./ChapterMark.astro";
 
-const featured = projects.filter((p) => p.featured);
+const featured = projects
+    .filter((p) => p.featured)
+    .sort((a, b) => (a.featuredOrder ?? 99) - (b.featuredOrder ?? 99));
 const firstImage = (p: (typeof projects)[number]) =>
     Array.isArray(p.image) ? p.image[0] : p.image;
 
@@ -24,15 +26,24 @@ const accents = ["166,227,161", "203,166,247", "137,180,250", "250,179,135"];
             <div data-cover-content class="will-change-transform">
                 <ChapterMark n="03" label="PROJECTS"
                              pre="Things I've " accent="built" color="#89b4fa"
-                             width="w-[min(34rem,40vw)]" />
+                             width="w-[min(18rem,84vw)] md:w-[min(34rem,40vw)]" />
             </div>
+        </div>
+
+        <!-- Mobile: static chapter header above the stacked cards -->
+        <div class="md:hidden px-4 pt-16 pb-8">
+            <ChapterMark n="03" label="PROJECTS"
+                         pre="Things I've " accent="built" color="#89b4fa" />
+            <h3 class="mt-8 font-bold uppercase tracking-[0.3em] text-lg text-white/80 select-none">
+                <span class="text-ctp-blue font-mono mr-2">//</span>featured projects
+            </h3>
         </div>
 
         <!-- Headline: rides in flush with the first card's leading edge, then
              docks centered while the rest of the strip sweeps past (engine) -->
         <h3 data-hscroll-headline
-            class="absolute top-[16vh] left-0 w-max font-bold uppercase tracking-[0.3em] text-xl md:text-2xl text-white/80 select-none whitespace-nowrap z-20 will-change-transform">
-            <span class="text-ctp-blue font-mono mr-2">//</span>featured projects
+            class="hidden md:block absolute top-[16vh] left-0 w-max font-bold uppercase tracking-[0.3em] text-xl md:text-2xl text-white/80 select-none whitespace-nowrap z-20 will-change-transform">
+            <span data-headline-sigil class="text-ctp-blue font-mono mr-2 transition-colors duration-500">//</span>featured projects
         </h3>
         <div data-hscroll-track class="relative z-10 px-4">
             {featured.map((p, i) => (
@@ -99,6 +110,14 @@ const accents = ["166,227,161", "203,166,247", "137,180,250", "250,179,135"];
                           style="font-family: 'Archivo Black', 'Inter', sans-serif;">PROJECTS</text>
                 </svg>
             </div>
+        </div>
+
+        <!-- Mobile: compact static arrow after the cards -->
+        <div class="md:hidden flex justify-center py-10" aria-hidden="true">
+            <svg class="w-40 h-auto text-ctp-blue drop-shadow-[0_0_24px_rgba(137,180,250,0.5)]"
+                 viewBox="0 0 100 100" fill="currentColor">
+                <path d="M2,10 H78 V68 H94 L61,99 L28,68 H44 V44 H2 Z" />
+            </svg>
         </div>
     </div>
 </div>

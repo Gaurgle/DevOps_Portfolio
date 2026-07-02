@@ -15,6 +15,7 @@ export const projects = [
     image: ["/pictures/notez-local.png", "/pictures/notez-global.png", "/pictures/todoz-local.png", "/pictures/todoz-global.png"],
     link: "https://github.com/Gaurgle/notez-cli",
     featured: true,
+    featuredOrder: 3,
     details: {
       long:
         "Notes that live where the work lives: in the project directory, mirrored to a " +
@@ -36,6 +37,7 @@ export const projects = [
     image: "/pictures/noiz.png",
     link: "https://github.com/Gaurgle/noiz",
     featured: true,
+    featuredOrder: 4,
     details: {
       long:
         "A focus tool that synthesizes its sound instead of playing samples: white, pink " +
@@ -75,6 +77,7 @@ export const projects = [
     image: ["/pictures/BLE app 1.png", "/pictures/BLE app 2.png"],
     link: "#",
     featured: true,
+    featuredOrder: 1,
     details: {
       long:
         "An Android tool that talks to real hardware: it connects to BLE and LE Audio " +
@@ -101,6 +104,7 @@ export const projects = [
     ],
     link: "#",
     featured: true,
+    featuredOrder: 2,
     details: {
       long:
         "The backend for the bench: a Ktor REST API that manages BLE test sessions and " +

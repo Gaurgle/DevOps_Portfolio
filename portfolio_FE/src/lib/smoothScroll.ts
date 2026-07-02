@@ -226,7 +226,9 @@ function measureCardStacks(): CardStack[] {
  */
 function applyPins(): void {
     for (const section of document.querySelectorAll<HTMLElement>("[data-pin]")) {
-        if (!isDesktop()) {
+        // Mobile skips pins unless the section opts in (data-pin-mobile,
+        // e.g. the hero so its explosion plays on a held screen).
+        if (!isDesktop() && !section.hasAttribute("data-pin-mobile")) {
             section.style.height = "";
             continue;
         }
@@ -258,6 +260,9 @@ type HScroll = {
     /** Travels at which each spotlight card pauses (pinned), and for how long. */
     pausePoints: number[];
     pauseLen: number;
+    /** Spotlight cards + the headline sigil that adopts their accent color. */
+    spotlightEls: HTMLElement[];
+    sigilEl: HTMLElement | null;
     /** Detached finale arrow: rides its virtual track position, then docks. */
     arrowEl: HTMLElement | null;
     arrowEntry: number;
@@ -326,10 +331,11 @@ function measureHScrolls(): HScroll[] {
         const pushStart = pushEl
             ? Math.round(cardEdge - pushEl.getBoundingClientRect().right - PUSH_GAP)
             : 0;
+        const sigilEl = section.querySelector<HTMLElement>("[data-headline-sigil]");
         result.push({
             section, track, headline, cardEdge, dockLeft, cardsEnd, headlineW,
             pushEl, pushStart, pausePoints, pauseLen, arrowEl, arrowEntry,
-            top, distance, buffer,
+            spotlightEls: spotlights, sigilEl, top, distance, buffer,
         });
     }
     return result;
@@ -435,7 +441,9 @@ function bindScrollDriven(reduced: boolean): void {
 
     // Section walls: scroll momentum dies exactly at each section start; the
     // next gesture continues past it. No snap animation, just a stop.
+    // Desktop only: braking scrollTo calls fight native touch momentum.
     const measureWalls = (): number[] =>
+        !isDesktop() ? [] :
         Array.from(document.querySelectorAll<HTMLElement>("[data-snap]"))
             .map((el) => Math.round(el.getBoundingClientRect().top + window.scrollY))
             // The first section starts ~100px in; a wall there would halt the
@@ -473,7 +481,8 @@ function bindScrollDriven(reduced: boolean): void {
 
     // Depth-of-field cards: sharp near the viewport center, increasingly
     // blurred toward the edges (about cards use this to take turns in focus).
-    const focusEls = reduced
+    // Desktop only: per-frame blur filters are too heavy for phones.
+    const focusEls = reduced || !isDesktop()
         ? []
         : Array.from(document.querySelectorAll<HTMLElement>("[data-focus]"));
 
@@ -596,6 +605,19 @@ function bindScrollDriven(reduced: boolean): void {
                 // while the card holds its pause.
                 const push = Math.max(0, raw - h.pushStart);
                 h.pushEl.style.transform = `translate3d(${-push}px, 0, 0)`;
+            }
+            if (h.sigilEl && h.spotlightEls.length) {
+                // The headline's // adopts the color of whichever card holds
+                // the spotlight (CSS transition handles the fade between).
+                let active = -1;
+                for (let i = 0; i < h.pausePoints.length; i++) {
+                    if (raw >= h.pausePoints[i] + i * h.pauseLen) active = i;
+                    else break;
+                }
+                if (active >= 0 && h.spotlightEls[active]) {
+                    const fc = h.spotlightEls[active].style.getPropertyValue("--fc").trim();
+                    if (fc) h.sigilEl.style.color = `rgb(${fc})`;
+                }
             }
             if (h.arrowEl) {
                 // Trails the last card at track speed, then docks under the
@@ -741,7 +763,8 @@ export function initSmoothScroll(): void {
     const reduced = prefersReducedMotion();
 
     if (!reduced) {
-        lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1 });
+        // Low lerp + slightly damped wheel = heavier, more deliberate glide.
+        lenis = new Lenis({ lerp: 0.065, smoothWheel: true, wheelMultiplier: 0.85 });
 
         const raf = (time: number) => {
             lenis?.raf(time);
