@@ -382,11 +382,12 @@ html.lenis, html.lenis body { height: auto; }
     opacity: 0.35;
     transform-origin: top;
     transform: scaleY(0);
+}
+/* Line draws itself once the timeline scrolls into view */
+.timeline.is-visible::before {
     animation: timeline-grow 1.1s ease-out forwards;
 }
-.timeline.is-visible::before,
-[data-reveal].is-visible .timeline::before { transform: scaleY(1); }
-@keyframes timeline-grow { to { transform: scaleY(1); } }
+@keyframes timeline-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 .timeline-node { position: relative; }
 .timeline-node::before {
     content: "";

@@ -117,6 +117,76 @@ import TechStack from "../components/TechStack.tsx";
             </div>
 
         </div>
+
+        <!-- Count-up stats -->
+        <div data-reveal class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="terminal-card p-4 text-center">
+                <div class="font-mono text-2xl md:text-3xl text-white" data-countup="10" data-countup-suffix="+">0</div>
+                <div class="font-mono text-[10px] text-zinc-500 mt-1">years in music</div>
+            </div>
+            <div class="terminal-card p-4 text-center">
+                <div class="font-mono text-2xl md:text-3xl text-white" data-countup="15">0</div>
+                <div class="font-mono text-[10px] text-zinc-500 mt-1">technologies</div>
+            </div>
+            <div class="terminal-card p-4 text-center">
+                <div class="font-mono text-2xl md:text-3xl text-white" data-countup="4">0</div>
+                <div class="font-mono text-[10px] text-zinc-500 mt-1">studio &amp; stage roles</div>
+            </div>
+            <div class="terminal-card p-4 text-center">
+                <div class="font-mono text-2xl md:text-3xl text-white" data-countup="6">0</div>
+                <div class="font-mono text-[10px] text-zinc-500 mt-1">artists worked with</div>
+            </div>
+        </div>
+
+        <!-- Journey timeline -->
+        <div class="terminal-card">
+            <div class="terminal-bar rounded-t-lg">
+                <span class="terminal-dot bg-ctp-red/80"></span>
+                <span class="terminal-dot bg-ctp-yellow/80"></span>
+                <span class="terminal-dot bg-ctp-green/80"></span>
+                <span class="font-mono text-xs text-zinc-300 ml-2">journey.log</span>
+            </div>
+            <div class="p-6">
+                <div data-reveal class="timeline space-y-7">
+                    <div data-reveal data-reveal-delay="1" class="timeline-node">
+                        <div class="font-mono text-xs text-ctp-green mb-1">01 · music</div>
+                        <h3 class="text-sm font-semibold text-white mb-1">Studio &amp; stage</h3>
+                        <p class="text-sm text-zinc-300 leading-relaxed">
+                            10+ years as a drummer, producer, mixing engineer and live
+                            technician. Produced and worked with major artists, including
+                            Eurovision acts. Where the habit of solving problems under
+                            pressure comes from.
+                        </p>
+                    </div>
+                    <div data-reveal data-reveal-delay="2" class="timeline-node">
+                        <div class="font-mono text-xs text-ctp-blue mb-1">02 · the pivot</div>
+                        <h3 class="text-sm font-semibold text-white mb-1">Traded the studio for the terminal</h3>
+                        <p class="text-sm text-zinc-300 leading-relaxed">
+                            Started studying software development at Nackademin in
+                            Stockholm, channeling the same problem-solving into code.
+                        </p>
+                    </div>
+                    <div data-reveal data-reveal-delay="3" class="timeline-node">
+                        <div class="font-mono text-xs text-ctp-mauve mb-1">03 · sigma connectivity</div>
+                        <h3 class="text-sm font-semibold text-white mb-1">Close to the hardware</h3>
+                        <p class="text-sm text-zinc-300 leading-relaxed">
+                            Interning on Bluetooth LE and LE Audio: an Android/Kotlin
+                            testing tool that drives real devices over GATT and runs
+                            automated scripts through an embedded Lua engine.
+                        </p>
+                    </div>
+                    <div data-reveal data-reveal-delay="4" class="timeline-node">
+                        <div class="font-mono text-xs text-ctp-peach mb-1">04 · now</div>
+                        <h3 class="text-sm font-semibold text-white mb-1">Backend &amp; Android developer</h3>
+                        <p class="text-sm text-zinc-300 leading-relaxed">
+                            Building APIs, services and apps end to end with Kotlin, Java,
+                            Spring Boot and Ktor, from a device on the bench to data in
+                            the database.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </BaseLayout>
 
