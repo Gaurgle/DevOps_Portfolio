@@ -6,6 +6,7 @@ import Sidebar from "../components/Sidebar.astro";
 import SidebarToggle from "../components/SidebarToggle";
 import ParticleBg from "../../public/js/ParticleBg";
 import EasterEggs from "../components/EasterEggs";
+import Footer from "../components/Footer.astro";
 
 const {title, description, current = "/"} = Astro.props;
 const isHome = Astro.url.pathname === "/";
@@ -17,7 +18,13 @@ const isHome = Astro.url.pathname === "/";
 </head>
 
 <body class="font-sans bg-black text-white relative">
-<ParticleBg client:idle className="bg-behind pointer-events-none" />
+<!-- Scroll progress bar (driven by Lenis) -->
+<div id="scroll-progress"></div>
+
+<!-- Particle background as a parallax layer -->
+<div class="bg-behind pointer-events-none" data-parallax-speed="0.12">
+    <ParticleBg client:idle />
+</div>
 
 <!-- BANNER -->
 <header class="fixed inset-x-0 top-0 z-50 pointer-events-auto">
@@ -43,5 +50,16 @@ const isHome = Astro.url.pathname === "/";
 <!-- Easter eggs (React component for reliable hydration with ClientRouter) -->
 <EasterEggs client:load />
 
+<!-- System-status line -->
+<Footer />
+
 </body>
 </html>
+
+<script>
+    import { wireSmoothScroll, initSmoothScroll } from "../lib/smoothScroll";
+    // Register lifecycle hooks once; ClientRouter re-fires page-load per navigation.
+    wireSmoothScroll();
+    // Init immediately if page-load already fired before this module ran (idempotent).
+    if (document.readyState !== "loading") initSmoothScroll();
+</script>

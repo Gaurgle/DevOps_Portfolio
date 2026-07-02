@@ -1,0 +1,25 @@
+---
+import { execSync } from "node:child_process";
+
+// Short commit hash, resolved at build time. Falls back to "dev" outside a repo.
+let buildHash = "dev";
+try {
+    buildHash = execSync("git rev-parse --short HEAD").toString().trim();
+} catch {
+    // not a git checkout / git unavailable — keep the fallback
+}
+
+// Static launch reference for the "uptime" figure.
+const SINCE_YEAR = 2025;
+---
+
+<footer class="scroll-status font-mono">
+    <span class="status-dot" aria-hidden="true"></span>
+    <span class="text-ctp-green/80">online</span>
+    <span class="text-zinc-600">·</span>
+    <span>build <span class="text-zinc-400">{buildHash}</span></span>
+    <span class="text-zinc-600">·</span>
+    <span>since <span class="text-zinc-400">{SINCE_YEAR}</span></span>
+    <span class="text-zinc-600 hidden sm:inline">·</span>
+    <span class="hidden sm:inline">roos@portfolio:~$</span>
+</footer>

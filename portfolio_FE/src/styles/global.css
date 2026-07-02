@@ -284,3 +284,130 @@ body.crt-mode::before {
     90%  { transform: translateY(0.5px); }
     100% { transform: translateY(0); }
 }
+
+/* ============================================================
+   Scroll motion (Lenis) — reveal, progress, scrub, content
+   ============================================================ */
+
+/* Lenis recommended baseline */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Reveal-on-scroll: hidden until observed, then reuse the fade-up keyframe */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(20px);
+    will-change: opacity, transform;
+}
+[data-reveal].is-visible {
+    animation: fade-up 0.6s ease-out forwards;
+}
+[data-reveal-delay="1"].is-visible { animation-delay: 0.08s; }
+[data-reveal-delay="2"].is-visible { animation-delay: 0.16s; }
+[data-reveal-delay="3"].is-visible { animation-delay: 0.24s; }
+[data-reveal-delay="4"].is-visible { animation-delay: 0.32s; }
+[data-reveal-delay="5"].is-visible { animation-delay: 0.40s; }
+[data-reveal-delay="6"].is-visible { animation-delay: 0.48s; }
+
+/* Scroll progress bar */
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, #a6e3a1, #89b4fa, #cba6f7, #fab387);
+    z-index: 60;
+    pointer-events: none;
+}
+
+/* Hero scrub: fade + drift the intro as its first viewport scrolls away */
+[data-hero-scrub] {
+    opacity: calc(1 - var(--scrub, 0) * 0.65);
+    transform: translateY(calc(var(--scrub, 0) * -32px));
+    will-change: opacity, transform;
+}
+
+/* Sticky section prompt */
+.scroll-prompt {
+    position: sticky;
+    top: 88px;
+    z-index: 30;
+}
+
+/* Footer system-status line */
+.scroll-status {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    font-size: 10px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid rgb(39 39 42);
+    color: rgb(113 113 122);
+    pointer-events: none;
+}
+.scroll-status .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: #a6e3a1;
+    box-shadow: 0 0 6px rgba(166, 227, 161, 0.7);
+    animation: status-pulse 2.4s ease-in-out infinite;
+}
+@keyframes status-pulse {
+    0%, 100% { opacity: 0.5; }
+    50%      { opacity: 1; }
+}
+
+/* Journey timeline (About) */
+.timeline { position: relative; padding-left: 1.75rem; }
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: linear-gradient(180deg, #a6e3a1, #89b4fa, #cba6f7, #fab387);
+    opacity: 0.35;
+    transform-origin: top;
+    transform: scaleY(0);
+    animation: timeline-grow 1.1s ease-out forwards;
+}
+.timeline.is-visible::before,
+[data-reveal].is-visible .timeline::before { transform: scaleY(1); }
+@keyframes timeline-grow { to { transform: scaleY(1); } }
+.timeline-node { position: relative; }
+.timeline-node::before {
+    content: "";
+    position: absolute;
+    left: -1.75rem;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    background: #11111b;
+    border: 2px solid #89b4fa;
+    box-shadow: 0 0 8px rgba(137, 180, 250, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-reveal],
+    [data-hero-scrub] {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+    .timeline::before { transform: scaleY(1); animation: none; }
+    .status-dot { animation: none; }
+}
