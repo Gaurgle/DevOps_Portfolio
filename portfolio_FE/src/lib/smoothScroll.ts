@@ -16,6 +16,10 @@ let lenis: Lenis | null = null;
 let rafId = 0;
 /** True while an anchor-click scroll is in flight (section walls stand down). */
 let anchorBypass = false;
+/** Per-frame contact-reveal magnet, set by bindScrollDriven (needs its
+ *  measurements); runs from the RAF loop since rest detection can't live
+ *  in scroll events. */
+let magnetTick: (() => void) | null = null;
 const observers: IntersectionObserver[] = [];
 const cleanups: Array<() => void> = [];
 
@@ -186,31 +190,43 @@ type CardStack = {
     buffer: number;
     offX: number;
     offY: number;
+    /** Mobile: cards rise from below instead of flying in from the right. */
+    vertical: boolean;
 };
 
 function measureCardStacks(): CardStack[] {
-    if (!isDesktop()) return [];
     const result: CardStack[] = [];
+    const desktop = isDesktop();
 
     for (const section of document.querySelectorAll<HTMLElement>("[data-cardstack]")) {
+        // The featured strip carries both attributes: on desktop it is a
+        // horizontal filmstrip (measureHScrolls owns it there) and only
+        // becomes a card stack on mobile.
+        if (desktop && section.hasAttribute("data-hscroll")) continue;
         const cards = Array.from(
             section.querySelectorAll<HTMLElement>("[data-stack-card]"),
         );
         if (cards.length < 2) continue;
 
-        // Generous read-time: each coaster owns ~0.9 viewport of scroll.
-        const per = Math.round(window.innerHeight * 0.9);
+        // Generous read-time: each coaster owns ~0.9 viewport of scroll
+        // (a bit brisker on mobile, where scrolling is thumb-flicks).
+        const per = Math.round(window.innerHeight * (desktop ? 0.9 : 0.75));
         const distance = (cards.length - 1) * per;
         // Cushion on entry and exit: pinned, but the pile holds still for
         // this much vertical scroll before/after the landing sequence.
-        const buffer = Math.round(window.innerHeight * 0.45);
-        // Cascade offset per card; keep in sync with .journey-stack CSS vars.
-        const offX = parseFloat(section.dataset.offX ?? "26");
-        const offY = parseFloat(section.dataset.offY ?? "48");
+        const buffer = Math.round(window.innerHeight * (desktop ? 0.45 : 0.3));
+        // Cascade offset per card. Desktop: diagonal coaster pile (keep in
+        // sync with .journey-stack CSS vars). Mobile: a slim vertical deck -
+        // each landing card covers the pile, leaving a 10px edge per card.
+        const offX = desktop ? parseFloat(section.dataset.offX ?? "26") : 0;
+        const offY = desktop ? parseFloat(section.dataset.offY ?? "48") : 10;
 
         section.style.height = `${window.innerHeight + distance + buffer * 2}px`;
         const top = section.getBoundingClientRect().top + window.scrollY;
-        result.push({ section, cards, top, per, distance, buffer, offX, offY });
+        result.push({
+            section, cards, top, per, distance, buffer, offX, offY,
+            vertical: !desktop,
+        });
     }
     return result;
 }
@@ -407,6 +423,8 @@ function measureHolds(): Hold[] {
 type RelParallax = { el: HTMLElement; speed: number; base: number };
 
 function measureRelParallax(): RelParallax[] {
+    // Desktop only: JS transforms lag behind native touch scrolling.
+    if (!isDesktop()) return [];
     const result: RelParallax[] = [];
     for (const el of document.querySelectorAll<HTMLElement>("[data-parallax-rel]")) {
         const speed = parseFloat(el.dataset.parallaxRel ?? "0.15");
@@ -423,12 +441,23 @@ function measureRelParallax(): RelParallax[] {
 function bindScrollDriven(reduced: boolean): void {
     const bar = document.getElementById("scroll-progress");
     const hue = document.getElementById("bottom-hue");
+    // The contact panel sits fixed under the whole page; keep it hidden
+    // until the reveal is near, or a hard overscroll bounce at the top
+    // flashes it through the gap behind the lifting page.
+    const panel = document.querySelector<HTMLElement>(".contact-panel");
     const heroScrub = reduced
         ? null
         : document.querySelector<HTMLElement>("[data-hero-scrub]");
+    // Speeds are read once, not per frame. Runs on mobile too: transforms
+    // derive from window.scrollY in the same frame, so the slow layers stay
+    // in step with native touch scroll closely enough.
     const wrapLayers = reduced
         ? []
-        : Array.from(document.querySelectorAll<HTMLElement>("[data-parallax-wrap]"));
+        : Array.from(document.querySelectorAll<HTMLElement>("[data-parallax-wrap]"))
+            .map((el) => ({
+                el,
+                speed: parseFloat(el.dataset.parallaxSpeed ?? "0.1"),
+            }));
 
     // Order matters: pins add height, which shifts everything below them,
     // so they must be applied before any position is measured.
@@ -454,49 +483,131 @@ function bindScrollDriven(reduced: boolean): void {
     let lastScroll = window.scrollY;
     let braking = false;
 
+    // Reveal magnet: stopping mid-reveal leaves the page edge hanging over
+    // the contact panel. Once the scroll RESTS inside the reveal band
+    // (finger off, momentum spent), ease to the closer end - fully open or
+    // fully closed. Never engages while the user is actively scrolling.
+    if (!reduced && panel && lenis) {
+        let touching = false;
+        const onTouchStart = () => (touching = true);
+        const onTouchEnd = () => (touching = false);
+        window.addEventListener("touchstart", onTouchStart, { passive: true });
+        window.addEventListener("touchend", onTouchEnd, { passive: true });
+        window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+        cleanups.push(() => {
+            window.removeEventListener("touchstart", onTouchStart);
+            window.removeEventListener("touchend", onTouchEnd);
+            window.removeEventListener("touchcancel", onTouchEnd);
+        });
+
+        let restFrames = 0;
+        let lastY = -1;
+        magnetTick = () => {
+            if (!lenis) return;
+            if (touching || braking || anchorBypass) {
+                restFrames = 0;
+                return;
+            }
+            const y = window.scrollY;
+            restFrames = Math.abs(y - lastY) < 0.5 ? restFrames + 1 : 0;
+            lastY = y;
+            // Fire exactly once per rest, after ~200ms of stillness.
+            if (restFrames !== 12) return;
+            const max =
+                document.documentElement.scrollHeight - window.innerHeight;
+            const bandStart = max - panel.offsetHeight;
+            // Edges excluded: settled states must not re-trigger.
+            if (y < bandStart + 32 || y > max - 32) return;
+            lenis.scrollTo(y > (bandStart + max) / 2 ? max : bandStart, {
+                duration: 0.8,
+                easing: (t: number) => 1 - Math.pow(1 - t, 3),
+            });
+        };
+        cleanups.push(() => (magnetTick = null));
+    }
+
+    // Frozen viewport height for all per-frame math. Reading innerHeight
+    // live wobbles frame-by-frame while the mobile URL bar animates, which
+    // makes every vh-derived position (hero scrub, deck cards) jitter
+    // mid-pin. Refreshed only on a real remeasure.
+    let viewportH = window.innerHeight || 1;
+
+    const remeasure = () => {
+        for (const s of stacks) s.section.style.height = "";
+        for (const h of hscrolls) h.section.style.height = "";
+        viewportH = window.innerHeight || 1;
+        applyPins();
+        stacks = measureCardStacks();
+        hscrolls = measureHScrolls();
+        holds = measureHolds();
+        covers = measureCovers();
+        relParallax = measureRelParallax();
+        walls = measureWalls();
+    };
+
     if (!reduced) {
         let resizeTimer = 0;
+        let lastWidth = window.innerWidth;
         const onResize = () => {
+            // Mobile URL-bar collapse fires height-only resizes mid-scroll;
+            // remeasuring then moves every pinned section under the finger.
+            // Below the desktop breakpoint only a width change (rotation)
+            // is a real layout change.
+            if (window.innerWidth === lastWidth && !isDesktop()) return;
+            lastWidth = window.innerWidth;
             window.clearTimeout(resizeTimer);
-            resizeTimer = window.setTimeout(() => {
-                for (const s of stacks) s.section.style.height = "";
-                for (const h of hscrolls) h.section.style.height = "";
-                applyPins();
-                stacks = measureCardStacks();
-                hscrolls = measureHScrolls();
-                holds = measureHolds();
-                covers = measureCovers();
-                relParallax = measureRelParallax();
-                walls = measureWalls();
-            }, 200);
+            resizeTimer = window.setTimeout(remeasure, 200);
         };
         window.addEventListener("resize", onResize);
         cleanups.push(() => {
             window.removeEventListener("resize", onResize);
             window.clearTimeout(resizeTimer);
         });
+
+        // Positions are measured before images and fonts finish on a first
+        // visit; anything that shifts layout afterwards leaves every pin
+        // engaging slightly off (a visible jump when the sticky catches).
+        // Re-measure once against the settled layout.
+        let alive = true;
+        cleanups.push(() => (alive = false));
+        if (document.readyState !== "complete") {
+            const onLoad = () => alive && remeasure();
+            window.addEventListener("load", onLoad, { once: true });
+            cleanups.push(() => window.removeEventListener("load", onLoad));
+        }
+        // Ignore if this page instance was torn down before fonts settled.
+        document.fonts?.ready.then(() => alive && remeasure());
     }
 
-    const vhOf = () => window.innerHeight || 1;
-
-    // Depth-of-field cards: sharp near the viewport center, increasingly
-    // blurred toward the edges (about cards use this to take turns in focus).
-    // Desktop only: per-frame blur filters are too heavy for phones.
+    // Depth-of-field cards: full presence near the viewport center, fading
+    // toward the edges (about cards use this to take turns in focus).
+    // Opacity only: animating blur() on cards that also carry a backdrop
+    // filter repainted the backdrop every single frame.
     const focusEls = reduced || !isDesktop()
         ? []
         : Array.from(document.querySelectorAll<HTMLElement>("[data-focus]"));
 
     const onScroll = () => {
         const progress = lenis ? lenis.progress : nativeProgress();
-        let scroll = lenis ? lenis.scroll : window.scrollY;
-        const vh = vhOf();
+        // The browser's actual offset, not Lenis's animated value: transforms
+        // derived from it land in the same frame as the rendered scroll, so
+        // pinned/held content doesn't shiver against the page.
+        const scroll = window.scrollY;
+        const vh = viewportH;
 
-        // Hit a wall this frame? Brake into the boundary with a short eased
-        // stop instead of a dead halt. (Skipped during anchor jumps.)
+        // Wall coming up? Brake into the boundary with a short eased stop
+        // instead of a dead halt. The crossing test looks ~8 frames ahead:
+        // braking only after the fact overshoots the wall and yanks the page
+        // back over it - a visible bounce at every section start under
+        // momentum. (Skipped during anchor jumps.)
         if (lenis && !anchorBypass && !braking) {
+            const projected = scroll + lenis.velocity * 8;
             for (const w of walls) {
+                // 1px tolerance: a brake that lands a hair short of the wall
+                // must not re-arm it against the very next gesture.
                 const crossed =
-                    (lastScroll < w && scroll > w) || (lastScroll > w && scroll < w);
+                    (lastScroll < w - 1 && Math.max(scroll, projected) > w) ||
+                    (lastScroll > w + 1 && Math.min(scroll, projected) < w);
                 if (crossed) {
                     braking = true;
                     // Failsafe: a user gesture can interrupt the brake and
@@ -518,6 +629,11 @@ function bindScrollDriven(reduced: boolean): void {
 
         if (bar) bar.style.transform = `scaleX(${progress || 0})`;
 
+        // Visible only near the end (the reveal starts around 0.88); 0.6
+        // leaves a wide margin so no gesture can outrun the toggle. The
+        // stylesheet default is hidden, so "visible" must be explicit.
+        if (panel) panel.style.visibility = progress > 0.6 ? "visible" : "hidden";
+
         // Bottom hue: faint for most of the ride, blooming as the end nears,
         // then fading out completely during the reveal - the panel takes over
         // the indigo, and the form is never sitting under the overlay.
@@ -529,20 +645,20 @@ function bindScrollDriven(reduced: boolean): void {
         }
 
         if (heroScrub) {
-            // A little scroll starts the dissolve while the hero is still
-            // pinned, revealing the about section underneath.
-            const raw = (scroll - vh * 0.08) / (vh * 0.55);
+            // The dissolve starts almost immediately (2vh guards against
+            // accidental nudges) and eases in at t^1.5: early movement
+            // registers right away without changing the full explosion.
+            const raw = (scroll - vh * 0.02) / (vh * 0.61);
             const t = Math.max(0, Math.min(1, raw));
-            heroScrub.style.setProperty("--scrub", String(t * t));
+            heroScrub.style.setProperty("--scrub", String(Math.pow(t, 1.5)));
         }
 
         // Particle layers: slow upward drift, wrapped every viewport-height so
         // the pre-painted pattern tiles forever. Keeps drifting during the
         // journey pin - the background stays alive while the cards slide.
         for (const layer of wrapLayers) {
-            const speed = parseFloat(layer.dataset.parallaxSpeed ?? "0.1");
-            const y = (scroll * speed) % vh;
-            layer.style.transform = `translate3d(0, ${-y}px, 0)`;
+            const y = (scroll * layer.speed) % vh;
+            layer.el.style.transform = `translate3d(0, ${-y}px, 0)`;
         }
 
         // Ghost numerals: drift down relative to their section (reads as depth).
@@ -565,8 +681,7 @@ function bindScrollDriven(reduced: boolean): void {
                     ? delta / (vh / 2)
                     : (-delta / (vh / 2)) * 0.4;
             const d = Math.max(0, Math.min(1, norm) - 0.25) / 0.75;
-            el.style.filter = d < 0.02 ? "none" : `blur(${(d * 5).toFixed(2)}px)`;
-            el.style.opacity = (1 - d * 0.35).toFixed(3);
+            el.style.opacity = (1 - d * 0.55).toFixed(3);
         }
 
         // (Chapter-cover exit is driven by the filmstrip below: the first
@@ -651,9 +766,13 @@ function bindScrollDriven(reduced: boolean): void {
                 }
                 const t = Math.max(0, Math.min(1, (local - (i - 1) * s.per) / s.per));
                 const eased = 1 - Math.pow(1 - t, 3);
-                // Cards fly in from the right and land on the pile.
-                const slide = (1 - eased) * (window.innerWidth * 0.9);
-                card.style.transform = `translate3d(${rx + slide}px, ${ry}px, 0)`;
+                // Cards fly in from the right (desktop) or rise from below
+                // (mobile) and land on the pile.
+                const slide =
+                    (1 - eased) * (s.vertical ? vh * 1.05 : window.innerWidth * 0.9);
+                card.style.transform = s.vertical
+                    ? `translate3d(${rx}px, ${ry + slide}px, 0)`
+                    : `translate3d(${rx + slide}px, ${ry}px, 0)`;
             });
         }
     };
@@ -673,24 +792,52 @@ function bindScrollDriven(reduced: boolean): void {
 
 type Marquee = {
     track: HTMLElement | null;
+    /** Cached half of the track's scroll width (a per-frame read of
+     *  scrollWidth forces layout on every frame of the whole page). */
+    half: number;
+    /** Off-screen the marquee sleeps entirely. */
+    visible: boolean;
     offset: number;
     skew: number;
     retry: number;
 };
 
-const marquee: Marquee = { track: null, offset: 0, skew: 0, retry: 0 };
+const marquee: Marquee = {
+    track: null, half: 0, visible: false, offset: 0, skew: 0, retry: 0,
+};
+
+/** Wire up a freshly found track: cache its width, watch visibility. */
+function adoptMarqueeTrack(track: HTMLElement): void {
+    marquee.track = track;
+    marquee.half = track.scrollWidth / 2;
+
+    const io = new IntersectionObserver((entries) => {
+        for (const e of entries) marquee.visible = e.isIntersecting;
+    });
+    io.observe(track);
+    observers.push(io);
+
+    const ro = new ResizeObserver(() => {
+        marquee.half = track.scrollWidth / 2;
+    });
+    ro.observe(track);
+    cleanups.push(() => ro.disconnect());
+}
 
 function tickMarquee(): void {
     // The marquee is a hydrated React island; it may appear after init.
     if (!marquee.track || !marquee.track.isConnected) {
+        marquee.track = null;
+        marquee.visible = false;
         if (marquee.retry++ % 30 === 0) {
-            marquee.track = document.querySelector<HTMLElement>("[data-marquee-track]");
+            const track = document.querySelector<HTMLElement>("[data-marquee-track]");
+            if (track) adoptMarqueeTrack(track);
         }
         if (!marquee.track) return;
     }
 
-    const half = marquee.track.scrollWidth / 2;
-    if (half <= 0) return;
+    const half = marquee.half;
+    if (!marquee.visible || half <= 0) return;
 
     const velocity = lenis?.velocity ?? 0;
     marquee.offset += 1.4 + Math.min(Math.abs(velocity) * 0.25, 10);
@@ -752,6 +899,8 @@ export function destroySmoothScroll(): void {
     lenis?.destroy();
     lenis = null;
     marquee.track = null;
+    marquee.visible = false;
+    marquee.half = 0;
     observers.forEach((o) => o.disconnect());
     observers.length = 0;
     cleanups.forEach((fn) => fn());
@@ -769,6 +918,7 @@ export function initSmoothScroll(): void {
         const raf = (time: number) => {
             lenis?.raf(time);
             tickMarquee();
+            magnetTick?.();
             rafId = requestAnimationFrame(raf);
         };
         rafId = requestAnimationFrame(raf);

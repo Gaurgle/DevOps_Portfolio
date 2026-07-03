@@ -50,10 +50,12 @@ export default function ContactForm() {
 
     return (
         <div className="max-w-xl mx-auto">
-            <p className="font-mono text-sm text-zinc-300 mb-4">
+            {/* Decorative second prompt: desktop only - on mobile the panel
+                must fit 88dvh so the reveal scrolls as one page */}
+            <p className="hidden md:block font-mono text-sm text-zinc-300 mb-4">
                 <span className="text-ctp-peach">$</span> mail -s &quot;hello&quot; andreas
             </p>
-            <p className="font-mono text-xs text-zinc-400 mb-6">
+            <p className="font-mono text-xs text-zinc-400 mb-4 md:mb-6">
                 or reach me at{' '}
                 <a href="mailto:larsnilsandreas@pm.me" className="text-zinc-300 hover:text-white transition-colors">
                     larsnilsandreas@pm.me
@@ -68,7 +70,7 @@ export default function ContactForm() {
                     <span className="font-mono text-xs text-zinc-300 ml-2">compose</span>
                 </div>
 
-                <form onSubmit={onSubmit} className="p-6 space-y-5">
+                <form onSubmit={onSubmit} className="p-4 md:p-6 space-y-3.5 md:space-y-5">
                     <input
                         name="company"
                         autoComplete="off"
@@ -117,7 +119,7 @@ export default function ContactForm() {
                             rows={5}
                             value={form.message}
                             onChange={onChange}
-                            className={`${inputClass} resize-none`}
+                            className={`${inputClass} resize-none h-20 md:h-auto`}
                             placeholder="What's on your mind?"
                         />
                     </label>

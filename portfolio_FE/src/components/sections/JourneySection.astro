@@ -3,7 +3,8 @@
  * Journey: the chapter mark (02 JOURNEY + hook) stays on the left of the
  * pinned viewport while the coaster pile builds on the right - vertical
  * scroll lands each milestone card on the previous one with a cascade
- * offset (smoothScroll.ts drives the transforms). Vertical stack on mobile.
+ * offset (smoothScroll.ts drives the transforms). On mobile the same pin
+ * plays as a vertical deck: cards rise from below and land nearly flush.
  */
 import ChapterMark from "./ChapterMark.astro";
 
@@ -87,7 +88,7 @@ const milestones = [
 
     <div data-cardstack data-off-x="26" data-off-y="48" class="journey-stack relative z-10">
         <div class="journey-viewport">
-            <div class="relative z-10 w-full flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-[5vw] px-4 md:px-[4vw] py-10 md:py-0">
+            <div class="relative z-10 w-full flex flex-col md:flex-row items-center md:justify-center gap-5 md:gap-[5vw] px-4 md:px-[4vw] py-4 md:py-0">
                 <!-- Chapter mark: stays for the whole pinned pile -->
                 <div class="shrink-0 text-center md:text-left">
                     <ChapterMark n="02" label="JOURNEY"

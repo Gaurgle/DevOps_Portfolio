@@ -29,29 +29,21 @@ const layers = [
             data-colors={l.colors}
         >
             <canvas></canvas>
+            <!-- Pre-painted bright copy; the showcase crossfades it in -->
+            <canvas data-bright></canvas>
         </div>
     ))}
 </div>
 
 <script>
     function paintLayer(layer: HTMLElement) {
-        const canvas = layer.querySelector("canvas");
-        if (!canvas) return;
+        const base = layer.querySelector<HTMLCanvasElement>("canvas:not([data-bright])");
+        const bright = layer.querySelector<HTMLCanvasElement>("canvas[data-bright]");
+        if (!base) return;
 
         const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         const w = window.innerWidth;
         const h = window.innerHeight;
-
-        // Two stacked copies of the same pattern -> seamless modulo wrap.
-        canvas.width = Math.round(w * dpr);
-        canvas.height = Math.round(h * 2 * dpr);
-        canvas.style.width = `${w}px`;
-        canvas.style.height = `${h * 2}px`;
-
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        ctx.scale(dpr, dpr);
-        ctx.clearRect(0, 0, w, h * 2);
 
         const density = parseInt(layer.dataset.density ?? "40", 10);
         const size = parseFloat(layer.dataset.size ?? "1.5");
@@ -62,7 +54,7 @@ const layers = [
         // Scale particle count with viewport area (density is per ~1080p screen).
         const count = Math.round(density * ((w * h) / (1920 * 1080)) + density * 0.3);
 
-        // Random points generated once, drawn twice -> both copies identical.
+        // Random points generated once, drawn onto every copy -> identical.
         const points = Array.from({ length: count }, (_, i) => ({
             x: Math.random() * w,
             y: Math.random() * h,
@@ -71,17 +63,45 @@ const layers = [
             color: colors[i % colors.length],
         }));
 
-        for (const yOffset of [0, h]) {
-            for (const p of points) {
-                if (glow > 0) {
-                    ctx.shadowBlur = glow;
-                    ctx.shadowColor = `rgba(${p.color},0.8)`;
+        // Two stacked copies of the same pattern -> seamless modulo wrap.
+        const draw = (canvas: HTMLCanvasElement, alphaBoost: number, glowBoost: number) => {
+            canvas.width = Math.round(w * dpr);
+            canvas.height = Math.round(h * 2 * dpr);
+            canvas.style.width = `${w}px`;
+            canvas.style.height = `${h * 2}px`;
+
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, w, h * 2);
+
+            for (const yOffset of [0, h]) {
+                for (const p of points) {
+                    const g = glow * glowBoost;
+                    if (g > 0) {
+                        ctx.shadowBlur = g;
+                        ctx.shadowColor = `rgba(${p.color},0.8)`;
+                    }
+                    ctx.beginPath();
+                    ctx.fillStyle = `rgba(${p.color},${Math.min(1, p.a * alphaBoost).toFixed(3)})`;
+                    ctx.arc(p.x, p.y + yOffset, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
                 }
-                ctx.beginPath();
-                ctx.fillStyle = `rgba(${p.color},${p.a.toFixed(3)})`;
-                ctx.arc(p.x, p.y + yOffset, p.r, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
+            }
+        };
+
+        draw(base, 1, 1);
+
+        // Bright copy for the showcase glow-up (crossfaded in via CSS).
+        // Desktop only: the filmstrip that triggers it never runs on mobile,
+        // so phones skip the extra full-screen texture entirely.
+        if (bright) {
+            if (window.matchMedia("(min-width: 768px)").matches) {
+                draw(bright, 2.4, 2);
+            } else {
+                bright.width = 0;
+                bright.height = 0;
             }
         }
     }
@@ -93,7 +113,16 @@ const layers = [
     }
 
     let resizeTimer = 0;
+    let lastWidth = window.innerWidth;
     window.addEventListener("resize", () => {
+        // Mobile URL-bar collapse fires height-only resizes mid-scroll;
+        // repainting four full-screen canvases then is a visible hitch.
+        // Below the desktop breakpoint only a width change is real.
+        if (
+            window.innerWidth === lastWidth &&
+            !window.matchMedia("(min-width: 768px)").matches
+        ) return;
+        lastWidth = window.innerWidth;
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(paintAll, 250);
     });
