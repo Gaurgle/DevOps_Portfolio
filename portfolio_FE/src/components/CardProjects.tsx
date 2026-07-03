@@ -217,7 +217,7 @@ export function ProjectCard({project, idx}: { project: (typeof projects)[number]
                             alt={`${project.projectTitle}${hasMultiple ? ` slide ${i + 1}` : ""}`}
                             loading="lazy"
                             className={`absolute inset-0 h-full w-full object-cover transition-all duration-700
-                                       grayscale group-hover:grayscale-0 group-hover:scale-105
+                                       md:grayscale md:group-hover:grayscale-0 md:group-hover:scale-105
                                        ${i === currentIndex ? "opacity-100" : "opacity-0"}`}
                         />
                     ))}

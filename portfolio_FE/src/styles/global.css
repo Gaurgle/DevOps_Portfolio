@@ -650,6 +650,22 @@ html.lenis, html.lenis body { height: auto; }
     }
 }
 
+/* Mobile projects carousel: native horizontal scroll-snap. The scrollbar
+   is hidden - position is shown by the progress bar underneath instead. */
+.carousel-track {
+    scrollbar-width: none;
+}
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+.carousel-progress-bar {
+    height: 100%;
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    /* Same gradient as the page's top scroll bar */
+    background: linear-gradient(90deg, #a6e3a1, #89b4fa, #cba6f7, #fab387);
+}
+
 /* Velocity marquee */
 .tech-marquee {
     overflow: hidden;
