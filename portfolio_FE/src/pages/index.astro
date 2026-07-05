@@ -66,13 +66,11 @@ import ProjectsGrid from "../components/ProjectsGrid.tsx";
     <!-- ================= JOURNEY (pinned card stack) ================= -->
     <JourneySection />
 
-    <!-- ================= TECH MARQUEE (pinned) ================= -->
-    <section data-snap data-pin="0.5" class="relative md:-mt-[30vh]">
-        <div class="pin-viewport w-full flex items-center justify-center">
-            <div class="w-full">
-                <TechMarquee client:idle />
-            </div>
-        </div>
+    <!-- ================= TECH MARQUEE ================= -->
+    <!-- Unpinned: it reads as a palate-cleanser divider between the two big
+         chapters, not a held moment - and every other section already pins. -->
+    <section class="relative py-8">
+        <TechMarquee client:idle />
     </section>
 
     <!-- ================= PROJECTS ================= -->
@@ -84,20 +82,13 @@ import ProjectsGrid from "../components/ProjectsGrid.tsx";
              the first card -->
         <FeaturedShowcase />
 
-        <!-- ...then the rest: entry hold + cushion walls over the grid -->
-        <div data-hold="0.9" class="relative z-10 mt-10 md:mt-[6vh]">
-            <!-- Wall matches the hold's early engagement (15vh above the grid) -->
-            <div data-snap class="absolute left-0 -top-[15vh] h-0 w-0" aria-hidden="true"></div>
-            <div data-snap class="absolute left-0 top-[180vh] h-0 w-0" aria-hidden="true"></div>
-            <div data-snap class="absolute left-0 top-[270vh] h-0 w-0" aria-hidden="true"></div>
-            <div data-snap class="absolute left-0 top-[360vh] h-0 w-0" aria-hidden="true"></div>
-            <!-- Frozen against scroll for the hold, then rides along -->
-            <div data-hold-content class="relative">
-                <h3 class="font-bold uppercase tracking-[0.3em] text-xl md:text-2xl text-white/80 select-none mb-10">
-                    <span class="text-ctp-blue font-mono mr-2">//</span>more projects
-                </h3>
-                <ProjectsGrid client:load />
-            </div>
+        <!-- ...then the rest, flowing freely: after the pinned filmstrip a
+             plain-scrolling grid is the contrast that makes the pins land -->
+        <div class="relative z-10 mt-10 md:mt-[6vh]">
+            <h3 class="font-bold uppercase tracking-[0.3em] text-xl md:text-2xl text-white/80 select-none mb-10">
+                <span class="text-ctp-blue font-mono mr-2">//</span>more projects
+            </h3>
+            <ProjectsGrid client:load />
         </div>
     </section>
 

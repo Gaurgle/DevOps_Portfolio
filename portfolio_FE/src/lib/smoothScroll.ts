@@ -200,8 +200,8 @@ function measureCardStacks(): CardStack[] {
 
     for (const section of document.querySelectorAll<HTMLElement>("[data-cardstack]")) {
         // The featured strip carries both attributes: on desktop it is a
-        // horizontal filmstrip (measureHScrolls owns it there) and only
-        // becomes a card stack on mobile.
+        // pinned pile with its own choreography (measureShowcases owns it
+        // there) and only uses the plain cardstack deck on mobile.
         if (desktop && section.hasAttribute("data-hscroll")) continue;
         const cards = Array.from(
             section.querySelectorAll<HTMLElement>("[data-stack-card]"),
@@ -254,104 +254,115 @@ function applyPins(): void {
 }
 
 /* ------------------------------------------------------------------ */
-/* Pinned horizontal filmstrips (featured projects showcase)           */
+/* Featured showcase (pinned card pile, desktop)                       */
 /* ------------------------------------------------------------------ */
 
-type HScroll = {
+/**
+ * Desktop flow of the featured projects section (the [data-hscroll]
+ * attribute names survive from its filmstrip past): the chapter mark
+ * enters centered, the first card flies in from the right and pushes it
+ * out left, every card lands on a journey-style pile, and once the pile
+ * is complete it exits left as one object - leaving the arrow, which
+ * rides in and docks. Mobile runs the cardstack deck instead.
+ */
+type Showcase = {
     section: HTMLElement;
+    /** The pile container: cards stack inside it; the exit slides IT left. */
     track: HTMLElement;
-    /** Optional headline: rides in with the track, then docks centered. */
+    cards: HTMLElement[];
+    /** Chapter-cover mark: pushed out left by the first card's arrival. */
+    coverEl: HTMLElement | null;
+    /** Viewport x of the mark's right edge at rest (for the exit fade). */
+    coverRight: number;
+    /** Docked headline (fades in on entry, leaves with the pile). */
     headline: HTMLElement | null;
-    /** Viewport x of the first card's leading edge at zero travel. */
-    cardEdge: number;
-    /** Docked (centered) viewport x for the headline. */
-    dockLeft: number;
-    /** Track x of the last card's trailing edge (for the shared exit). */
-    cardsEnd: number;
     headlineW: number;
-    /** Chapter-cover mark that the first card pushes out to the left. */
-    pushEl: HTMLElement | null;
-    /** Track travel at which the first card touches the mark's right edge. */
-    pushStart: number;
-    /** Travels at which each spotlight card pauses (pinned), and for how long. */
-    pausePoints: number[];
-    pauseLen: number;
-    /** Spotlight cards + the headline sigil that adopts their accent color. */
-    spotlightEls: HTMLElement[];
+    /** The pile's resting right edge: the exit glues the headline to it. */
+    dockRight: number;
     sigilEl: HTMLElement | null;
-    /** Detached finale arrow: rides its virtual track position, then docks. */
     arrowEl: HTMLElement | null;
-    arrowEntry: number;
-    top: number;
-    distance: number;
+    /** Docked x for headline and arrow: the pile's resting left edge. */
+    dockLeft: number;
+    /** Pile cascade offset per card. */
+    offX: number;
+    offY: number;
+    /** Vertical scroll spent per landing card. */
+    per: number;
+    /** Dwell after the last landing, before the pile exits. */
+    settle: number;
+    /** Scroll spent on the pile's exit slide. */
+    exitDist: number;
     buffer: number;
+    top: number;
 };
 
-function measureHScrolls(): HScroll[] {
+function measureShowcases(): Showcase[] {
     if (!isDesktop()) return [];
-    const result: HScroll[] = [];
+    const result: Showcase[] = [];
 
     for (const section of document.querySelectorAll<HTMLElement>("[data-hscroll]")) {
         const track = section.querySelector<HTMLElement>("[data-hscroll-track]");
         if (!track) continue;
-
-        const viewport = section.querySelector<HTMLElement>(".hscroll-viewport");
-        const visible = viewport?.clientWidth ?? window.innerWidth;
-
-        // Cushion on entry and exit: pinned, but the track holds still for
-        // this much vertical scroll before/after the sideways travel.
-        const buffer = Math.round(window.innerHeight * 0.4);
-        // Every spotlight card pauses (pinned) at the same stage position so
-        // each project gets its moment under the docked headline.
-        const dockX = Math.round(window.innerWidth * 0.19);
-        const pauseLen = Math.round(window.innerHeight * 0.45);
-        const spotlights = Array.from(
+        const cards = Array.from(
             track.querySelectorAll<HTMLElement>("[data-spotlight]"),
         );
-        const pausePoints = spotlights
-            .map((el) => el.offsetLeft - dockX)
-            .filter((p) => p > 0)
-            .sort((a, b) => a - b);
-        // The detached arrow trails well behind the last card (a beat of
-        // scroll before it reveals) and docks under the headline; travel
-        // ends exactly at its dock, with the last card long gone by then.
-        const lastSpot = spotlights[spotlights.length - 1];
-        const lastRight = lastSpot ? lastSpot.offsetLeft + lastSpot.offsetWidth : 0;
-        const arrowEl = section.querySelector<HTMLElement>("[data-hscroll-arrow]");
-        const arrowEntry = lastRight + Math.round(window.innerWidth * 0.45);
-        const distance = lastSpot
-            ? Math.max(lastRight + 32, arrowEntry - dockX)
-            : Math.max(0, track.scrollWidth - visible * 0.45);
-        if (distance <= 0) continue;
-        section.style.height =
-            `${window.innerHeight + distance + pausePoints.length * pauseLen + buffer * 2}px`;
-        const top = section.getBoundingClientRect().top + window.scrollY;
-        const headline = section.querySelector<HTMLElement>("[data-hscroll-headline]");
-        // Track pads the first card 92vw in; the headline's left edge rides
-        // flush with that card's edge and docks exactly where the card's
-        // left edge sits during its pause - they stop aligned.
-        const cardEdge = Math.round(window.innerWidth * 0.92);
-        const headlineW = headline?.offsetWidth ?? 0;
-        // The headline docks at the spotlight position, aligned with every
-        // paused card's left edge.
-        const dockLeft = dockX;
-        // Last card's right edge in track coordinates (right pad is 6vw).
-        const cardsEnd = Math.round(track.scrollWidth - window.innerWidth * 0.06);
-        // The chapter cover's mark (a sibling block in the same section) gets
-        // pushed out by the first card: contact at its right edge.
-        const pushEl =
+        if (!cards.length) continue;
+
+        // Reset scroll-driven state before measuring resting rects.
+        track.style.transform = "";
+        track.style.opacity = "";
+        cards.forEach((c) => (c.style.opacity = ""));
+        const coverEl =
             section.closest("section")?.querySelector<HTMLElement>("[data-cover-content]") ?? null;
-        // Keep an air gap: the push begins while the card is still this far
-        // from the mark, so they travel together without touching.
-        const PUSH_GAP = 56;
-        const pushStart = pushEl
-            ? Math.round(cardEdge - pushEl.getBoundingClientRect().right - PUSH_GAP)
+        if (coverEl) {
+            coverEl.style.transform = "";
+            coverEl.style.opacity = "";
+        }
+
+        const vh = window.innerHeight;
+        // Generous read-time per landing card, a settle beat on the full
+        // pile, one exit slide, and a dwell on the docked arrow.
+        const per = Math.round(vh * 0.75);
+        const settle = Math.round(vh * 0.3);
+        const exitDist = Math.round(vh * 0.85);
+        const arrowDwell = Math.round(vh * 0.35);
+        const buffer = Math.round(vh * 0.3);
+        // Cascade offsets; keep in sync with the .hscroll-pin CSS calc.
+        const offX = parseFloat(section.dataset.offX ?? "24");
+        const offY = parseFloat(section.dataset.offY ?? "34");
+
+        section.style.height =
+            `${vh + buffer * 2 + cards.length * per + settle + exitDist + arrowDwell}px`;
+        const top = section.getBoundingClientRect().top + window.scrollY;
+        const coverRight = coverEl
+            ? Math.round(coverEl.getBoundingClientRect().right)
             : 0;
-        const sigilEl = section.querySelector<HTMLElement>("[data-headline-sigil]");
+
+        // Seat the headline just above the pile's top card (its CSS top is
+        // only a no-JS fallback), snug to the composition at any size.
+        const headline =
+            section.querySelector<HTMLElement>("[data-hscroll-headline]");
+        const trackRect = track.getBoundingClientRect();
+        if (headline) {
+            const viewport =
+                section.querySelector<HTMLElement>(".hscroll-viewport") ?? section;
+            headline.style.top = `${Math.round(
+                trackRect.top -
+                    viewport.getBoundingClientRect().top -
+                    headline.offsetHeight -
+                    16,
+            )}px`;
+        }
+
         result.push({
-            section, track, headline, cardEdge, dockLeft, cardsEnd, headlineW,
-            pushEl, pushStart, pausePoints, pauseLen, arrowEl, arrowEntry,
-            spotlightEls: spotlights, sigilEl, top, distance, buffer,
+            section, track, cards, coverEl, coverRight,
+            headline,
+            headlineW: headline?.offsetWidth ?? 0,
+            dockRight: Math.round(trackRect.right),
+            sigilEl: section.querySelector<HTMLElement>("[data-headline-sigil]"),
+            arrowEl: section.querySelector<HTMLElement>("[data-hscroll-arrow]"),
+            dockLeft: Math.round(trackRect.left),
+            offX, offY, per, settle, exitDist, buffer, top,
         });
     }
     return result;
@@ -463,7 +474,7 @@ function bindScrollDriven(reduced: boolean): void {
     // so they must be applied before any position is measured.
     if (!reduced) applyPins();
     let stacks = reduced ? [] : measureCardStacks();
-    let hscrolls = reduced ? [] : measureHScrolls();
+    let showcases = reduced ? [] : measureShowcases();
     let holds = reduced ? [] : measureHolds();
     let covers = reduced ? [] : measureCovers();
     let relParallax = reduced ? [] : measureRelParallax();
@@ -534,11 +545,23 @@ function bindScrollDriven(reduced: boolean): void {
 
     const remeasure = () => {
         for (const s of stacks) s.section.style.height = "";
-        for (const h of hscrolls) h.section.style.height = "";
+        // Clear the showcase's scroll-driven state here too: crossing to
+        // mobile skips measureShowcases entirely, and the deck must not
+        // inherit a translated pile or faded cards.
+        for (const sc of showcases) {
+            sc.section.style.height = "";
+            sc.track.style.transform = "";
+            sc.track.style.opacity = "";
+            sc.cards.forEach((c) => (c.style.opacity = ""));
+            if (sc.coverEl) {
+                sc.coverEl.style.transform = "";
+                sc.coverEl.style.opacity = "";
+            }
+        }
         viewportH = window.innerHeight || 1;
         applyPins();
         stacks = measureCardStacks();
-        hscrolls = measureHScrolls();
+        showcases = measureShowcases();
         holds = measureHolds();
         covers = measureCovers();
         relParallax = measureRelParallax();
@@ -684,63 +707,86 @@ function bindScrollDriven(reduced: boolean): void {
             el.style.opacity = (1 - d * 0.55).toFixed(3);
         }
 
-        // (Chapter-cover exit is driven by the filmstrip below: the first
-        // card physically pushes the mark out via pushEl.)
-
-        // Pinned filmstrips (cushioned: the track waits out the buffer).
+        // Featured showcase pile (cushioned: waits out the entry buffer).
         // While inside one, the particle background lights up (CSS reacts
         // to the .in-showcase class).
         let inShowcase = false;
-        for (const h of hscrolls) {
-            const local = scroll - h.top - h.buffer;
-            // Raw travel includes all pause slots; the track's x holds still
-            // during each (spotlight card pinned) while the pushed mark and
-            // the scroll keep going.
-            const totalPause = h.pausePoints.length * h.pauseLen;
-            const raw = Math.max(0, Math.min(h.distance + totalPause, local));
-            let x = raw;
-            for (const p of h.pausePoints) {
-                if (x <= p) break;
-                x = Math.max(p, x - h.pauseLen);
+        for (const sc of showcases) {
+            const local = scroll - sc.top - sc.buffer;
+            const stackLen = sc.cards.length * sc.per;
+
+            // Cards fly in from the right, one per scroll beat, and land
+            // on the pile with a cascading offset.
+            sc.cards.forEach((card, i) => {
+                const t = Math.max(0, Math.min(1, (local - i * sc.per) / sc.per));
+                const eased = 1 - Math.pow(1 - t, 3);
+                const slide = (1 - eased) * (window.innerWidth * 1.05);
+                card.style.transform =
+                    `translate3d(${i * sc.offX + slide}px, ${i * sc.offY}px, 0)`;
+            });
+
+            // The first card's arrival pushes the chapter mark out left;
+            // the fade is late and sharp so the exit reads as motion.
+            if (sc.coverEl) {
+                const t0 = Math.max(0, Math.min(1, local / sc.per));
+                const eased = 1 - Math.pow(1 - t0, 3);
+                const push = eased * (sc.coverRight + 60);
+                sc.coverEl.style.transform = `translate3d(${-push}px, 0, 0)`;
+                const rightEdge = sc.coverRight - push;
+                const co = Math.max(0, Math.min(1, (rightEdge - 220) / 80));
+                sc.coverEl.style.opacity = co.toFixed(3);
             }
-            h.track.style.transform = `translate3d(${-x}px, 0, 0)`;
-            if (h.headline) {
-                // Three phases: flush with the first card's edge on the way
-                // in, docked at center, then leaving right-edge-aligned with
-                // the last card once its trailing edge passes.
-                const tx = Math.min(
-                    Math.max(h.dockLeft, h.cardEdge - x),
-                    h.cardsEnd - h.headlineW - x,
+
+            // Once the pile is complete (plus a settle beat) it exits left
+            // as ONE object, at full opacity - pure motion; it passes
+            // behind the frosted sidebar - while the arrow rides in to
+            // take the stage.
+            const e = Math.max(
+                0,
+                Math.min(1, (local - stackLen - sc.settle) / sc.exitDist),
+            );
+            // Smoothstep: the slide spends its whole scroll length moving
+            // (a cubic ease-out front-loads it into a couple of frames).
+            const easedE = e * e * (3 - 2 * e);
+            const pileX = -easedE * (window.innerWidth * 1.15);
+            sc.track.style.transform = `translate3d(${pileX}px, 0, 0)`;
+
+            // Docked headline: fades in as the pile starts; on the exit it
+            // holds its dock until the pile's trailing edge catches it,
+            // then rides out right-edge-aligned with the last card.
+            if (sc.headline) {
+                const hx = Math.min(
+                    sc.dockLeft,
+                    sc.dockRight + pileX - sc.headlineW,
                 );
-                h.headline.style.transform = `translate3d(${tx}px, 0, 0)`;
+                sc.headline.style.transform = `translate3d(${hx}px, 0, 0)`;
+                const inO = Math.max(0, Math.min(1, (local + sc.buffer * 0.5) / 150));
+                sc.headline.style.opacity = inO.toFixed(3);
             }
-            if (h.pushEl) {
-                // The first card shoves the chapter mark out on contact; the
-                // mark rides the RAW timeline, so it keeps sliding out even
-                // while the card holds its pause.
-                const push = Math.max(0, raw - h.pushStart);
-                h.pushEl.style.transform = `translate3d(${-push}px, 0, 0)`;
+
+            // The headline's // adopts the color of the arriving card
+            // (CSS transition handles the fade between).
+            if (sc.sigilEl && sc.cards.length) {
+                const active = Math.max(
+                    0,
+                    Math.min(sc.cards.length - 1, Math.floor(local / sc.per)),
+                );
+                const fc = sc.cards[active].style.getPropertyValue("--fc").trim();
+                if (fc) sc.sigilEl.style.color = `rgb(${fc})`;
             }
-            if (h.sigilEl && h.spotlightEls.length) {
-                // The headline's // adopts the color of whichever card holds
-                // the spotlight (CSS transition handles the fade between).
-                let active = -1;
-                for (let i = 0; i < h.pausePoints.length; i++) {
-                    if (raw >= h.pausePoints[i] + i * h.pauseLen) active = i;
-                    else break;
-                }
-                if (active >= 0 && h.spotlightEls[active]) {
-                    const fc = h.spotlightEls[active].style.getPropertyValue("--fc").trim();
-                    if (fc) h.sigilEl.style.color = `rgb(${fc})`;
-                }
+
+            // Finale arrow: rides in from the right during the pile's exit
+            // and docks under the headline for the closing dwell.
+            if (sc.arrowEl) {
+                const ax =
+                    sc.dockLeft + (1 - easedE) * (window.innerWidth - sc.dockLeft);
+                sc.arrowEl.style.transform = `translate3d(${ax}px, 0, 0)`;
             }
-            if (h.arrowEl) {
-                // Trails the last card at track speed, then docks under the
-                // headline and stays while the card finishes clearing out.
-                const ax = Math.max(h.dockLeft, h.arrowEntry - x);
-                h.arrowEl.style.transform = `translate3d(${ax}px, 0, 0)`;
-            }
-            if (scroll > h.top - vh * 0.2 && scroll < h.top + h.distance + h.buffer * 2) {
+
+            if (
+                local > -vh * 0.2 &&
+                local < stackLen + sc.settle + sc.exitDist + sc.buffer
+            ) {
                 inShowcase = true;
             }
         }

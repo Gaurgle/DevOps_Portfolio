@@ -461,18 +461,35 @@ html.lenis, html.lenis body { height: auto; }
         overflow: hidden;
         display: flex;
         align-items: center;
+        justify-content: center;
+        /* Seats the pile low enough that the snug headline above it
+           clears the fixed banner */
+        padding-top: 9vh;
     }
+    /* The pile area: cards land on it with a cascade, then the whole
+       area exits left as one object (engine drives both transforms).
+       Cascade math mirrors offX/offY in measureShowcases (24/34px). */
     .hscroll-pin [data-hscroll-track] {
-        display: flex;
-        gap: 4rem;
-        /* Left pad parks the first card just beyond the right screen edge;
-           small right pad lets the last card settle fully in frame */
-        padding: 0 6vw 0 92vw;
+        position: relative;
+        padding: 0;
+        width: calc(min(50rem, 62vw) + var(--deck-n, 3) * 24px);
+        height: calc(min(34rem, 68vh) + var(--deck-n, 3) * 34px);
         will-change: transform;
     }
     .hscroll-pin .featured-card {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: min(50rem, 62vw);
-        flex-shrink: 0;
+        height: min(34rem, 68vh);
+        will-change: transform;
+    }
+    .hscroll-pin .featured-card .terminal-card {
+        height: 100%;
+        /* Fully opaque: pile cards overlap text-on-text while landing */
+        background: rgb(12, 12, 17);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
     }
 }
 /* Flagship pop, clean version: near-solid surface, crisp accent border,
@@ -598,10 +615,11 @@ html.lenis, html.lenis body { height: auto; }
     }
     .journey-stack [data-stack-card] .terminal-card {
         height: 100%;
-        /* Near-opaque so the pile reads as layered coasters. No backdrop
+        /* Fully opaque: cards overlap text-on-text while landing, and any
+           translucency lets the covered card ghost through. No backdrop
            blur: these cards fly in on every frame of the pin, and a blur
            behind a moving element repaints continuously. */
-        background: rgba(9, 9, 13, 0.92);
+        background: rgb(9, 9, 13);
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
         box-shadow: -18px 18px 40px rgba(0, 0, 0, 0.55);

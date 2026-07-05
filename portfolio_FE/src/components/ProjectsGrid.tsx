@@ -7,8 +7,17 @@ import { ProjectCard } from "./CardProjects";
  *  scroll-snap browses the cards, a vertical swipe passes the section.
  *  Discoverability: next-card peek, an 01/NN counter with a progress bar,
  *  and a one-time sideways nudge when the section first comes into view. */
+/** First impressions first: finished projects with screenshots lead, bare
+ *  or under-construction ones close the set (order within a tier holds). */
+function presentability(p: (typeof projects)[number]): number {
+    const hasShot = Array.isArray(p.image) ? p.image.length > 0 : Boolean(p.image);
+    return (hasShot ? 0 : 1) + (p.wip ? 2 : 0);
+}
+
 export default function ProjectsGrid() {
-    const rest = projects.filter((p) => !("featured" in p) || !p.featured);
+    const rest = projects
+        .filter((p) => !("featured" in p) || !p.featured)
+        .sort((a, b) => presentability(a) - presentability(b));
     const total = rest.length;
     const trackRef = useRef<HTMLDivElement>(null);
     const barRef = useRef<HTMLDivElement>(null);
