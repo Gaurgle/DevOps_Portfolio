@@ -52,42 +52,44 @@ const accents = ["166,227,161", "203,166,247", "137,180,250", "250,179,135"];
             {featured.map((p, i) => (
                 <div class="featured-card" data-spotlight data-stack-card
                      style={`--fc: ${accents[i % accents.length]}; z-index: ${i + 1}`}>
-                    <div class="terminal-card h-full">
-                        <div class="terminal-bar">
-                            <span class="terminal-dot bg-ctp-red/80"></span>
-                            <span class="terminal-dot bg-ctp-yellow/80"></span>
-                            <span class="terminal-dot bg-ctp-green/80"></span>
-                            <span class="font-mono text-xs text-zinc-300 ml-2">featured/{String(i + 1).padStart(2, "0")}</span>
-                            <span class="font-mono text-xs ml-auto mr-1" style={`color: rgb(${accents[i % accents.length]})`}>{p.projectTitle}</span>
+                    <div class="edit-card h-full">
+                        <div class="edit-head">
+                            <span style={`color: rgb(${accents[i % accents.length]})`}>
+                                featured/{String(i + 1).padStart(2, "0")}
+                            </span>
                         </div>
-                        <div class="md:flex">
-            {firstImage(p) && (
-                                <div class="md:w-2/5 shrink-0 flex items-center justify-center bg-zinc-900/30 p-2 md:p-3">
-                                    <img src={firstImage(p)} alt={p.projectTitle} loading="lazy"
-                                         class="max-h-32 md:max-h-[24rem] w-auto max-w-full object-contain md:grayscale md:hover:grayscale-0 transition-all duration-500" />
+                        {firstImage(p) ? (
+                            <div class="edit-media">
+                                <img src={firstImage(p)} alt={p.projectTitle} loading="lazy"
+                                     class="h-full w-full object-contain md:grayscale md:hover:grayscale-0 transition-all duration-500" />
+                            </div>
+                        ) : (
+                            <div class="edit-media flex items-center justify-center font-mono text-xs text-zinc-600">
+                                <span><span class="text-ctp-mauve">$</span> ./preview<br />no screenshot yet</span>
+                            </div>
+                        )}
+                        <div class="edit-body">
+                            <h3 class="text-2xl md:text-4xl font-bold leading-[1.05] text-white mb-4 md:mb-5">
+                                {p.projectTitle}<span style={`color: rgb(${accents[i % accents.length]})`}>.</span>
+                            </h3>
+                            <div class="edit-cols">
+                                <p class="edit-desc">{p.details?.long}</p>
+                                <div class="space-y-2.5">
+                                    <ul class="space-y-1.5">
+                                        {p.details?.highlights.slice(0, 3).map((h) => (
+                                            <li>
+                                                <span class="mr-1.5" style={`color: rgb(${accents[i % accents.length]})`}>▸</span>{h}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <p class="text-zinc-500">{p.tags?.join(" · ").toLowerCase()}</p>
+                                    {p.link && p.link !== "#" && (
+                                        <a href={p.link} target="_blank" rel="noopener noreferrer"
+                                           class="inline-block text-zinc-400 hover:text-white transition-colors duration-200">
+                                            github &rarr;
+                                        </a>
+                                    )}
                                 </div>
-                            )}
-                            <div class="p-5 md:p-8 flex-1">
-                                <h3 class="font-mono text-xl md:text-2xl font-semibold text-white mb-3">{p.projectTitle}</h3>
-                                <p class="text-sm md:text-base text-zinc-300 leading-relaxed mb-4">{p.details?.long}</p>
-                                <ul class="space-y-1.5 mb-5">
-                                    {p.details?.highlights.map((h) => (
-                                        <li class="font-mono text-xs md:text-sm text-zinc-300">
-                                            <span class="mr-2" style={`color: rgb(${accents[i % accents.length]})`}>▸</span>{h}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <div class="flex flex-wrap gap-1.5 mb-4">
-                                    {p.tags?.map((tag) => (
-                                        <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-zinc-800/80 text-zinc-400 border border-zinc-800">{tag}</span>
-                                    ))}
-                                </div>
-                                {p.link && p.link !== "#" && (
-                                    <a href={p.link} target="_blank" rel="noopener noreferrer"
-                                       class="font-mono text-xs text-zinc-400 hover:text-white transition-colors duration-200">
-                                        github &rarr;
-                                    </a>
-                                )}
                             </div>
                         </div>
                     </div>
@@ -99,19 +101,28 @@ const accents = ["166,227,161", "203,166,247", "137,180,250", "250,179,135"];
         <!-- Finale: a huge arrow, detached from the track (engine-driven).
              It rides in behind the last card, docks aligned under the
              headline, and stays while the last card clears out left. -->
-        <div class="absolute inset-y-0 left-0 hidden md:flex items-center z-10 pointer-events-none">
-            <div data-hscroll-arrow class="flex items-center gap-16 select-none will-change-transform">
+        <!-- Centered on the stage; pt matches the viewport's padding-top so
+             the arrow shares the pile's vertical frame -->
+        <div class="absolute inset-0 hidden md:flex items-center justify-center pt-[10vh] z-10 pointer-events-none">
+            <div data-hscroll-arrow class="flex items-center select-none will-change-transform">
                 <!-- Massive elbow arrow; the label bends with it: MORE runs
                      along the top shaft, PROJECTS turns and runs down the leg -->
-                <svg data-magnetic="0.12" class="pointer-events-auto w-[clamp(18rem,36vw,32rem)] h-auto text-ctp-blue drop-shadow-[0_0_40px_rgba(137,180,250,0.5)]"
+                <svg data-magnetic="0.12" class="pointer-events-auto w-[clamp(22rem,42vw,38rem)] h-auto text-ctp-blue drop-shadow-[0_0_40px_rgba(137,180,250,0.5)]"
                      viewBox="0 0 100 100" aria-hidden="true">
-                    <path fill="currentColor" d="M2,10 H78 V68 H94 L61,99 L28,68 H44 V44 H2 Z" />
+                    <!-- The engine scrubs the assembly: outline draws itself
+                         (dashoffset), the fill floods, the label stamps in -->
+                    <path fill="currentColor" stroke="currentColor" stroke-width="1.2"
+                          d="M2,10 H78 V68 H94 L61,99 L28,68 H44 V44 H2 Z" />
+                    <!-- Letters are individual tspans: the engine stamps
+                         them on one at a time, typewriter-style. PROJECTS
+                         translates to y=14.6 so its P's ink top sits level
+                         with MORE's cap line (12 rode ~2.5 units high). -->
                     <text x="4" y="38.5" font-size="33" font-weight="800" fill="#0b0b12"
                           textLength="38" lengthAdjust="spacingAndGlyphs"
-                          style="font-family: 'Archivo Black', 'Inter', sans-serif;">MORE</text>
-                    <text transform="translate(52,12) rotate(90)" x="0" y="0" font-size="30" font-weight="800" fill="#0b0b12"
+                          style="font-family: 'Archivo Black', 'Inter', sans-serif;"><tspan>M</tspan><tspan>O</tspan><tspan>R</tspan><tspan>E</tspan></text>
+                    <text transform="translate(52,14.6) rotate(90)" x="0" y="0" font-size="30" font-weight="800" fill="#0b0b12"
                           textLength="55" lengthAdjust="spacingAndGlyphs"
-                          style="font-family: 'Archivo Black', 'Inter', sans-serif;">PROJECTS</text>
+                          style="font-family: 'Archivo Black', 'Inter', sans-serif;"><tspan>P</tspan><tspan>R</tspan><tspan>O</tspan><tspan>J</tspan><tspan>E</tspan><tspan>C</tspan><tspan>T</tspan><tspan>S</tspan></text>
                 </svg>
             </div>
         </div>

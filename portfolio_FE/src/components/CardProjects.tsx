@@ -190,20 +190,13 @@ export function ProjectCard({project, idx}: { project: (typeof projects)[number]
 
     return (
         <div
-            className="relative group bg-zinc-950 rounded-xl border border-zinc-800/50 overflow-hidden
-                       hover:border-zinc-700 transition-all duration-500 hover:-translate-y-1
+            className="relative group bg-zinc-950 border border-zinc-700/70 rounded-md overflow-hidden
+                       hover:border-zinc-500 transition-all duration-500 hover:-translate-y-1
                        opacity-0 animate-fade-up flex flex-col"
             style={{animationDelay: `${idx * 100 + 100}ms`}}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            {/* Project name on top */}
-            <div className="px-5 pt-4 pb-3 border-b border-zinc-800/50">
-                <h3 className="font-mono text-sm font-semibold text-white">
-                    {project.projectTitle}
-                </h3>
-            </div>
-
             {/* Image slideshow / placeholder */}
             {hasImage ? (
                 <div
@@ -256,14 +249,17 @@ export function ProjectCard({project, idx}: { project: (typeof projects)[number]
             )}
 
             {project.wip && (
-                <span className="absolute top-[60px] left-2 z-20 px-2 py-0.5 text-[10px] font-mono rounded
+                <span className="absolute top-2 left-2 z-20 px-2 py-0.5 text-[10px] font-mono
                                  bg-ctp-yellow/15 text-ctp-yellow border border-ctp-yellow/30">
                     under construction
                 </span>
             )}
 
-            {/* Content: info + links */}
+            {/* Content: title below the image (editorial order), info + links */}
             <div className="p-5 flex flex-col gap-3 flex-1 min-h-0">
+                <h3 className="text-lg font-bold leading-tight text-white">
+                    {project.projectTitle}
+                </h3>
                 <div className="flex-1 min-h-0 overflow-y-auto text-xs text-zinc-400 leading-relaxed">
                     <p>{project.description}</p>
                 </div>
@@ -273,7 +269,7 @@ export function ProjectCard({project, idx}: { project: (typeof projects)[number]
                         {project.tags.map((tag: string) => (
                             <span
                                 key={tag}
-                                className="px-2 py-0.5 text-[10px] font-mono rounded
+                                className="px-2 py-0.5 text-[10px] font-mono
                                            bg-zinc-800/80 text-zinc-400 border border-zinc-800"
                             >
                                 {tag}

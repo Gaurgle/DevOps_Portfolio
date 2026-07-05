@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { projects } from "../data/projects";
 import { ProjectCard } from "./CardProjects";
+import PlayButton from "./PlayButton";
 
 type Project = (typeof projects)[number];
 
@@ -78,77 +79,34 @@ export default function ProjectsGrid() {
     /* ------------------------- desktop ls list ------------------------- */
     const [filter, setFilter] = useState<string | null>(null);
     const [active, setActive] = useState<Project | null>(null);
-    const previewRef = useRef<HTMLDivElement>(null);
+    const warmedRef = useRef(false);
 
-    // Chips: the most common techs across the set.
-    const chips = useMemo(() => {
-        const counts = new Map<string, number>();
-        for (const p of rest) {
-            for (const tag of p.tags ?? []) {
-                counts.set(tag, (counts.get(tag) ?? 0) + 1);
-            }
-        }
-        return [...counts.entries()]
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 6)
-            .map(([tag]) => tag);
-    }, [rest]);
+    // Curated filter set, matched loosely against tags (case-insensitive
+    // substring: "CLI" also catches "GitHub CLI").
+    const chips = ["BLE", "LE Audio", "Kotlin", "Android", "Audio", "CLI", "Java"];
 
     const listed = filter
-        ? rest.filter((p) => (p.tags ?? []).includes(filter))
+        ? rest.filter((p) =>
+              (p.tags ?? []).some((t) =>
+                  t.toLowerCase().includes(filter.toLowerCase()),
+              ),
+          )
         : rest;
 
-    // The preview chases the cursor with a RAF lerp (a retargeted CSS
-    // transition reads floaty/laggy). On FIRST hover it snaps to the
-    // cursor and fades in there; while visible it settles in a few frames.
-    const shownRef = useRef(false);
-    const warmedRef = useRef(false);
-    const targetPos = useRef({ x: 0, y: 0 });
-    const chasePos = useRef({ x: 0, y: 0 });
-    const rafRef = useRef(0);
+    // The docked viewer engages on CLICK (rows never navigate - only the
+    // arrow links out). Until the first click it shows a statement.
+    const shown = active && listed.includes(active) ? active : null;
 
-    const clampToViewport = (cx: number, cy: number) => ({
-        x: Math.min(cx + 32, window.innerWidth - 360),
-        y: Math.min(Math.max(cy - 120, 80), window.innerHeight - 300),
-    });
-
-    const chase = () => {
-        const el = previewRef.current;
-        const p = chasePos.current;
-        const t = targetPos.current;
-        p.x += (t.x - p.x) * 0.22;
-        p.y += (t.y - p.y) * 0.22;
-        if (el) el.style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
-        rafRef.current = requestAnimationFrame(chase);
-    };
-
-    const onRowEnter = (p: Project, e: ReactMouseEvent) => {
-        // Warm every preview image into cache once, so row-to-row swaps
-        // don't stall on network + decode.
-        if (!warmedRef.current) {
-            warmedRef.current = true;
-            for (const proj of rest) {
-                const src = firstImage(proj);
-                if (src) new Image().src = src;
-            }
+    // Warm every preview image into cache once, so row-to-row swaps don't
+    // stall on network + decode.
+    const warmImages = () => {
+        if (warmedRef.current) return;
+        warmedRef.current = true;
+        for (const proj of rest) {
+            const src = firstImage(proj);
+            if (src) new Image().src = src;
         }
-        const t = clampToViewport(e.clientX, e.clientY);
-        targetPos.current = t;
-        if (!shownRef.current) chasePos.current = { ...t }; // materialize AT the cursor
-        shownRef.current = true;
-        if (!rafRef.current) rafRef.current = requestAnimationFrame(chase);
-        setActive(p);
     };
-    const onListMove = (e: ReactMouseEvent) => {
-        targetPos.current = clampToViewport(e.clientX, e.clientY);
-    };
-    const onListLeave = () => {
-        shownRef.current = false;
-        setActive(null);
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = 0;
-    };
-    useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
     return (
         <div>
@@ -161,7 +119,7 @@ export default function ProjectsGrid() {
                             {" "}| grep <span className="text-ctp-blue">{filter.toLowerCase()}</span>
                         </span>
                     )}
-                    <span className="text-zinc-600 select-none">  # hover a row to preview</span>
+                    <span className="text-zinc-600 select-none">  # click a row to preview</span>
                 </p>
                 <div className="flex flex-wrap gap-1.5 mb-6">
                     {chips.map((tag) => (
@@ -169,7 +127,7 @@ export default function ProjectsGrid() {
                             key={tag}
                             type="button"
                             onClick={() => setFilter(filter === tag ? null : tag)}
-                            className={`px-2.5 py-0.5 text-[11px] font-mono rounded border transition-colors duration-200
+                            className={`px-2.5 py-0.5 text-[11px] font-mono rounded-sm border transition-colors duration-200
                                 ${filter === tag
                                     ? "bg-ctp-blue/15 text-ctp-blue border-ctp-blue/40"
                                     : "bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-zinc-200"}`}
@@ -179,82 +137,131 @@ export default function ProjectsGrid() {
                     ))}
                 </div>
 
-                <div
-                    onMouseMove={onListMove}
-                    onMouseLeave={onListLeave}
-                    className="border-t border-zinc-800/70"
-                >
-                    {listed.map((p, i) => {
-                        const accent = ACCENTS[i % ACCENTS.length];
-                        const href = p.link && p.link !== "#" ? p.link : null;
-                        const Row = href ? "a" : "div";
-                        return (
-                            <Row
-                                key={p.projectTitle}
-                                {...(href
-                                    ? { href, target: "_blank", rel: "noopener noreferrer" }
-                                    : {})}
-                                onMouseEnter={(e: ReactMouseEvent) => onRowEnter(p, e)}
-                                onFocus={() => setActive(p)}
-                                style={{ "--rc": accent } as CSSProperties}
-                                className="ls-row group flex items-baseline gap-6 py-4 px-2 border-b border-zinc-800/70
-                                           font-mono cursor-pointer transition-colors duration-200 hover:bg-white/[0.02]"
-                            >
-                                <span className="text-[11px] text-zinc-600 shrink-0 select-none">
-                                    {p.wip ? "d-wip------" : "drwxr-xr-x"}
-                                </span>
-                                <span className="ls-name text-lg text-zinc-200 transition-colors duration-200">
-                                    {p.projectTitle.toLowerCase().replaceAll(" ", "-")}
-                                </span>
-                                {p.wip && (
-                                    <span className="px-1.5 py-0.5 text-[10px] rounded bg-ctp-yellow/15 text-ctp-yellow border border-ctp-yellow/30 shrink-0">
-                                        under construction
+                <div className="flex gap-10" onMouseEnter={warmImages}>
+                    {/* Rows. Fixed min-height: filtering must not shrink the
+                        page (a shorter document would drop the reader into
+                        the contact reveal band mid-interaction). */}
+                    <div
+                        className="flex-1 border-t border-zinc-800/70 self-start"
+                        style={{ minHeight: `${rest.length * 3.75}rem` }}
+                    >
+                        {listed.length === 0 && (
+                            <div className="py-6 px-2 font-mono text-sm text-zinc-500">
+                                grep: no matches in projects/
+                            </div>
+                        )}
+                        {listed.map((p, i) => {
+                            const accent = ACCENTS[i % ACCENTS.length];
+                            const href = p.link && p.link !== "#" ? p.link : null;
+                            const selected = shown === p;
+                            return (
+                                <div
+                                    key={p.projectTitle}
+                                    onClick={() => setActive(p)}
+                                    onKeyDown={(e) => e.key === "Enter" && setActive(p)}
+                                    role="button"
+                                    tabIndex={0}
+                                    style={{ "--rc": accent } as CSSProperties}
+                                    className={`ls-row group flex items-baseline gap-5 py-4 px-2 border-b border-zinc-800/70
+                                               font-mono cursor-pointer transition-colors duration-200 hover:bg-white/[0.02]
+                                               ${selected ? "ls-row-active bg-white/[0.03]" : ""}`}
+                                >
+                                    <span className="ls-name whitespace-nowrap text-lg text-zinc-200 transition-colors duration-200">
+                                        {p.projectTitle.toLowerCase().replaceAll(" ", "-")}
                                     </span>
-                                )}
-                                <span className="ml-auto text-xs text-zinc-500 text-right shrink-0 hidden lg:block">
-                                    {(p.tags ?? []).slice(0, 4).join(" · ").toLowerCase()}
-                                </span>
-                                <span className="text-zinc-600 group-hover:text-zinc-200 transition-colors duration-200 shrink-0">
-                                    {href ? "↗" : "·"}
-                                </span>
-                            </Row>
-                        );
-                    })}
-                </div>
+                                    {p.wip && (
+                                        <span className="px-1.5 py-0.5 text-[10px] bg-ctp-yellow/15 text-ctp-yellow border border-ctp-yellow/30 shrink-0 whitespace-nowrap">
+                                            under construction
+                                        </span>
+                                    )}
+                                    <span className="ml-auto" aria-hidden="true"></span>
+                                    {href ? (
+                                        <a
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={(e) => e.stopPropagation()}
+                                            aria-label={`${p.projectTitle} on GitHub`}
+                                            className="text-zinc-600 hover:text-white group-hover:text-zinc-300 transition-colors duration-200 shrink-0"
+                                        >
+                                            ↗
+                                        </a>
+                                    ) : (
+                                        <span className="text-zinc-700 shrink-0">·</span>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
 
-                {/* Floating preview: fixed, trails the cursor over the list */}
-                <div
-                    ref={previewRef}
-                    aria-hidden="true"
-                    className={`fixed left-0 top-0 z-30 w-80 pointer-events-none rounded-lg overflow-hidden
-                                border border-zinc-700 bg-zinc-950 shadow-2xl shadow-black/60
-                                transition-opacity duration-500 ease-out will-change-transform
-                                ${active ? "opacity-100 delay-100" : "opacity-0"}`}
-                >
-                    {active && firstImage(active) ? (
-                        <img
-                            src={firstImage(active)!}
-                            alt=""
-                            decoding="async"
-                            className="w-80 h-48 object-cover"
-                        />
-                    ) : (
-                        <div className="w-80 h-48 flex items-center justify-center bg-zinc-900/40 font-mono text-xs text-zinc-600">
-                            <span>
-                                <span className="text-ctp-mauve">$</span> ./preview
-                                <br />
-                                no screenshot yet
-                            </span>
-                        </div>
-                    )}
-                    {active && (
-                        <div className="px-3 py-2 font-mono text-xs text-zinc-300 border-t border-zinc-800 flex justify-between gap-3">
-                            <span>{active.projectTitle}</span>
-                            <span className="text-zinc-500 truncate">
-                                {(active.tags ?? [])[0]?.toLowerCase()}
-                            </span>
-                        </div>
-                    )}
+                    {/* Docked viewer: frameless - the name floats above the
+                        top line, the picture aligns with the rows, info at
+                        the bottom. Engages on row click; rests as a
+                        statement until then. Set sizes: nothing moves or
+                        resizes between projects - only content swaps. */}
+                    <div className="w-[34rem] shrink-0 relative flex flex-col">
+                        {shown && (
+                            <p className="absolute bottom-full left-0 mb-4 font-mono text-base text-white">
+                                {shown.projectTitle.toLowerCase().replaceAll(" ", "-")}
+                                <span className="text-ctp-blue animate-pulse">_</span>
+                            </p>
+                        )}
+                        {!shown ? (
+                            <div className="w-full h-[28rem] flex flex-col justify-end p-8 bg-zinc-900/20 border border-zinc-800 rounded-md">
+                                <p className="text-3xl font-bold leading-tight text-white/90 mb-4">
+                                    {rest.length} more experiments,
+                                    <br />
+                                    tools and games<span className="text-ctp-blue">.</span>
+                                </p>
+                                <p className="font-mono text-xs text-zinc-500">
+                                    <span className="text-ctp-blue">$</span> click a row to open it here
+                                </p>
+                            </div>
+                        ) : firstImage(shown) ? (
+                            <img
+                                key={shown.projectTitle}
+                                src={firstImage(shown)!}
+                                alt=""
+                                decoding="async"
+                                className="w-full h-[28rem] object-cover rounded-md animate-fade-in-fast"
+                            />
+                        ) : (
+                            <div className="w-full h-[28rem] flex items-center justify-center bg-zinc-900/30 border border-zinc-800 rounded-md font-mono text-xs text-zinc-600">
+                                <span>
+                                    <span className="text-ctp-mauve">$</span> ./preview
+                                    <br />
+                                    no screenshot yet
+                                </span>
+                            </div>
+                        )}
+                        {shown && (
+                            <div className="flex-none mt-3 h-36 overflow-hidden space-y-2">
+                                <p className="text-sm text-zinc-400 leading-relaxed line-clamp-3">
+                                    {shown.description}
+                                </p>
+                                <p className="font-mono text-xs text-zinc-500 truncate">
+                                    {(shown.tags ?? []).join(" · ").toLowerCase()}
+                                </p>
+                                <div className="flex items-center gap-5 pt-1 font-mono text-xs">
+                                    {shown.link && shown.link !== "#" && (
+                                        <a href={shown.link} target="_blank" rel="noopener noreferrer"
+                                           className="text-zinc-400 hover:text-white transition-colors duration-200">
+                                            github &rarr;
+                                        </a>
+                                    )}
+                                    {shown.demoUrl && (
+                                        <a href={shown.demoUrl} target="_blank" rel="noopener noreferrer"
+                                           className="text-zinc-400 hover:text-white transition-colors duration-200">
+                                            live &rarr;
+                                        </a>
+                                    )}
+                                    {shown.songSrc && (
+                                        <PlayButton src={shown.songSrc} title={shown.projectTitle} />
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 

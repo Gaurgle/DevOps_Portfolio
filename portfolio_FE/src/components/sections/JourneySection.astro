@@ -88,7 +88,9 @@ const milestones = [
 
     <div data-cardstack data-off-x="26" data-off-y="48" class="journey-stack relative z-10">
         <div class="journey-viewport">
-            <div class="relative z-10 w-full flex flex-col md:flex-row items-center md:justify-center gap-5 md:gap-[5vw] px-4 md:px-[4vw] py-4 md:py-0">
+            <!-- md:items-start: the mark's numeral tops out level with the
+                 first card's top edge instead of floating centered -->
+            <div class="relative z-10 w-full flex flex-col md:flex-row items-center md:items-start md:justify-center gap-5 md:gap-[5vw] px-4 md:px-[4vw] py-4 md:py-0">
                 <!-- Chapter mark: stays for the whole pinned pile -->
                 <div class="shrink-0 text-center md:text-left">
                     <ChapterMark n="02" label="JOURNEY"
@@ -100,17 +102,13 @@ const milestones = [
                 <div class="stack-area">
                     {milestones.map((m, i) => (
                         <div data-stack-card style={`z-index: ${i + 1}`}>
-                            <div class="terminal-card">
-                                <div class="terminal-bar">
-                                    <span class="terminal-dot bg-ctp-red/80"></span>
-                                    <span class="terminal-dot bg-ctp-yellow/80"></span>
-                                    <span class="terminal-dot bg-ctp-green/80"></span>
-                                    <span class="font-mono text-xs text-zinc-300 ml-2">journey/{m.n}.log</span>
-                                    <span class={`font-mono text-xs ml-auto mr-1 ${m.color}`}>{m.cmd}</span>
+                            <div class="edit-card h-full">
+                                <div class="edit-head">
+                                    <span class="text-zinc-400">journey/{m.n}.log</span>
                                 </div>
-                                <div class="p-6 md:p-9">
+                                <div class="edit-body">
                                     <div class={`font-mono text-xs mb-2 ${m.color}`}>{m.n} · {m.cmd}</div>
-                                    <h3 class="text-xl md:text-3xl font-semibold text-white mb-4">{m.title}</h3>
+                                    <h3 class="text-2xl md:text-4xl font-bold leading-[1.05] text-white mb-4 md:mb-6">{m.title}</h3>
                                     <div class="space-y-3">
                                         {m.paras.map((p) => (
                                             <p class="text-sm md:text-base text-zinc-300 leading-relaxed max-w-xl">{p}</p>

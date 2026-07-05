@@ -196,6 +196,7 @@ function setupScrollSpy(reduced: boolean): void {
 
     const dock = document.getElementById("dock-cmd");
     const sigil = document.getElementById("dock-sigil");
+    const hueEl = document.getElementById("bottom-hue");
     let dockTimer = 0;
     let currentActive = "";
 
@@ -230,6 +231,14 @@ function setupScrollSpy(reduced: boolean): void {
         });
         // Lets CSS react to focus (e.g. ghost numerals brightening).
         sections.forEach((s) => s.classList.toggle("section-active", s === section));
+        // The bottom hue adopts the chapter's accent (CSS cross-fades it);
+        // the hero alone stays hue-free.
+        if (hueEl) {
+            if (section.dataset.cmdColor) {
+                hueEl.style.setProperty("--hue-color", section.dataset.cmdColor);
+            }
+            hueEl.classList.toggle("hue-off", name === "home");
+        }
         dockType(section);
     };
 
@@ -364,6 +373,14 @@ type Showcase = {
     dockRight: number;
     sigilEl: HTMLElement | null;
     arrowEl: HTMLElement | null;
+    /** Arrow assembly parts: outline path (with cached length) + the
+     *  label's individual letters (stamped on typewriter-style). */
+    arrowPath: SVGPathElement | null;
+    arrowLen: number;
+    arrowLetters: SVGElement[];
+    /** True viewport-centering correction: the full-bleed section sits
+     *  half a scrollbar-width left of the viewport origin. */
+    arrowShift: number;
     /** Docked x for headline and arrow: the pile's resting left edge. */
     dockLeft: number;
     /** Pile cascade offset per card. */
@@ -375,6 +392,8 @@ type Showcase = {
     settle: number;
     /** Scroll spent on the pile's exit slide. */
     exitDist: number;
+    /** Dwell on the assembled arrow before its own exit. */
+    arrowDwell: number;
     buffer: number;
     top: number;
 };
@@ -407,16 +426,19 @@ function measureShowcases(): Showcase[] {
         // pile, one exit slide, and a dwell on the docked arrow.
         const per = Math.round(vh * 0.75);
         const settle = Math.round(vh * 0.3);
-        const exitDist = Math.round(vh * 0.85);
-        const arrowDwell = Math.round(vh * 0.35);
+        // Generous exit: the pile's departure AND the arrow's assembly
+        // (outline draw, flood, label stamp) are both scrubbed across it.
+        const exitDist = Math.round(vh * 1.1);
+        const arrowDwell = Math.round(vh * 0.25);
         const buffer = Math.round(vh * 0.3);
         // Cascade offsets; keep in sync with the .hscroll-pin CSS calc.
         const offX = parseFloat(section.dataset.offX ?? "24");
-        const offY = parseFloat(section.dataset.offY ?? "34");
+        const offY = parseFloat(section.dataset.offY ?? "28");
 
         section.style.height =
             `${vh + buffer * 2 + cards.length * per + settle + exitDist + arrowDwell}px`;
-        const top = section.getBoundingClientRect().top + window.scrollY;
+        const sectionRect = section.getBoundingClientRect();
+        const top = sectionRect.top + window.scrollY;
         const coverRight = coverEl
             ? Math.round(coverEl.getBoundingClientRect().right)
             : 0;
@@ -437,15 +459,32 @@ function measureShowcases(): Showcase[] {
             )}px`;
         }
 
+        const arrowEl = section.querySelector<HTMLElement>("[data-hscroll-arrow]");
+        const arrowPath = arrowEl?.querySelector<SVGPathElement>("path") ?? null;
+        let arrowLen = 0;
+        if (arrowPath) {
+            arrowLen = arrowPath.getTotalLength();
+            arrowPath.style.strokeDasharray = String(arrowLen);
+        }
+
         result.push({
             section, track, cards, coverEl, coverRight,
             headline,
             headlineW: headline?.offsetWidth ?? 0,
-            dockRight: Math.round(trackRect.right),
+            // Section space, not viewport space: the headline and arrow are
+            // positioned inside the full-bleed section, which sits half a
+            // scrollbar-width left of the viewport origin.
+            dockRight: Math.round(trackRect.right - sectionRect.left),
             sigilEl: section.querySelector<HTMLElement>("[data-headline-sigil]"),
-            arrowEl: section.querySelector<HTMLElement>("[data-hscroll-arrow]"),
-            dockLeft: Math.round(trackRect.left),
-            offX, offY, per, settle, exitDist, buffer, top,
+            arrowEl, arrowPath, arrowLen,
+            arrowLetters: arrowEl
+                ? Array.from(arrowEl.querySelectorAll<SVGElement>("text tspan"))
+                : [],
+            arrowShift: Math.round(
+                (window.innerWidth - sectionRect.width) / 2 - sectionRect.left,
+            ),
+            dockLeft: Math.round(trackRect.left - sectionRect.left),
+            offX, offY, per, settle, exitDist, arrowDwell, buffer, top,
         });
     }
     return result;
@@ -508,6 +547,49 @@ function measureHolds(): Hold[] {
         result.push({ content, top, dist });
     }
     return result;
+}
+
+/* ------------------------------------------------------------------ */
+/* Chapter-mark drift                                                  */
+/* ------------------------------------------------------------------ */
+
+type MarkDrift = { el: HTMLElement; settleAt: number };
+
+/**
+ * The chapter numerals + hook lines lag slightly behind their section's
+ * content on APPROACH - a whisper of parallax depth - converging to zero
+ * moments after they enter. Marks that are RIGIDLY paired with content
+ * are excluded: the journey mark's top must equal the first card's top
+ * from the very first visible pixel (any lag next to an exact reference
+ * reads as misalignment, not depth). The contact panel's mark is
+ * fixed-positioned and stays put.
+ */
+function measureMarkDrifts(): MarkDrift[] {
+    // Desktop only: JS transforms lag behind native touch scrolling.
+    if (!isDesktop()) return [];
+    const all = Array.from(
+        document.querySelectorAll<HTMLElement>(".chapter-mark"),
+    );
+    // Reset everything first: a mark excluded below must not keep a
+    // residual drift transform from an earlier measure.
+    all.forEach((el) => (el.style.transform = ""));
+    return all
+        .filter(
+            (el) =>
+                !el.closest(".contact-panel") && !el.closest(".journey-stack"),
+        )
+        .map((el) => {
+            const r = el.getBoundingClientRect();
+            // Drift reaches zero as the mark's top passes ~72% of the
+            // viewport - i.e. moments after it enters, so compositions are
+            // aligned while the section is still arriving.
+            return {
+                el,
+                settleAt: Math.round(
+                    r.top + window.scrollY - window.innerHeight * 0.72,
+                ),
+            };
+        });
 }
 
 /* ------------------------------------------------------------------ */
@@ -574,6 +656,7 @@ function bindScrollDriven(reduced: boolean): void {
     if (!reduced) applyPins();
     let stacks = reduced ? [] : measureCardStacks();
     let showcases = reduced ? [] : measureShowcases();
+    let markDrifts = reduced ? [] : measureMarkDrifts();
     let holds = reduced ? [] : measureHolds();
     let covers = reduced ? [] : measureCovers();
 
@@ -660,6 +743,7 @@ function bindScrollDriven(reduced: boolean): void {
         applyPins();
         stacks = measureCardStacks();
         showcases = measureShowcases();
+        markDrifts = measureMarkDrifts();
         holds = measureHolds();
         covers = measureCovers();
         walls = measureWalls();
@@ -754,13 +838,12 @@ function bindScrollDriven(reduced: boolean): void {
         // stylesheet default is hidden, so "visible" must be explicit.
         if (panel) panel.style.visibility = progress > 0.6 ? "visible" : "hidden";
 
-        // Bottom hue: faint for most of the ride, blooming as the end nears,
-        // then fading out completely during the reveal - the panel takes over
-        // the indigo, and the form is never sitting under the overlay.
+        // Bottom hue: faint for most of the ride, blooming gently as the
+        // end nears - and staying, so the contact reveal keeps its final
+        // orange (the hue sits above the panel, below the page).
         if (hue) {
             const bloom = Math.max(0, Math.min(1, (progress - 0.68) / 0.2));
-            const fade = Math.max(0, Math.min(1, (progress - 0.88) / 0.08));
-            const o = Math.min(1, 0.62 + bloom * 0.38) * (1 - fade);
+            const o = Math.min(1, 0.5 + bloom * 0.3);
             hue.style.opacity = o.toFixed(3);
         }
 
@@ -775,6 +858,14 @@ function bindScrollDriven(reduced: boolean): void {
 
         // (Particle layers are driven from the RAF loop - parallaxTick -
         // so the cursor can move them between scroll events too.)
+
+        // Chapter marks lag a touch behind their content on approach
+        // (subtle depth), converging to zero moments after they enter -
+        // aligned compositions hold from entry through the whole pin.
+        for (const m of markDrifts) {
+            const dy = Math.max(0, Math.min(60, (m.settleAt - scroll) * 0.1));
+            m.el.style.transform = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
+        }
 
         // Depth-of-field focus (see focusEls above). A dead zone around the
         // center keeps the active card fully sharp, and outgoing cards
@@ -836,16 +927,20 @@ function bindScrollDriven(reduced: boolean): void {
             const pileX = -easedE * (window.innerWidth * 1.15);
             sc.track.style.transform = `translate3d(${pileX}px, 0, 0)`;
 
-            // Docked headline: fades in as the pile starts; on the exit it
-            // holds its dock until the pile's trailing edge catches it,
-            // then rides out right-edge-aligned with the last card.
+            // Docked headline: fades in mid-flight of the FIRST card - after
+            // the chapter mark has been pushed away, so they never share the
+            // stage. On the exit it holds its dock until the pile's trailing
+            // edge catches it, then rides out with the last card.
             if (sc.headline) {
                 const hx = Math.min(
                     sc.dockLeft,
                     sc.dockRight + pileX - sc.headlineW,
                 );
                 sc.headline.style.transform = `translate3d(${hx}px, 0, 0)`;
-                const inO = Math.max(0, Math.min(1, (local + sc.buffer * 0.5) / 150));
+                const inO = Math.max(
+                    0,
+                    Math.min(1, (local - sc.per * 0.45) / (sc.per * 0.3)),
+                );
                 sc.headline.style.opacity = inO.toFixed(3);
             }
 
@@ -860,12 +955,42 @@ function bindScrollDriven(reduced: boolean): void {
                 if (fc) sc.sigilEl.style.color = `rgb(${fc})`;
             }
 
-            // Finale arrow: rides in from the right during the pile's exit
-            // and docks under the headline for the closing dwell.
+            // Finale arrow, assembled IN PLACE on the emptied stage and
+            // scrubbed by the exit progress (fully reversible): once the
+            // pile has cleared, the outline draws itself around the
+            // silhouette, the fill floods in, and the label stamps on.
+            // Then it exits the way it points: sliding down and fading as
+            // the section releases into the grid.
             if (sc.arrowEl) {
-                const ax =
-                    sc.dockLeft + (1 - easedE) * (window.innerWidth - sc.dockLeft);
-                sc.arrowEl.style.transform = `translate3d(${ax}px, 0, 0)`;
+                const draw = Math.max(0, Math.min(1, (easedE - 0.52) / 0.28));
+                const flood = Math.max(0, Math.min(1, (easedE - 0.8) / 0.13));
+                if (sc.arrowPath) {
+                    sc.arrowPath.style.strokeDashoffset =
+                        String(sc.arrowLen * (1 - draw));
+                    sc.arrowPath.style.fillOpacity = flood.toFixed(3);
+                }
+                // Letters stamp on one at a time (M-O-R-E, then PROJECTS
+                // running down the leg) - hard on/off, like a typewriter.
+                const stamp = Math.max(0, Math.min(1, (easedE - 0.86) / 0.14));
+                const n = sc.arrowLetters.length || 1;
+                sc.arrowLetters.forEach((letter, i) => {
+                    letter.style.opacity = stamp * n >= i + 0.6 ? "1" : "0";
+                });
+
+                const e2 = Math.max(
+                    0,
+                    Math.min(
+                        1,
+                        (local - stackLen - sc.settle - sc.exitDist - sc.arrowDwell) /
+                            sc.buffer,
+                    ),
+                );
+                const eased2 = e2 * e2 * (3 - 2 * e2);
+                // Layout centers the arrow (arrowShift trues it up against
+                // the viewport); the engine only drives its exit.
+                sc.arrowEl.style.transform =
+                    `translate3d(${sc.arrowShift}px, ${(eased2 * vh * 0.35).toFixed(1)}px, 0)`;
+                sc.arrowEl.style.opacity = (1 - eased2).toFixed(3);
             }
 
             if (
