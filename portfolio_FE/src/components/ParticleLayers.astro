@@ -42,7 +42,10 @@ const layers = [
         if (!base) return;
 
         const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        const w = window.innerWidth;
+        // Horizontal padding: the layers shift sideways a little with the
+        // cursor (mouse parallax), so the pattern must overhang both edges.
+        const PAD = 48;
+        const w = window.innerWidth + PAD * 2;
         const h = window.innerHeight;
 
         const density = parseInt(layer.dataset.density ?? "40", 10);
@@ -69,6 +72,7 @@ const layers = [
             canvas.height = Math.round(h * 2 * dpr);
             canvas.style.width = `${w}px`;
             canvas.style.height = `${h * 2}px`;
+            canvas.style.left = `-${PAD}px`;
 
             const ctx = canvas.getContext("2d");
             if (!ctx) return;

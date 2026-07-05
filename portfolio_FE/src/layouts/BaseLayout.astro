@@ -19,6 +19,10 @@ const isHome = Astro.url.pathname === "/";
 </head>
 
 <body class="font-sans bg-black text-white relative">
+<!-- Film grain: a whisper of animated noise over everything, so the black
+     reads as material instead of emptiness -->
+<div id="film-grain" aria-hidden="true"></div>
+
 <!-- Scroll progress bar (driven by Lenis) -->
 <div id="scroll-progress"></div>
 

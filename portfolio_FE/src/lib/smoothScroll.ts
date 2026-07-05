@@ -20,6 +20,9 @@ let anchorBypass = false;
  *  measurements); runs from the RAF loop since rest detection can't live
  *  in scroll events. */
 let magnetTick: (() => void) | null = null;
+/** Per-frame particle-layer driver (scroll drift + lerped mouse parallax);
+ *  lives in the RAF loop because the cursor moves without scroll events. */
+let parallaxTick: (() => void) | null = null;
 const observers: IntersectionObserver[] = [];
 const cleanups: Array<() => void> = [];
 
@@ -56,6 +59,86 @@ function setupReveal(): void {
 
     els.forEach((el) => io.observe(el));
     observers.push(io);
+}
+
+/* ------------------------------------------------------------------ */
+/* Word reveals                                                        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * `[data-word-reveal]` text splits into word spans that rise in with a
+ * stagger once the surrounding `[data-reveal]` card becomes visible (the
+ * reveal IO adds .is-visible; CSS does the rest). Walks text nodes only,
+ * so nested markup - like the rough-notation spans - stays intact.
+ */
+function setupWordReveals(reduced: boolean): void {
+    if (reduced) return;
+    const els = document.querySelectorAll<HTMLElement>(
+        "[data-word-reveal]:not([data-wr-done])",
+    );
+    for (const el of els) {
+        el.setAttribute("data-wr-done", "");
+        let wi = 0;
+        const walk = (node: Node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                [...node.childNodes].forEach(walk);
+                return;
+            }
+            if (node.nodeType !== Node.TEXT_NODE) return;
+            const text = node.textContent ?? "";
+            if (!text.trim()) return;
+            const frag = document.createDocumentFragment();
+            for (const part of text.split(/(\s+)/)) {
+                if (!part) continue;
+                if (/^\s+$/.test(part)) {
+                    frag.appendChild(document.createTextNode(part));
+                } else {
+                    const span = document.createElement("span");
+                    span.className = "wr-w";
+                    // Delay cap: very long paragraphs finish together at
+                    // the tail instead of dripping in for seconds.
+                    span.style.setProperty("--wi", String(Math.min(wi++, 45)));
+                    span.textContent = part;
+                    frag.appendChild(span);
+                }
+            }
+            node.parentNode?.replaceChild(frag, node);
+        };
+        [...el.childNodes].forEach(walk);
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Magnetic hover                                                      */
+/* ------------------------------------------------------------------ */
+
+/** `[data-magnetic="0.3"]` elements lean toward the cursor while hovered
+ *  and spring back on leave. Desktop only - there is no hover on touch. */
+function setupMagnetic(reduced: boolean): void {
+    if (reduced || !isDesktop()) return;
+    for (const el of document.querySelectorAll<HTMLElement>("[data-magnetic]")) {
+        const strength = parseFloat(el.dataset.magnetic || "0.3");
+        const onMove = (e: MouseEvent) => {
+            const r = el.getBoundingClientRect();
+            const dx = e.clientX - (r.left + r.width / 2);
+            const dy = e.clientY - (r.top + r.height / 2);
+            el.style.transition = "transform 0.15s ease-out";
+            el.style.transform =
+                `translate(${(dx * strength).toFixed(1)}px, ${(dy * strength).toFixed(1)}px)`;
+        };
+        const onLeave = () => {
+            el.style.transition = "transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)";
+            el.style.transform = "";
+        };
+        el.addEventListener("mousemove", onMove);
+        el.addEventListener("mouseleave", onLeave);
+        cleanups.push(() => {
+            el.removeEventListener("mousemove", onMove);
+            el.removeEventListener("mouseleave", onLeave);
+            el.style.transform = "";
+            el.style.transition = "";
+        });
+    }
 }
 
 /* ------------------------------------------------------------------ */
@@ -428,24 +511,6 @@ function measureHolds(): Hold[] {
 }
 
 /* ------------------------------------------------------------------ */
-/* Relative parallax (ghost numerals etc.)                             */
-/* ------------------------------------------------------------------ */
-
-type RelParallax = { el: HTMLElement; speed: number; base: number };
-
-function measureRelParallax(): RelParallax[] {
-    // Desktop only: JS transforms lag behind native touch scrolling.
-    if (!isDesktop()) return [];
-    const result: RelParallax[] = [];
-    for (const el of document.querySelectorAll<HTMLElement>("[data-parallax-rel]")) {
-        const speed = parseFloat(el.dataset.parallaxRel ?? "0.15");
-        const base = el.getBoundingClientRect().top + window.scrollY;
-        result.push({ el, speed, base });
-    }
-    return result;
-}
-
-/* ------------------------------------------------------------------ */
 /* Scroll-driven frame update                                          */
 /* ------------------------------------------------------------------ */
 
@@ -459,9 +524,9 @@ function bindScrollDriven(reduced: boolean): void {
     const heroScrub = reduced
         ? null
         : document.querySelector<HTMLElement>("[data-hero-scrub]");
-    // Speeds are read once, not per frame. Runs on mobile too: transforms
-    // derive from window.scrollY in the same frame, so the slow layers stay
-    // in step with native touch scroll closely enough.
+    // Speeds are read once, not per frame. Driven from the RAF loop (see
+    // parallaxTick below): scroll drift on both platforms, plus a lerped
+    // cursor-follow depth shift on desktop.
     const wrapLayers = reduced
         ? []
         : Array.from(document.querySelectorAll<HTMLElement>("[data-parallax-wrap]"))
@@ -470,6 +535,40 @@ function bindScrollDriven(reduced: boolean): void {
                 speed: parseFloat(el.dataset.parallaxSpeed ?? "0.1"),
             }));
 
+    if (wrapLayers.length) {
+        const mouse = { tx: 0, ty: 0, x: 0, y: 0 };
+        if (isDesktop()) {
+            const onPointer = (ev: PointerEvent) => {
+                mouse.tx = ev.clientX / window.innerWidth - 0.5;
+                mouse.ty = ev.clientY / window.innerHeight - 0.5;
+            };
+            window.addEventListener("pointermove", onPointer, { passive: true });
+            cleanups.push(() =>
+                window.removeEventListener("pointermove", onPointer),
+            );
+        }
+        let lastWritten = -1;
+        parallaxTick = () => {
+            mouse.x += (mouse.tx - mouse.x) * 0.05;
+            mouse.y += (mouse.ty - mouse.y) * 0.05;
+            const scroll = window.scrollY;
+            // Idle guard: skip the writes when neither scroll nor cursor
+            // moved meaningfully since the last frame.
+            const key = scroll + mouse.x * 997 + mouse.y * 631;
+            if (Math.abs(key - lastWritten) < 0.05) return;
+            lastWritten = key;
+            for (const layer of wrapLayers) {
+                // Fold the vertical mouse shift into the wrap phase so the
+                // translate stays within the tiled range (no seams).
+                const phase = scroll * layer.speed + mouse.y * layer.speed * 140;
+                const y = ((phase % viewportH) + viewportH) % viewportH;
+                const mx = mouse.x * layer.speed * -220;
+                layer.el.style.transform = `translate3d(${mx}px, ${-y}px, 0)`;
+            }
+        };
+        cleanups.push(() => (parallaxTick = null));
+    }
+
     // Order matters: pins add height, which shifts everything below them,
     // so they must be applied before any position is measured.
     if (!reduced) applyPins();
@@ -477,7 +576,6 @@ function bindScrollDriven(reduced: boolean): void {
     let showcases = reduced ? [] : measureShowcases();
     let holds = reduced ? [] : measureHolds();
     let covers = reduced ? [] : measureCovers();
-    let relParallax = reduced ? [] : measureRelParallax();
 
     // Section walls: scroll momentum dies exactly at each section start; the
     // next gesture continues past it. No snap animation, just a stop.
@@ -564,7 +662,6 @@ function bindScrollDriven(reduced: boolean): void {
         showcases = measureShowcases();
         holds = measureHolds();
         covers = measureCovers();
-        relParallax = measureRelParallax();
         walls = measureWalls();
     };
 
@@ -676,20 +773,8 @@ function bindScrollDriven(reduced: boolean): void {
             heroScrub.style.setProperty("--scrub", String(Math.pow(t, 1.5)));
         }
 
-        // Particle layers: slow upward drift, wrapped every viewport-height so
-        // the pre-painted pattern tiles forever. Keeps drifting during the
-        // journey pin - the background stays alive while the cards slide.
-        for (const layer of wrapLayers) {
-            const y = (scroll * layer.speed) % vh;
-            layer.el.style.transform = `translate3d(0, ${-y}px, 0)`;
-        }
-
-        // Ghost numerals: drift down relative to their section (reads as depth).
-        for (const p of relParallax) {
-            const local = scroll - p.base + vh;
-            if (local < -vh || local > vh * 6) continue;
-            p.el.style.transform = `translate3d(0, ${local * p.speed}px, 0)`;
-        }
+        // (Particle layers are driven from the RAF loop - parallaxTick -
+        // so the cursor can move them between scroll events too.)
 
         // Depth-of-field focus (see focusEls above). A dead zone around the
         // center keeps the active card fully sharp, and outgoing cards
@@ -965,6 +1050,7 @@ export function initSmoothScroll(): void {
             lenis?.raf(time);
             tickMarquee();
             magnetTick?.();
+            parallaxTick?.();
             rafId = requestAnimationFrame(raf);
         };
         rafId = requestAnimationFrame(raf);
@@ -976,6 +1062,8 @@ export function initSmoothScroll(): void {
             .forEach((el) => el.classList.add("is-visible"));
     }
 
+    setupWordReveals(reduced);
+    setupMagnetic(reduced);
     setupTypedPrompts(reduced);
     setupScrollSpy(reduced);
     setupAnchors();

@@ -37,6 +37,7 @@ export default function SidebarNav() {
                 <a
                     key={href}
                     data-spy={spy}
+                    data-magnetic="0.25"
                     className="group flex items-center gap-2 py-1.5 font-mono text-sm text-zinc-200 hover:text-white transition-colors duration-200"
                     href={href}
                 >
