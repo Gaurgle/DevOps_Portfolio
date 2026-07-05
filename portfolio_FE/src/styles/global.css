@@ -833,6 +833,14 @@ html.lenis, html.lenis body { height: auto; }
         padding: 0.75rem;
     }
 }
+/* The compose card sits on the indigo panel - fully opaque, or the
+   gradient bleeds through and the form reads washed out */
+.contact-panel .terminal-card {
+    background: rgb(12, 12, 18);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
 .page-over-panel {
     position: relative;
     z-index: 10;

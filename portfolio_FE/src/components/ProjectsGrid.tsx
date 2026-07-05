@@ -98,35 +98,57 @@ export default function ProjectsGrid() {
         ? rest.filter((p) => (p.tags ?? []).includes(filter))
         : rest;
 
-    // The preview trails the cursor: transform retargets a CSS transition,
-    // so frequent updates read as a soft chase - no RAF needed. On FIRST
-    // hover it must SNAP to the cursor (transition suspended) and fade in
-    // there, or it visibly flies in from wherever it last was.
+    // The preview chases the cursor with a RAF lerp (a retargeted CSS
+    // transition reads floaty/laggy). On FIRST hover it snaps to the
+    // cursor and fades in there; while visible it settles in a few frames.
     const shownRef = useRef(false);
-    const placePreview = (cx: number, cy: number, snap: boolean) => {
+    const warmedRef = useRef(false);
+    const targetPos = useRef({ x: 0, y: 0 });
+    const chasePos = useRef({ x: 0, y: 0 });
+    const rafRef = useRef(0);
+
+    const clampToViewport = (cx: number, cy: number) => ({
+        x: Math.min(cx + 32, window.innerWidth - 360),
+        y: Math.min(Math.max(cy - 120, 80), window.innerHeight - 300),
+    });
+
+    const chase = () => {
         const el = previewRef.current;
-        if (!el) return;
-        const x = Math.min(cx + 32, window.innerWidth - 360);
-        const y = Math.min(Math.max(cy - 120, 80), window.innerHeight - 300);
-        if (snap) {
-            el.style.transition = "none";
-            el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-            void el.offsetWidth; // flush: the fade-in starts from here
-            el.style.transition = "";
-        } else {
-            el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        }
+        const p = chasePos.current;
+        const t = targetPos.current;
+        p.x += (t.x - p.x) * 0.22;
+        p.y += (t.y - p.y) * 0.22;
+        if (el) el.style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
+        rafRef.current = requestAnimationFrame(chase);
     };
+
     const onRowEnter = (p: Project, e: ReactMouseEvent) => {
-        if (!shownRef.current) placePreview(e.clientX, e.clientY, true);
+        // Warm every preview image into cache once, so row-to-row swaps
+        // don't stall on network + decode.
+        if (!warmedRef.current) {
+            warmedRef.current = true;
+            for (const proj of rest) {
+                const src = firstImage(proj);
+                if (src) new Image().src = src;
+            }
+        }
+        const t = clampToViewport(e.clientX, e.clientY);
+        targetPos.current = t;
+        if (!shownRef.current) chasePos.current = { ...t }; // materialize AT the cursor
         shownRef.current = true;
+        if (!rafRef.current) rafRef.current = requestAnimationFrame(chase);
         setActive(p);
     };
-    const onListMove = (e: ReactMouseEvent) => placePreview(e.clientX, e.clientY, false);
+    const onListMove = (e: ReactMouseEvent) => {
+        targetPos.current = clampToViewport(e.clientX, e.clientY);
+    };
     const onListLeave = () => {
         shownRef.current = false;
         setActive(null);
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = 0;
     };
+    useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
     return (
         <div>
@@ -206,13 +228,14 @@ export default function ProjectsGrid() {
                     aria-hidden="true"
                     className={`fixed left-0 top-0 z-30 w-80 pointer-events-none rounded-lg overflow-hidden
                                 border border-zinc-700 bg-zinc-950 shadow-2xl shadow-black/60
-                                transition-[transform,opacity] duration-500 ease-out will-change-transform
+                                transition-opacity duration-500 ease-out will-change-transform
                                 ${active ? "opacity-100 delay-100" : "opacity-0"}`}
                 >
                     {active && firstImage(active) ? (
                         <img
                             src={firstImage(active)!}
                             alt=""
+                            decoding="async"
                             className="w-80 h-48 object-cover"
                         />
                     ) : (
