@@ -553,16 +553,23 @@ function measureHolds(): Hold[] {
 /* Chapter-mark drift                                                  */
 /* ------------------------------------------------------------------ */
 
-type MarkDrift = { el: HTMLElement; settleAt: number };
+type MarkDrift = {
+    el: HTMLElement;
+    settleAt: number;
+    entryLag: boolean;
+    sinkSpeed: number;
+    sinkCap: number;
+};
 
 /**
- * The chapter numerals + hook lines lag slightly behind their section's
- * content on APPROACH - a whisper of parallax depth - converging to zero
- * moments after they enter. Marks that are RIGIDLY paired with content
- * are excluded: the journey mark's top must equal the first card's top
- * from the very first visible pixel (any lag next to an exact reference
- * reads as misalignment, not depth). The contact panel's mark is
- * fixed-positioned and stays put.
+ * The chapter numerals + hook lines get two drift phases:
+ * - APPROACH: a slight lag behind the section's content (parallax depth),
+ *   converging to zero moments after entering. Marks rigidly paired with
+ *   content skip this - the journey mark's top must equal the first
+ *   card's top from the very first visible pixel.
+ * - SETTLED SINK: a while after seating in the aligned position, every
+ *   mark starts gliding downward very slowly as the scroll continues.
+ * The contact panel's mark is fixed-positioned and stays put.
  */
 function measureMarkDrifts(): MarkDrift[] {
     // Desktop only: JS transforms lag behind native touch scrolling.
@@ -574,20 +581,21 @@ function measureMarkDrifts(): MarkDrift[] {
     // residual drift transform from an earlier measure.
     all.forEach((el) => (el.style.transform = ""));
     return all
-        .filter(
-            (el) =>
-                !el.closest(".contact-panel") && !el.closest(".journey-stack"),
-        )
+        .filter((el) => !el.closest(".contact-panel"))
         .map((el) => {
             const r = el.getBoundingClientRect();
-            // Drift reaches zero as the mark's top passes ~72% of the
-            // viewport - i.e. moments after it enters, so compositions are
-            // aligned while the section is still arriving.
+            const journey = Boolean(el.closest(".journey-stack"));
+            // "Settled" once the mark's top passes ~72% of the viewport -
+            // i.e. moments after it enters. The journey mark sinks slower
+            // and farther: its pin is long, so the glide gets to stretch.
             return {
                 el,
                 settleAt: Math.round(
                     r.top + window.scrollY - window.innerHeight * 0.72,
                 ),
+                entryLag: !journey,
+                sinkSpeed: journey ? 0.025 : 0.04,
+                sinkCap: journey ? 130 : 80,
             };
         });
 }
@@ -859,12 +867,22 @@ function bindScrollDriven(reduced: boolean): void {
         // (Particle layers are driven from the RAF loop - parallaxTick -
         // so the cursor can move them between scroll events too.)
 
-        // Chapter marks lag a touch behind their content on approach
-        // (subtle depth), converging to zero moments after they enter -
-        // aligned compositions hold from entry through the whole pin.
+        // Chapter marks: an approach lag that converges to zero on entry
+        // (skipped for rigidly paired marks), then - a while after they
+        // settle aligned - a very slow downward glide as scrolling goes on.
         for (const m of markDrifts) {
-            const dy = Math.max(0, Math.min(60, (m.settleAt - scroll) * 0.1));
-            m.el.style.transform = `translate3d(0, ${dy.toFixed(1)}px, 0)`;
+            const pre = m.entryLag
+                ? Math.max(0, Math.min(60, (m.settleAt - scroll) * 0.1))
+                : 0;
+            const sink = Math.max(
+                0,
+                Math.min(
+                    m.sinkCap,
+                    (scroll - m.settleAt - vh * 0.6) * m.sinkSpeed,
+                ),
+            );
+            m.el.style.transform =
+                `translate3d(0, ${(pre + sink).toFixed(1)}px, 0)`;
         }
 
         // Depth-of-field focus (see focusEls above). A dead zone around the
@@ -968,6 +986,11 @@ function bindScrollDriven(reduced: boolean): void {
                     sc.arrowPath.style.strokeDashoffset =
                         String(sc.arrowLen * (1 - draw));
                     sc.arrowPath.style.fillOpacity = flood.toFixed(3);
+                    // The outline is scaffolding: it dissolves as the fill
+                    // floods, leaving a pure silhouette - a centered SVG
+                    // stroke otherwise protrudes past the fill edge and
+                    // reads as a misaligned lighter rim at rest.
+                    sc.arrowPath.style.strokeOpacity = (1 - flood).toFixed(3);
                 }
                 // Letters stamp on one at a time (M-O-R-E, then PROJECTS
                 // running down the leg) - hard on/off, like a typewriter.
